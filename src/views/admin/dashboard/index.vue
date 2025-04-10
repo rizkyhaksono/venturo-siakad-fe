@@ -49,7 +49,7 @@ const email = ref("");
 <template>
     <Layout>
         <div class="">
-            Welcome to dashboard
+            Welcome to admin dashboard
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
             <!-- Line Chart -->

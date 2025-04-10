@@ -18,14 +18,14 @@ function login(email, password) {
         .then(handleResponse)
         .then((user) => {
             if (user.token) {
-                localStorage.setItem("user", JSON.stringify(user));
+                localStorage.setItem("venturo_siakad_user", JSON.stringify(user));
             }
             return user;
         });
 }
 
 function logout() {
-    localStorage.removeItem("user");
+    localStorage.removeItem("venturo_siakad_user");
 }
 
 function register(user) {

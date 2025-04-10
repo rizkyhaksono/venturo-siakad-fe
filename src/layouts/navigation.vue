@@ -72,7 +72,16 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
-import { mdiHome, mdiAccountGroup } from "@mdi/js";
+import {
+    mdiHome,
+    mdiSchool,
+    mdiGoogleClassroom,
+    mdiHumanMaleBoard,
+    mdiCounter,
+    mdiInvoiceTextClock,
+    mdiAccountGroup,
+    mdiCardAccountDetails
+} from "@mdi/js";
 
 // Ambil route aktif
 const route = useRoute();
@@ -120,18 +129,38 @@ const menus = ref([
         label: "Users",
         icon: mdiAccountGroup,
         submenu: [
-            { label: "User List", to: "/user" },
-            { label: "Add User", to: "/404" },
-            {
-                label: "Settings",
-                submenu: [
-                    { label: "Edit Profile", to: "/404" },
-                    { label: "Change Password", to: "/404" },
-                    { label: "Upgrade to PRO", to: "/404" },
-                ],
-            },
+            { label: "User", to: "/user" },
+            { label: "User Role", to: "/user_role" },
         ],
     },
+    {
+        label: "Class",
+        icon: mdiSchool,
+        submenu: [
+            { label: "Class", to: "/class" },
+            { label: "Class History", to: "/class_history" },
+        ]
+    },
+    {
+        label: "Subject",
+        icon: mdiGoogleClassroom,
+        submenu: [
+            { label: "Subject", to: "/subject" },
+            { label: "Subject Hour", to: "/subject_hour" },
+            { label: "Subject Schedule", to: "/subject_schedule" },
+        ]
+    },
+    {
+        label: "Teacher",
+        icon: mdiHumanMaleBoard,
+        submenu: [
+            { label: "Teacher", to: "/teacher" },
+            { label: "Homeroom Teacher", to: "/homeroom_teacher" }
+        ]
+    },
+    { label: "Registration", to: "/registration", icon: mdiInvoiceTextClock },
+    { label: "Student", to: "/student", icon: mdiCardAccountDetails },
+    { label: "Study Year", to: "/student", icon: mdiCounter },
 ]);
 </script>
 

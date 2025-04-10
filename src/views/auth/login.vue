@@ -8,15 +8,15 @@ import { mdiEye, mdiEyeOff, mdiGoogle } from "@mdi/js";
 
 const showPassword = ref(false);
 const mode = useColorMode({
-  emitAuto: false, // Supaya tidak otomatis pakai sistem OS
-  modes: {
-    light: "light",
-    dark: "dark",
-  },
+    emitAuto: false, // Supaya tidak otomatis pakai sistem OS
+    modes: {
+        light: "light",
+        dark: "dark",
+    },
 });
 
 if (!mode.value) {
-  mode.value = "light"; // Set default ke "light"
+    mode.value = "light"; // Set default ke "light"
 }
 const router = useRouter();
 const authStore = useAuthStore();
@@ -57,12 +57,15 @@ const login = async () => {
             duration: 3000,
             class: "bg-green-500 text-white border-none shadow-lg",
         });
-        setTimeout(function() {
-            console.log("Hello World!");
-            if (user.role === "user") {
-                router.push("/");
-            } else {
-                router.push("/dashboard");
+        setTimeout(function () {
+            if (user.role === "Student") {
+                router.push("/student/dashboard");
+            }
+            if (user.role === "Admin") {
+                router.push("/admin/dashboard");
+            }
+            if (user.role === "Teacher") {
+                router.push("/teacher/dashboard");
             }
         }, 1000); // 3000 milisecond = 3 detik
     }
@@ -105,9 +108,11 @@ const login = async () => {
                 <div class="mb-4 space-y-1.5">
                     <label class="text-sm text-slate-800 font-bold">Password</label>
                     <div class="relative">
-                        <input v-model="formModel.password" :type="showPassword ? 'text' : 'password'" placeholder="Masukkan Password"
+                        <input v-model="formModel.password" :type="showPassword ? 'text' : 'password'"
+                            placeholder="Masukkan Password"
                             class="w-full border border-slate-200 rounded-md py-2 px-2.5 text-sm shadow-sm hover:border-slate-800 focus:border-slate-800 focus:ring focus:ring-slate-800/10" />
-                        <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600" @click="togglePassword">
+                        <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+                            @click="togglePassword">
                             <svg class="h-5 w-5" viewBox="0 0 24 24">
                                 <path :d="showPassword ? mdiEyeOff : mdiEye" fill="currentColor" />
                             </svg>
@@ -121,7 +126,8 @@ const login = async () => {
                 </div>
 
                 <div class="flex items-center justify-between text-sm">
-                    <router-link to="/forgot-password" class="text-primary hover:underline">Forgot Password?</router-link>
+                    <router-link to="/forgot-password" class="text-primary hover:underline">Forgot
+                        Password?</router-link>
                 </div>
 
                 <button type="submit" class="w-full bg-primary text-white font-bold py-2 rounded-md mt-4">
@@ -129,7 +135,7 @@ const login = async () => {
                 </button>
             </form>
 
-            <!-- <div class="text-center text-sm mt-4">
+            <div class="text-center text-sm mt-4">
                 Don't have an account?
                 <router-link to="/register" class="text-primary hover:underline">Register</router-link>
             </div>
@@ -138,7 +144,7 @@ const login = async () => {
                 By clicking continue, you agree to our
                 <a href="#" class="underline">Terms of Service</a> and
                 <a href="#" class="underline">Privacy Policy</a>.
-            </div> -->
+            </div>
         </div>
     </div>
 

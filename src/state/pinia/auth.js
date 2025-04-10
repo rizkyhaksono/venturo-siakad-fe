@@ -14,10 +14,10 @@ export const useAuthStore = defineStore("auth", {
         },
     }),
     actions: {
-        async login(credential) {
+        async register(credential) {
             try {
                 const res = await axios.post(
-                    `${this.apiUrl}/v1/auth/login`,
+                    `${this.apiUrl}/v1/auth/register`,
                     credential
                 );
                 this.response = {
@@ -29,6 +29,33 @@ export const useAuthStore = defineStore("auth", {
                 this.saveUser(user);
                 this.userLogin = user;
                 return user;
+            } catch (error) {
+                this.response = {
+                    status: error.response?.status,
+                    message: error.message,
+                    error: error.response.data.errors,
+                };
+            }
+        },
+        async login(credential) {
+            try {
+                const res = await axios.post(
+                    `${this.apiUrl}/v1/auth/login`,
+                    credential
+                );
+                this.response = {
+                    status: res.status,
+                    message: res.data.message,
+                };
+                const { access_token, user, role } = res.data.data;
+                this.saveToken(access_token);
+                this.saveUser(user);
+                this.saveRole(role);
+                this.userLogin = user;
+                return {
+                    user: user,
+                    role: role,
+                }
             } catch (error) {
                 this.response = {
                     status: error.response?.status,
@@ -62,6 +89,7 @@ export const useAuthStore = defineStore("auth", {
                 this.userLogin = {};
                 this.removeToken();
                 this.removeUser();
+                this.removeRole();
             }
         },
         async saveUserLogin() {
@@ -72,23 +100,29 @@ export const useAuthStore = defineStore("auth", {
                 console.error("Failed to fetch user profile", error);
             }
         },
+        async saveRole(token) {
+            localStorage.setItem("venturo_siakad_role", token);
+        },
+        async removeRole() {
+            localStorage.removeItem("venturo_siakad_role");
+        },
         async saveToken(token) {
-            localStorage.setItem("token", token);
+            localStorage.setItem("venturo_siakad_token", token);
         },
         async removeToken() {
-            localStorage.removeItem("token");
+            localStorage.removeItem("venturo_siakad_token");
         },
         getToken() {
-            return localStorage.getItem("token") || "";
+            return localStorage.getItem("venturo_siakad_token") || "";
         },
         async saveUser(user) {
-            localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("venturo_siakad_user", JSON.stringify(user));
         },
         async removeUser() {
-            localStorage.removeItem("user");
+            localStorage.removeItem("venturo_siakad_user");
         },
         getUser() {
-            return JSON.parse(localStorage.getItem("user") || "");
+            return JSON.parse(localStorage.getItem("venturo_siakad_user") || "");
         },
     },
 });

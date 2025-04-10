@@ -41,7 +41,7 @@ export const useUserStore = defineStore("user", {
                     message: error.message,
                 };
             }
-            
+
         },
         async changePage(newPage) {
             this.current = newPage;
@@ -66,7 +66,7 @@ export const useUserStore = defineStore("user", {
                     error: error.response.data.errors,
                 };
             }
-            
+
         },
         async updateUser(users) {
             try {
