@@ -6,11 +6,23 @@ export default [
         beforeEnter(to, from, next) {
             const auth = useAuthStore();
             if (auth.getToken) {
-                next({ name: "dashboard" });
+                switch (auth.role) {
+                    case "admin":
+                        next({ name: "admin-dashboard" });
+                        break;
+                    case "student":
+                        next({ name: "student-dashboard" });
+                        break;
+                    case "teacher":
+                        next({ name: "teacher-dashboard" });
+                        break;
+                    default:
+                        next({ name: "login" });
+                }
             } else {
                 next({ name: "login" });
             }
-        },
+        }
     },
     {
         path: "/admin/dashboard",
