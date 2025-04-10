@@ -5,7 +5,7 @@ import Layout from "@/layouts/main.vue";
 import Modal from "@/components/widgets/Modal.vue";
 import Button from "@/components/widgets/Button";
 import InputField from "@/components/widgets/Input";
-import FormUser from "@/views/user/form.vue"; // Import file FormUser
+import FormUser from "@/views/admin/user/form.vue"; // Import file FormUser
 
 import { showSuccessToast, showDeleteConfirmationDialog } from "@/helpers/alert.js";
 const userStore = useUserStore();
@@ -86,7 +86,7 @@ onMounted(() => {
                         data-orientation="horizontal">
                         <div class="relative w-full md:w-72">
                             <InputField v-model="userStore.searchQuery" placeholder="Search..." name="search"
-                                v-debounce:500="searchData"/>
+                                v-debounce:500="searchData" />
                         </div>
                     </div>
                     <div class="w-full md:w-72 flex justify-end">
@@ -100,7 +100,8 @@ onMounted(() => {
                                 <h1 class="text-xl font-bold">{{ userModalTitle }}</h1>
                             </template>
                             <template #body>
-                                <FormUser ref="formUserRef" :user="selectedUser" @refresh="getUsers" @close="closeUserModal" />
+                                <FormUser ref="formUserRef" :user="selectedUser" @refresh="getUsers"
+                                    @close="closeUserModal" />
                             </template>
                             <template #footer>
                                 <div class="flex justify-end gap-2">
