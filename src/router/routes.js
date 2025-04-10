@@ -52,7 +52,13 @@ export default [
         path: "/admin/user_role",
         name: "user-role",
         meta: { title: "User Role Page", authRequired: true },
-        component: () => import("../views/admin/user"),
+        component: () => import("../views/admin/user-role"),
+    },
+    {
+        path: "/admin/class",
+        name: "class",
+        meta: { title: "Class Page", authRequired: true },
+        component: () => import("../views/admin/class"),
     },
     {
         path: "/login",

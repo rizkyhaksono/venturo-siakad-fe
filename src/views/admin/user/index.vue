@@ -1,14 +1,14 @@
 <script setup>
-import { useUserStore } from "@/state/pinia";
+import { useAdminUserStore } from "@/state/pinia";
 import { ref, onMounted } from "vue";
 import Layout from "@/layouts/main.vue";
 import Modal from "@/components/widgets/Modal.vue";
 import Button from "@/components/widgets/Button";
 import InputField from "@/components/widgets/Input";
-import FormUser from "@/views/admin/user/form.vue"; // Import file FormUser
+import FormUser from "@/views/admin/user/form.vue";
 
 import { showSuccessToast, showDeleteConfirmationDialog } from "@/helpers/alert.js";
-const userStore = useUserStore();
+const userStore = useAdminUserStore();
 const rows = ref([]);
 const userModalRef = ref(null);
 const selectedUser = ref(null);
@@ -16,6 +16,7 @@ const userModalTitle = ref("");
 
 const getUsers = async () => {
     await userStore.getUsers();
+    console.log(userStore)
     rows.value = userStore.users || [];
 };
 
@@ -127,36 +128,35 @@ onMounted(() => {
                                 </th>
                                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium"><small
                                         class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                                    </small></th>
+                                    </small>Action</th>
                             </tr>
                         </thead>
                         <tbody class="group text-sm text-gray-800 dark:text-white">
-                            <template v-if="userStore.totalData > 0">
+                            <template v-if="userStore.users && userStore.users.length > 0">
                                 <tr class="border-b border-gray-200 last:border-0" v-for="row in userStore.users"
                                     :key="row.id">
                                     <td class="p-3">
-                                        <div class="flex items-center gap-3"><img :src="row.photo_url"
-                                                alt="John Michael"
+                                        <div class="flex items-center gap-3">
+                                            <img :src="row.photo ? row.photo : 'path/to/default/avatar.png'"
+                                                :alt="row.name"
                                                 class="inline-block object-cover object-center data-[shape=square]:rounded-none data-[shape=circular]:rounded-full data-[shape=rounded]:rounded-[current] w-8 h-8 rounded"
                                                 data-shape="circular" />
-                                            <div class="flex flex-col"><small
-                                                    class="font-sans antialiased text-sm text-current">
+                                            <div class="flex flex-col">
+                                                <small class="font-sans antialiased text-sm text-current">
                                                     {{ row.name }}
                                                 </small>
                                                 <small class="font-sans antialiased text-sm text-current opacity-70">
-                                                    {{ row.email }}</small>
+                                                    {{ row.email }}
+                                                </small>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="p-3">
-                                        <div class="flex gap-2 justify-end">
-                                            <!-- Tombol Edit -->
+                                        <div class="flex gap-2 justify-start">
                                             <Button @click="openUserModal('edit', row.id)" variant="outline"
                                                 color="secondary">
                                                 Edit
                                             </Button>
-
-                                            <!-- Tombol Delete -->
                                             <Button @click="deleteUser(row.id)" variant="outline" color="error">
                                                 Delete
                                             </Button>
@@ -164,9 +164,8 @@ onMounted(() => {
                                     </td>
                                 </tr>
                             </template>
-
                             <tr v-else>
-                                <td class="border-b border-gray-200 last:border-0 ps-2 py-2">
+                                <td colspan="2" class="border-b border-gray-200 last:border-0 ps-2 py-2">
                                     No results.
                                 </td>
                             </tr>

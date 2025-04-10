@@ -122,45 +122,54 @@ onUnmounted(() => {
     document.removeEventListener("click", handleClickOutside);
 });
 
+const getRole = localStorage.getItem("venturo_siakad_role");
+const getRolePrefix = (role) => {
+    if (role === 'Admin') return '/admin';
+    if (role === 'Teacher') return '/teacher';
+    if (role === 'Student') return '/student';
+    return '';
+};
+const rolePrefix = getRolePrefix(getRole);
+
 // Data menu utama
 const menus = ref([
-    { label: "Dashboard", to: "/dashboard", icon: mdiHome },
+    { label: "Dashboard", to: `${rolePrefix}/dashboard`, icon: mdiHome },
     {
         label: "Users",
         icon: mdiAccountGroup,
         submenu: [
-            { label: "User", to: "/user" },
-            { label: "User Role", to: "/user_role" },
+            { label: "User", to: `${rolePrefix}/user` },
+            { label: "User Role", to: `${rolePrefix}/user_role` },
         ],
     },
     {
         label: "Class",
         icon: mdiSchool,
         submenu: [
-            { label: "Class", to: "/class" },
-            { label: "Class History", to: "/class_history" },
+            { label: "Class", to: `${rolePrefix}/class` },
+            { label: "Class History", to: `${rolePrefix}/class_history` },
         ]
     },
     {
         label: "Subject",
         icon: mdiGoogleClassroom,
         submenu: [
-            { label: "Subject", to: "/subject" },
-            { label: "Subject Hour", to: "/subject_hour" },
-            { label: "Subject Schedule", to: "/subject_schedule" },
+            { label: "Subject", to: `${rolePrefix}/subject` },
+            { label: "Subject Hour", to: `${rolePrefix}/subject_hour` },
+            { label: "Subject Schedule", to: `${rolePrefix}/subject_schedule` },
         ]
     },
     {
         label: "Teacher",
         icon: mdiHumanMaleBoard,
         submenu: [
-            { label: "Teacher", to: "/teacher" },
-            { label: "Homeroom Teacher", to: "/homeroom_teacher" }
+            { label: "Teacher", to: `${rolePrefix}/teacher` },
+            { label: "Homeroom Teacher", to: `${rolePrefix}/homeroom_teacher` }
         ]
     },
-    { label: "Registration", to: "/registration", icon: mdiInvoiceTextClock },
-    { label: "Student", to: "/student", icon: mdiCardAccountDetails },
-    { label: "Study Year", to: "/student", icon: mdiCounter },
+    { label: "Registration", to: `${rolePrefix}/registration`, icon: mdiInvoiceTextClock },
+    { label: "Student", to: `${rolePrefix}/student`, icon: mdiCardAccountDetails },
+    { label: "Study Year", to: `${rolePrefix}/study_year`, icon: mdiCounter },
 ]);
 </script>
 
