@@ -1,5 +1,5 @@
 <script setup>
-import { useAdminClassHistoryStore } from "@/state/pinia";
+import { useAdminSubjectStore } from "@/state/pinia";
 import { ref, onMounted } from "vue";
 import Layout from "@/layouts/main.vue";
 import Modal from "@/components/widgets/Modal.vue";
@@ -8,23 +8,23 @@ import InputField from "@/components/widgets/Input";
 import FormUser from "@/views/admin/user/form.vue";
 import { showSuccessToast, showDeleteConfirmationDialog } from "@/helpers/alert.js";
 
-const classHistoryStore = useAdminClassHistoryStore();
+const subjectStore = useAdminSubjectStore();
 const rows = ref([]);
 const userModalRef = ref(null);
 const selectedUser = ref(null);
 const userModalTitle = ref("");
 
 const getClassHistories = async () => {
-  await classHistoryStore.getClassHistory();
-  rows.value = classHistoryStore.classHistory?.data?.data.data || [];
+  await subjectStore.getSubject();
+  rows.value = subjectStore.subject?.data?.data || [];
 };
 
 const searchData = async () => {
-  await classHistoryStore.changePage(1);
+  await subjectStore.changePage(1);
 };
 
 const paginate = async (page) => {
-  await classHistoryStore.changePage(page);
+  await subjectStore.changePage(page);
   await getClassHistories();
 };
 
@@ -53,7 +53,7 @@ const deleteUser = async (id) => {
   const confirmed = await showDeleteConfirmationDialog();
   if (confirmed) {
     try {
-      await classHistoryStore.deleteUser(id);
+      await subjectStore.deleteUser(id);
       showSuccessToast("User berhasil dihapus");
       await getClassHistories();
     } catch (error) {
@@ -69,16 +69,16 @@ onMounted(() => {
 
 <template>
   <Layout>
-    <template #title>Data Kelas</template>
+    <template #title>Data Subject</template>
     <div class="w-full mx-auto p-4 rounded-lg bg-gray-100 dark:bg-gray-900">
       <div class="w-full">
         <div class="mb-8 flex items-center justify-between gap-8">
           <div>
             <h6 class="font-sans antialiased font-bold text-base md:text-lg lg:text-xl text-current">
-              List Riwayat Kelas
+              List Subject
             </h6>
             <p class="font-sans antialiased text-base text-current mt-1">
-              Lihat informasi riwayat kelas siswa
+              Lihat informasi subject
             </p>
           </div>
         </div>
@@ -86,14 +86,14 @@ onMounted(() => {
           <div class="flex data-[orientation=horizontal]:flex-col data-[orientation=vertical]:flex-row gap-2"
             data-orientation="horizontal">
             <div class="relative w-full md:w-72">
-              <InputField v-model="classHistoryStore.searchQuery" placeholder="Search..." name="search"
+              <InputField v-model="subjectStore.searchQuery" placeholder="Search..." name="search"
                 v-debounce:500="searchData" />
             </div>
           </div>
           <div class="w-full md:w-72 flex justify-end">
             <!-- Tombol trigger modal -->
             <Button @click="openUserModal('add')" variant="solid" color="primary">
-              Tambah User
+              Tambah Subject
             </Button>
             <!-- Modal Form -->
             <Modal ref="userModalRef">
@@ -124,13 +124,7 @@ onMounted(() => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Nama Siswa
-                  </small>
-                </th>
-                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
-                  <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    NIS
+                    Nama Mata Pelajaran
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
@@ -142,13 +136,13 @@ onMounted(() => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Tahun Ajaran
+                    Guru Pengajar
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Status
+                    Tahun Ajaran
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
@@ -163,27 +157,22 @@ onMounted(() => {
               <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm font-medium text-current">
-                    {{ row.student.name }}
+                    {{ row.name }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.student.student_number }}
+                    {{ row.class_id }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.class.name }}
+                    {{ row.teacher_id }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.study_year.year }} (Semester {{ row.study_year.semester }})
-                  </small>
-                </td>
-                <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
-                    {{ row.new_status }}
+                    {{ row.study_year_id }}
                   </small>
                 </td>
                 <td class="p-3">
@@ -201,18 +190,18 @@ onMounted(() => {
           </table>
         </div>
         <div class="flex items-center justify-between border-gray-200 py-4"><small
-            class="font-sans antialiased text-sm text-current">Page {{ classHistoryStore.totalPage != 0 ?
-              classHistoryStore.current
-              : classHistoryStore.totalPage }} of {{
-              classHistoryStore.totalPage }}</small>
+            class="font-sans antialiased text-sm text-current">Page {{ subjectStore.totalPage != 0 ?
+              subjectStore.current
+              : subjectStore.totalPage }} of {{
+              subjectStore.totalPage }}</small>
           <div class="flex gap-2"><button
               class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="classHistoryStore.current === 1"
-              @click="paginate(classHistoryStore.current - 1)">Previous</button><button
+              data-shape="default" data-width="default" :disabled="subjectStore.current === 1"
+              @click="paginate(subjectStore.current - 1)">Previous</button><button
               class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="classHistoryStore.current >=
-                Math.ceil(classHistoryStore.totalData / classHistoryStore.perpage)
-                " @click="paginate(classHistoryStore.current + 1)">Next</button></div>
+              data-shape="default" data-width="default" :disabled="subjectStore.current >=
+                Math.ceil(subjectStore.totalData / subjectStore.perpage)
+                " @click="paginate(subjectStore.current + 1)">Next</button></div>
         </div>
       </div>
     </div>

@@ -16,7 +16,6 @@ const userModalTitle = ref("");
 
 const getUsers = async () => {
     await userStore.getUsers();
-    console.log(userStore)
     rows.value = userStore.users || [];
 };
 

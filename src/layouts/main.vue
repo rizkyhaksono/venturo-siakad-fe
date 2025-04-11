@@ -85,10 +85,14 @@ const rolePrefix = getRolePrefix(getRole);
                     </button>
                     <div data-role="menu"
                         class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl p-1 z-10">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 rounded-md">My
-                            Account</a>
-                        <a href="#"
-                            class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 rounded-md">Settings</a>
+                        <router-link :to="`${rolePrefix}/profile`"
+                            class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 rounded-md">My
+                            Account
+                        </router-link>
+                        <router-link :to="`${rolePrefix}/settings`"
+                            class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 rounded-md">
+                            Settings
+                        </router-link>
                         <button @click="logout"
                             class="block w-full text-left px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 rounded-md">
                             Logout
