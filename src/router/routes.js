@@ -24,23 +24,12 @@ export default [
             }
         }
     },
+    // admin routes
     {
         path: "/admin/dashboard",
         name: "admin-dashboard",
         meta: { title: "Dashboard", authRequired: true },
         component: () => import("../views/admin/dashboard"),
-    },
-    {
-        path: "/student/dashboard",
-        name: "student-dashboard",
-        meta: { title: "Dashboard", authRequired: true },
-        component: () => import("../views/student/dashboard"),
-    },
-    {
-        path: "/teacher/dashboard",
-        name: "teacher-dashboard",
-        meta: { title: "Dashboard", authRequired: true },
-        component: () => import("../views/teacher/dashboard"),
     },
     {
         path: "/admin/user",
@@ -63,8 +52,70 @@ export default [
     {
         path: "/admin/class_history",
         name: "class-history",
-        meta: { title: "Class Page", authRequired: true },
+        meta: { title: "Class History Page", authRequired: true },
         component: () => import("../views/admin/class-history"),
+    },
+    {
+        path: "/admin/subject",
+        name: "subject",
+        meta: { title: "Subject Page", authRequired: true },
+        component: () => import("../views/admin/subject"),
+    },
+    {
+        path: "/admin/subject_hour",
+        name: "subject-hour",
+        meta: { title: "Subject Hour Page", authRequired: true },
+        component: () => import("../views/admin/subject-hour"),
+    },
+    {
+        path: "/admin/subject_schedule",
+        name: "subject-schedule",
+        meta: { title: "Subject Schedule Page", authRequired: true },
+        component: () => import("../views/admin/subject-schedule"),
+    },
+    {
+        path: "/admin/teacher",
+        name: "teacher",
+        meta: { title: "Teacher Page", authRequired: true },
+        component: () => import("../views/admin/teacher"),
+    },
+    {
+        path: "/admin/homeroom_teacher",
+        name: "homeroom-teacher",
+        meta: { title: "Homeroom Teacher Page", authRequired: true },
+        component: () => import("../views/admin/homeroom-teacher"),
+    },
+    {
+        path: "/admin/registration",
+        name: "Registration",
+        meta: { title: "Registration Page", authRequired: true },
+        component: () => import("../views/admin/registration"),
+    },
+    {
+        path: "/admin/student",
+        name: "Student",
+        meta: { title: "Student Page", authRequired: true },
+        component: () => import("../views/admin/student"),
+    },
+    {
+        path: "/admin/study_year",
+        name: "Study Year",
+        meta: { title: "Study Year Page", authRequired: true },
+        component: () => import("../views/admin/study-year"),
+    },
+    // student routes
+    {
+        path: "/student/dashboard",
+        name: "student-dashboard",
+        meta: { title: "Dashboard", authRequired: true },
+        component: () => import("../views/student/dashboard"),
+    },
+    // teacher routes
+    {
+        path: "/teacher/dashboard",
+        name: "teacher-dashboard",
+        meta: { title: "Dashboard", authRequired: true },
+        component: () => import("../views/teacher/dashboard"),
     },
     {
         path: "/login",
