@@ -6,8 +6,8 @@ import Modal from "@/components/widgets/Modal.vue";
 import Button from "@/components/widgets/Button";
 import InputField from "@/components/widgets/Input";
 import FormUser from "@/views/admin/user/form.vue";
-
 import { showSuccessToast, showDeleteConfirmationDialog } from "@/helpers/alert.js";
+
 const userStore = useAdminUserStore();
 const rows = ref([]);
 const userModalRef = ref(null);
@@ -137,8 +137,7 @@ onMounted(() => {
                                     :key="row.id">
                                     <td class="p-3">
                                         <div class="flex items-center gap-3">
-                                            <img :src="row.photo ? row.photo : 'path/to/default/avatar.png'"
-                                                :alt="row.name"
+                                            <img :src="row.photo || '/src/assets/default_photo.jpg'" :alt="row.name"
                                                 class="inline-block object-cover object-center data-[shape=square]:rounded-none data-[shape=circular]:rounded-full data-[shape=rounded]:rounded-[current] w-8 h-8 rounded"
                                                 data-shape="circular" />
                                             <div class="flex flex-col">

@@ -31,10 +31,9 @@ export const useAdminClassStore = defineStore("adminClass", {
       try {
         const url = `${this.apiUrl}/v1/admin/classes?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`;
         const res = await axios.get(url);
-        const classesDataList = res.data.data.list.data;
-        console.log(res.data);
+        const classesDataList = res.data;
         this.classes = classesDataList;
-        this.totalData = res.data.data.meta.total;
+        this.totalData = res.data.total;
         this.totalPage = Math.ceil(this.totalData / this.perpage);
       } catch (error) {
         this.response = {
