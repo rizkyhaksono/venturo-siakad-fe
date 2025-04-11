@@ -16,7 +16,6 @@ const userModalTitle = ref("");
 
 const getClasses = async () => {
   await classStore.getClasses();
-  console.log(classStore.classes.data)
   rows.value = classStore.classes || [];
 };
 

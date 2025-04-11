@@ -61,6 +61,12 @@ export default [
         component: () => import("../views/admin/class"),
     },
     {
+        path: "/admin/class_history",
+        name: "class-history",
+        meta: { title: "Class Page", authRequired: true },
+        component: () => import("../views/admin/class-history"),
+    },
+    {
         path: "/login",
         name: "login",
         component: () => import("../views/auth/login"),
