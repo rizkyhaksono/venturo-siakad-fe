@@ -16,7 +16,6 @@ const userModalTitle = ref("");
 
 const getClassHistories = async () => {
   await subjectHourStore.getSubjectHour();
-  console.log(subjectHourStore.subjectHour);
   rows.value = subjectHourStore.subjectHour?.data?.data || [];
 };
 
@@ -125,25 +124,19 @@ onMounted(() => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Nama Mata Pelajaran
+                    Jam ke
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Kelas
+                    Jam mulai
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Guru Pengajar
-                  </small>
-                </th>
-                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
-                  <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Tahun Ajaran
+                    Jam selesai
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
@@ -158,22 +151,17 @@ onMounted(() => {
               <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm font-medium text-current">
-                    {{ row.name }}
+                    {{ row.start_hour }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.class_id }}
+                    {{ row.start_time }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.teacher_id }}
-                  </small>
-                </td>
-                <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
-                    {{ row.study_year_id }}
+                    {{ row.end_time }}
                   </small>
                 </td>
                 <td class="p-3">
