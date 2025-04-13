@@ -16,6 +16,7 @@ import { useAdminHomeroomTeacherStore } from "./pinia/admin/homeroom-teacher";
 import { useAdminTeacherStore } from "./pinia/admin/teacher";
 import { useAdminRegistrationStore } from "./pinia/admin/registration";
 import { useAdminStudentStore } from "./pinia/admin/student";
+import { useAdminStudyYearStore } from "./pinia/admin/study-year";
 
 const pinia = createPinia();
 export default pinia;
@@ -34,4 +35,5 @@ export {
   useAdminTeacherStore,
   useAdminRegistrationStore,
   useAdminStudentStore,
+  useAdminStudyYearStore,
 };

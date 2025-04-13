@@ -31,7 +31,7 @@ export const useAdminStudentStore = defineStore("adminStudent", {
       try {
         const url = `${this.apiUrl}/v1/admin/students?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`;
         const res = await axios.get(url);
-        const studentsDataList = res;
+        const studentsDataList = res.data.data;
         this.students = studentsDataList;
         this.totalData = res.data.data.meta.total;
         this.totalPage = Math.ceil(this.totalData / this.perpage);

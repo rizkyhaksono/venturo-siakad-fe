@@ -1,5 +1,5 @@
 <script setup>
-import { useAdminStuden } from "@/state/pinia";
+import { useAdminStudentStore } from "@/state/pinia";
 import { ref, onMounted } from "vue";
 import Layout from "@/layouts/main.vue";
 import Modal from "@/components/widgets/Modal.vue";
@@ -8,23 +8,23 @@ import InputField from "@/components/widgets/Input";
 import FormUser from "@/views/admin/user/form.vue";
 import { showSuccessToast, showDeleteConfirmationDialog } from "@/helpers/alert.js";
 
-const registrationStore = useAdminStuden();
+const studentStore = useAdminStudentStore();
 const rows = ref([]);
 const userModalRef = ref(null);
 const selectedUser = ref(null);
 const userModalTitle = ref("");
 
 const getRegistrations = async () => {
-  await registrationStore.getRegistrations();
-  rows.value = registrationStore.registrations.data
+  await studentStore.getStudents();
+  rows.value = studentStore.students.data.data
 };
 
 const searchData = async () => {
-  await registrationStore.changePage(1);
+  await studentStore.changePage(1);
 };
 
 const paginate = async (page) => {
-  await registrationStore.changePage(page);
+  await studentStore.changePage(page);
   await getRegistrations();
 };
 
@@ -32,10 +32,10 @@ const openClassModal = (mode, id = null) => {
   userModalRef.value.openModal();
   if (mode === "edit" && id) {
     selectedUser.value = rows.value.find((item) => item.id === id);
-    userModalTitle.value = "Ubah Kelas";
+    userModalTitle.value = "Edit Student";
   } else {
     selectedUser.value = null;
-    userModalTitle.value = "Tambah Kelas";
+    userModalTitle.value = "Add Student";
   }
 };
 const formUserRef = ref(null);
@@ -53,7 +53,7 @@ const deleteUser = async (id) => {
   const confirmed = await showDeleteConfirmationDialog();
   if (confirmed) {
     try {
-      await registrationStore.deleteUser(id);
+      await studentStore.deleteUser(id);
       showSuccessToast("User berhasil dihapus");
       await getRegistrations();
     } catch (error) {
@@ -69,16 +69,16 @@ onMounted(() => {
 
 <template>
   <Layout>
-    <template #title>Data Registrasi</template>
+    <template #title>Data Student</template>
     <div class="w-full mx-auto p-4 rounded-lg bg-gray-100 dark:bg-gray-900">
       <div class="w-full">
         <div class="mb-8 flex items-center justify-between gap-8">
           <div>
             <h6 class="font-sans antialiased font-bold text-base md:text-lg lg:text-xl text-current">
-              List Registrasi
+              List Student
             </h6>
             <p class="font-sans antialiased text-base text-current mt-1">
-              Lihat informasi registrasi
+              Lihat informasi student
             </p>
           </div>
         </div>
@@ -86,14 +86,14 @@ onMounted(() => {
           <div class="flex data-[orientation=horizontal]:flex-col data-[orientation=vertical]:flex-row gap-2"
             data-orientation="horizontal">
             <div class="relative w-full md:w-72">
-              <InputField v-model="registrationStore.searchQuery" placeholder="Search..." name="search"
+              <InputField v-model="studentStore.searchQuery" placeholder="Search..." name="search"
                 v-debounce:500="searchData" />
             </div>
           </div>
           <div class="w-full md:w-72 flex justify-end">
             <!-- Tombol trigger modal -->
             <Button @click="openUserModal('add')" variant="solid" color="primary">
-              Tambah Teacher
+              Tambah Student
             </Button>
             <!-- Modal Form -->
             <Modal ref="userModalRef">
@@ -124,6 +124,12 @@ onMounted(() => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Student Number
+                  </small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                  <small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
                     Name
                   </small>
                 </th>
@@ -136,7 +142,7 @@ onMounted(() => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Role
+                    Gender
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
@@ -157,7 +163,12 @@ onMounted(() => {
               <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm font-medium text-current">
-                    {{ row.user.name }}
+                    {{ row.student_number }}
+                  </small>
+                </td>
+                <td class="p-3">
+                  <small class="font-sans antialiased text-sm font-medium text-current">
+                    {{ row.name }}
                   </small>
                 </td>
                 <td class="p-3">
@@ -167,7 +178,7 @@ onMounted(() => {
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.user.m_user_roles_id }}
+                    {{ row.gender || '-' }}
                   </small>
                 </td>
                 <td class="p-3">
@@ -198,15 +209,15 @@ onMounted(() => {
         </div>
         <div class="flex items-center justify-between border-gray-200 py-4">
           <small class="font-sans antialiased text-sm text-current">
-            Page {{ registrationStore.teachers?.current_page || 1 }} of {{ registrationStore.teachers?.last_page || 1 }}
+            Page {{ studentStore.students?.current_page || 1 }} of {{ studentStore.students?.last_page || 1 }}
           </small>
           <div class="flex gap-2">
-            <Button variant="outline" color="secondary" :disabled="!registrationStore.teachers?.prev_page_url"
-              @click="paginate(registrationStore.teachers?.current_page - 1)">
+            <Button variant="outline" color="secondary" :disabled="!studentStore.students?.prev_page_url"
+              @click="paginate(studentStore.students?.current_page - 1)">
               Previous
             </Button>
-            <Button variant="outline" color="secondary" :disabled="!registrationStore.teachers?.next_page_url"
-              @click="paginate(registrationStore.teachers?.current_page + 1)">
+            <Button variant="outline" color="secondary" :disabled="!studentStore.students?.next_page_url"
+              @click="paginate(studentStore.students?.current_page + 1)">
               Next
             </Button>
           </div>

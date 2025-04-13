@@ -32,6 +32,18 @@ export default [
         component: () => import("../views/admin/dashboard"),
     },
     {
+        path: "/admin/profile",
+        name: "profile",
+        meta: { title: "Profile", authRequired: true },
+        component: () => import("../views/admin/profile"),
+    },
+    {
+        path: "/admin/settings",
+        name: "settings",
+        meta: { title: "Settings", authRequired: true },
+        component: () => import("../views/admin/settings"),
+    },
+    {
         path: "/admin/user",
         name: "user",
         meta: { title: "User Page", authRequired: true },
