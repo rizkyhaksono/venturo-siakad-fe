@@ -25,13 +25,17 @@ export default defineConfig(({ mode }) => {
             extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".vue"],
         },
         optimizeDeps: {
-            include: ["quill","@ckeditor/ckeditor5-vue", "@ckeditor/ckeditor5-build-classic"],
+            include: ["quill", "@ckeditor/ckeditor5-vue", "@ckeditor/ckeditor5-build-classic"],
         },
         preview: {
             port: parseInt(env.VITE_APP_PREVIEW_PORT) || 8081,
+            strictPort: true,
+            host: '0.0.0.0',
+            allowedHosts: true,
         },
         server: {
             port: parseInt(env.VITE_APP_PORT) || 8080,
+            allowedHosts: ['venturo.siakad.fe.natee.my.id']
         },
     };
 });
