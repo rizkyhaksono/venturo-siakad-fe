@@ -1,21 +1,20 @@
 <script setup>
-import { reactive, computed, ref } from "vue";
-import { useRouter } from "vue-router";
 import { useAuthStore } from "@/state/pinia";
 import { useColorMode } from "@vueuse/core";
+import { computed, reactive } from "vue";
+import { useRouter } from "vue-router";
 import { Toaster, toast } from "vue-sonner";
-import { mdiGoogle } from "@mdi/js";
 
 const mode = useColorMode({
-  emitAuto: false, // Supaya tidak otomatis pakai sistem OS
-  modes: {
-    light: "light",
-    dark: "dark",
-  },
+    emitAuto: false, // Supaya tidak otomatis pakai sistem OS
+    modes: {
+        light: "light",
+        dark: "dark",
+    },
 });
 
 if (!mode.value) {
-  mode.value = "light"; // Set default ke "light"
+    mode.value = "light"; // Set default ke "light"
 }
 const router = useRouter();
 const authStore = useAuthStore();
@@ -68,7 +67,8 @@ const reset = async () => {
                 <div class="mb-4 space-y-1.5">
                     <label class="text-sm text-slate-800 font-bold">Email</label>
                     <input v-model="formModel.email" type="email" placeholder="Masukkan Email"
-                        class="w-full border border-slate-200 rounded-md py-2 px-2.5 text-sm shadow-sm hover:border-slate-800 focus:border-slate-800 focus:ring focus:ring-slate-800/10" required />
+                        class="w-full border border-slate-200 rounded-md py-2 px-2.5 text-sm shadow-sm hover:border-slate-800 focus:border-slate-800 focus:ring focus:ring-slate-800/10"
+                        required />
                     <div v-if="errorList?.email" class="text-red-500 text-xs">
                         <span v-for="(err, index) in errorList.email" :key="index">
                             {{ err }}

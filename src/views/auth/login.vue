@@ -1,10 +1,10 @@
 <script setup>
-import { reactive, computed, ref } from "vue";
-import { useRouter } from "vue-router";
 import { useAuthStore } from "@/state/pinia";
+import { mdiEye, mdiEyeOff } from "@mdi/js";
 import { useColorMode } from "@vueuse/core";
+import { computed, reactive, ref } from "vue";
+import { useRouter } from "vue-router";
 import { Toaster, toast } from "vue-sonner";
-import { mdiEye, mdiEyeOff, mdiGoogle } from "@mdi/js";
 
 const showPassword = ref(false);
 const mode = useColorMode({

@@ -1,12 +1,12 @@
 <script setup>
-import { useAdminTeacherStore } from "@/state/pinia";
-import { ref, onMounted } from "vue";
-import Layout from "@/layouts/main.vue";
-import Modal from "@/components/widgets/Modal.vue";
 import Button from "@/components/widgets/Button";
 import InputField from "@/components/widgets/Input";
+import Modal from "@/components/widgets/Modal.vue";
+import { showDeleteConfirmationDialog, showSuccessToast } from "@/helpers/alert.js";
+import Layout from "@/layouts/main.vue";
+import { useAdminTeacherStore } from "@/state/pinia";
 import FormUser from "@/views/admin/user/form.vue";
-import { showSuccessToast, showDeleteConfirmationDialog } from "@/helpers/alert.js";
+import { onMounted, ref } from "vue";
 
 const teacherStore = useAdminTeacherStore();
 const rows = ref([]);

@@ -1,12 +1,11 @@
 <script setup>
-import { ref, reactive, computed, watch } from "vue";
-import { required, email, minLength } from "@vuelidate/validators";
-import useVuelidate from "@vuelidate/core";
-import { useUserStore } from "@/state/pinia";
-import InputField from "@/components/widgets/Input";
-import Button from "@/components/widgets/Button";
 import ImageCropper from "@/components/widgets/Cropper";
-import { showSuccessToast, showErrorToast } from "@/helpers/alert.js";
+import InputField from "@/components/widgets/Input";
+import { showErrorToast, showSuccessToast } from "@/helpers/alert.js";
+import { useUserStore } from "@/state/pinia";
+import useVuelidate from "@vuelidate/core";
+import { email, minLength, required } from "@vuelidate/validators";
+import { defineEmits, defineExpose, defineProps, reactive, ref, watch } from "vue";
 
 const userStore = useUserStore();
 const emits = defineEmits(["refresh", "close"]);

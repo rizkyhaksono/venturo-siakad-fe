@@ -1,13 +1,13 @@
 <script setup>
-import { useAdminUserRoleStore } from "@/state/pinia";
-import { ref, onMounted } from "vue";
-import Layout from "@/layouts/main.vue";
-import Modal from "@/components/widgets/Modal.vue";
 import Button from "@/components/widgets/Button";
 import InputField from "@/components/widgets/Input";
+import Modal from "@/components/widgets/Modal.vue";
+import { showDeleteConfirmationDialog, showSuccessToast } from "@/helpers/alert.js";
+import Layout from "@/layouts/main.vue";
+import { useAdminUserRoleStore } from "@/state/pinia";
 import FormUserRole from "@/views/admin/user-role/form.vue";
+import { onMounted, ref } from "vue";
 
-import { showSuccessToast, showDeleteConfirmationDialog } from "@/helpers/alert.js";
 const roleStore = useAdminUserRoleStore();
 const rows = ref([]);
 const userModalRef = ref(null);
