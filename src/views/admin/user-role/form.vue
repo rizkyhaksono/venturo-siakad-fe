@@ -47,8 +47,7 @@ const saveUserRole = async () => {
         };
 
         if (props.user?.id) {
-            payload.id = props.user.id;
-            await userRoleStore.updateRole(payload);
+            await userRoleStore.updateRole(props.user.id, payload);
             showSuccessToast("User role updated successfully!");
         } else {
             await userRoleStore.postRole(payload);

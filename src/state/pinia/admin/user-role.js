@@ -67,9 +67,9 @@ export const useAdminUserRoleStore = defineStore("adminUserRole", {
         };
       }
     },
-    async updateRole(role) {
+    async updateRole(id, role) {
       try {
-        const res = await axios.put(`${this.apiUrl}/v1/admin/roles/${role.id}`, role);
+        const res = await axios.put(`${this.apiUrl}/v1/admin/roles/${id}`, role);
         this.response = {
           status: res.status,
           message: res.data.message

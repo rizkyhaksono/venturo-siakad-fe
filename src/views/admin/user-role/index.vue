@@ -11,7 +11,7 @@ import { showSuccessToast, showDeleteConfirmationDialog } from "@/helpers/alert.
 const roleStore = useAdminUserRoleStore();
 const rows = ref([]);
 const userModalRef = ref(null);
-const selectedUser = ref(null);
+const selectedUserRole = ref(null);
 const userModalTitle = ref("");
 
 const getRoles = async () => {
@@ -31,10 +31,10 @@ const paginate = async (page) => {
 const openUserRoleModal = (mode, id = null) => {
   userModalRef.value.openModal();
   if (mode === "edit" && id) {
-    selectedUser.value = rows.value.find((user) => user.id === id);
+    selectedUserRole.value = rows.value.find((userRole) => userRole.id === id);
     userModalTitle.value = "Ubah User Role";
   } else {
-    selectedUser.value = null;
+    selectedUserRole.value = null;
     userModalTitle.value = "Tambah User Role";
   }
 };
@@ -98,7 +98,8 @@ onMounted(() => {
                 <h1 class="text-xl font-bold">{{ userModalTitle }}</h1>
               </template>
               <template #body>
-                <FormUserRole ref="formUserRoleRef" :user="selectedUser" @refresh="getRoles" @close="closeUserModal" />
+                <FormUserRole ref="formUserRoleRef" :user="selectedUserRole" @refresh="getRoles"
+                  @close="closeUserModal" />
               </template>
               <template #footer>
                 <div class="flex justify-end gap-2">
