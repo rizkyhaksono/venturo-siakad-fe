@@ -5,6 +5,7 @@ export const useAuthStore = defineStore("auth", {
     state: () => ({
         apiUrl: import.meta.env.VITE_APP_APIURL,
         userLogin: {},
+        userRegister: {},
         csrfToken: "",
         bearerToken: "",
         response: {
@@ -24,11 +25,8 @@ export const useAuthStore = defineStore("auth", {
                     status: res.status,
                     message: res.data.message,
                 };
-                const { access_token, user } = res.data.data;
-                this.saveToken(access_token);
-                this.saveUser(user);
-                this.userLogin = user;
-                return user;
+                this.userRegister = res.data.data;
+                return res;
             } catch (error) {
                 this.response = {
                     status: error.response?.status,
