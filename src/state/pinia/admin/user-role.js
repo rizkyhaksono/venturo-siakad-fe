@@ -67,5 +67,58 @@ export const useAdminUserRoleStore = defineStore("adminUserRole", {
         };
       }
     },
+    async updateRole(role) {
+      try {
+        const res = await axios.put(`${this.apiUrl}/v1/admin/roles/${role.id}`, role);
+        this.response = {
+          status: res.status,
+          message: res.data.message
+        }
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.error,
+        }
+      } finally {
+        this.getRoles();
+      }
+    },
+    async deleteRole(id) {
+      try {
+        const res = await axios.delete(`${this.apiUrl}/v1/admin/roles/${id}`);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+        };
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.error,
+        }
+      } finally {
+        this.getRoles();
+      }
+    },
+    resetState() {
+      this.roles = [];
+      this.role = null;
+      this.response = {
+        status: null,
+        message: null,
+        error: [],
+      };
+      this.modalAction = {
+        action: "",
+        modal_title: "",
+        modal_button: "",
+      };
+      this.totalData = 0;
+      this.totalPage = 0;
+      this.current = 1;
+      this.perpage = 10;
+      this.searchQuery = "";
+    }
   }
 })

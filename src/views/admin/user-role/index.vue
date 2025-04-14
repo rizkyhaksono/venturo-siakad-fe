@@ -5,7 +5,7 @@ import Layout from "@/layouts/main.vue";
 import Modal from "@/components/widgets/Modal.vue";
 import Button from "@/components/widgets/Button";
 import InputField from "@/components/widgets/Input";
-import FormUser from "@/views/admin/user/form.vue";
+import FormUserRole from "@/views/admin/user-role/form.vue";
 
 import { showSuccessToast, showDeleteConfirmationDialog } from "@/helpers/alert.js";
 const roleStore = useAdminUserRoleStore();
@@ -28,20 +28,20 @@ const paginate = async (page) => {
   await getRoles();
 };
 
-const openUserModal = (mode, id = null) => {
+const openUserRoleModal = (mode, id = null) => {
   userModalRef.value.openModal();
   if (mode === "edit" && id) {
     selectedUser.value = rows.value.find((user) => user.id === id);
-    userModalTitle.value = "Ubah User";
+    userModalTitle.value = "Ubah User Role";
   } else {
     selectedUser.value = null;
-    userModalTitle.value = "Tambah User";
+    userModalTitle.value = "Tambah User Role";
   }
 };
-const formUserRef = ref(null);
+const formUserRoleRef = ref(null);
 const submitUserModal = () => {
-  if (formUserRef.value) {
-    formUserRef.value.saveUser();  // Panggil fungsi saveUser() di FormUser
+  if (formUserRoleRef.value) {
+    formUserRoleRef.value.saveUserRole();
   }
 };
 
@@ -49,12 +49,12 @@ const closeUserModal = () => {
   userModalRef.value.closeModal();
 };
 
-const deleteUser = async (id) => {
+const deleteRole = async (id) => {
   const confirmed = await showDeleteConfirmationDialog();
   if (confirmed) {
     try {
-      await roleStore.deleteUser(id);
-      showSuccessToast("User berhasil dihapus");
+      await roleStore.deleteRole(id);
+      showSuccessToast("User role berhasil dihapus");
       await getRoles();
     } catch (error) {
       console.error(error);
@@ -74,9 +74,7 @@ onMounted(() => {
       <div class="w-full">
         <div class="mb-8 flex items-center justify-between gap-8">
           <div>
-            <h6 class="font-sans antialiased font-bold text-base md:text-lg lg:text-xl text-current">
-              List User Role
-            </h6>
+            <h6 class="font-sans antialiased font-bold text-base md:text-lg lg:text-xl text-current">List User Role</h6>
             <p class="font-sans antialiased text-base text-current mt-1">lihat informasi untuk semua user role
             </p>
           </div>
@@ -91,8 +89,8 @@ onMounted(() => {
           </div>
           <div class="w-full md:w-72 flex justify-end">
             <!-- Tombol trigger modal -->
-            <Button @click="openUserModal('add')" variant="solid" color="primary">
-              Tambah User
+            <Button @click="openUserRoleModal('add')" variant="solid" color="primary">
+              Tambah User Role
             </Button>
             <!-- Modal Form -->
             <Modal ref="userModalRef">
@@ -100,7 +98,7 @@ onMounted(() => {
                 <h1 class="text-xl font-bold">{{ userModalTitle }}</h1>
               </template>
               <template #body>
-                <FormUser ref="formUserRef" :user="selectedUser" @refresh="getRoles" @close="closeUserModal" />
+                <FormUserRole ref="formUserRoleRef" :user="selectedUser" @refresh="getRoles" @close="closeUserModal" />
               </template>
               <template #footer>
                 <div class="flex justify-end gap-2">
@@ -113,7 +111,6 @@ onMounted(() => {
                 </div>
               </template>
             </Modal>
-
           </div>
         </div>
         <div class="mt-4 w-full overflow-hidden rounded-lg border border-gray-200">
@@ -157,10 +154,10 @@ onMounted(() => {
                   </td>
                   <td class="p-3">
                     <div class="flex gap-2 justify-start">
-                      <Button @click="openUserModal('edit', row.id)" variant="outline" color="secondary">
+                      <Button @click="openUserRoleModal('edit', row.id)" variant="outline" color="secondary">
                         Edit
                       </Button>
-                      <Button @click="deleteUser(row.id)" variant="outline" color="error">
+                      <Button @click="deleteRole(row.id)" variant="outline" color="error">
                         Delete
                       </Button>
                     </div>
