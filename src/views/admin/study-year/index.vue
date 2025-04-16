@@ -5,16 +5,16 @@ import Modal from "@/components/widgets/Modal.vue";
 import { showDeleteConfirmationDialog, showSuccessToast } from "@/helpers/alert.js";
 import Layout from "@/layouts/main.vue";
 import { useAdminStudyYearStore } from "@/state/pinia";
-import FormUser from "@/views/admin/user/form.vue";
+import FormStudyYear from "@/views/admin/study-year/form.vue";
 import { onMounted, ref } from "vue";
 
 const studyYearStore = useAdminStudyYearStore();
 const rows = ref([]);
-const userModalRef = ref(null);
-const selectedUser = ref(null);
+const studyYearModalRef = ref(null);
+const selectedStudyYear = ref(null);
 const userModalTitle = ref("");
 
-const getRegistrations = async () => {
+const getStudyYears = async () => {
   await studyYearStore.getStudyYears();
   rows.value = studyYearStore.studyYears.data.data
 };
@@ -25,37 +25,37 @@ const searchData = async () => {
 
 const paginate = async (page) => {
   await studyYearStore.changePage(page);
-  await getRegistrations();
+  await getStudyYears();
 };
 
 const openClassModal = (mode, id = null) => {
-  userModalRef.value.openModal();
+  studyYearModalRef.value.openModal();
   if (mode === "edit" && id) {
-    selectedUser.value = rows.value.find((item) => item.id === id);
-    userModalTitle.value = "Edit Student";
+    selectedStudyYear.value = rows.value.find((item) => item.id === id);
+    userModalTitle.value = "Edit Study Year";
   } else {
-    selectedUser.value = null;
-    userModalTitle.value = "Add Student";
+    selectedStudyYear.value = null;
+    userModalTitle.value = "Add Study Year";
   }
 };
-const formUserRef = ref(null);
+const formStudyYearRef = ref(null);
 const submitUserModal = () => {
-  if (formUserRef.value) {
-    formUserRef.value.saveUser();  // Panggil fungsi saveUser() di FormUser
+  if (formStudyYearRef.value) {
+    formStudyYearRef.value.saveStudyYear();
   }
 };
 
-const closeUserModal = () => {
-  userModalRef.value.closeModal();
+const closeStudyYearModal = () => {
+  studyYearModalRef.value.closeModal();
 };
 
-const deleteUser = async (id) => {
+const deleteStudyYear = async (id) => {
   const confirmed = await showDeleteConfirmationDialog();
   if (confirmed) {
     try {
-      await studyYearStore.deleteUser(id);
-      showSuccessToast("User berhasil dihapus");
-      await getRegistrations();
+      await studyYearStore.deleteStudyYear(id);
+      showSuccessToast("Study year berhasil dihapus");
+      await getStudyYears();
     } catch (error) {
       console.error(error);
     }
@@ -63,7 +63,7 @@ const deleteUser = async (id) => {
 };
 
 onMounted(() => {
-  getRegistrations();
+  getStudyYears();
 });
 </script>
 
@@ -92,20 +92,21 @@ onMounted(() => {
           </div>
           <div class="w-full md:w-72 flex justify-end">
             <!-- Tombol trigger modal -->
-            <Button @click="openUserModal('add')" variant="solid" color="primary">
+            <Button @click="openClassModal('add')" variant="solid" color="primary">
               Tambah Study Year
             </Button>
             <!-- Modal Form -->
-            <Modal ref="userModalRef">
+            <Modal ref="studyYearModalRef">
               <template #title>
                 <h1 class="text-xl font-bold">{{ userModalTitle }}</h1>
               </template>
               <template #body>
-                <FormUser ref="formUserRef" :user="selectedUser" @refresh="getRegistrations" @close="closeUserModal" />
+                <FormStudyYear ref="formStudyYearRef" :user="selectedStudyYear" @refresh="getStudyYears"
+                  @close="closeStudyYearModal" />
               </template>
               <template #footer>
                 <div class="flex justify-end gap-2">
-                  <Button @click="closeUserModal" variant="outline" color="secondary">
+                  <Button @click="closeStudyYearModal" variant="outline" color="secondary">
                     Close
                   </Button>
                   <Button @click="submitUserModal" variant="solid" color="primary">
@@ -169,7 +170,7 @@ onMounted(() => {
                     <Button @click="openClassModal('edit', row.id)" variant="outline" color="secondary">
                       Edit
                     </Button>
-                    <Button @click="deleteUser(row.id)" variant="outline" color="error">
+                    <Button @click="deleteStudyYear(row.id)" variant="outline" color="error">
                       Delete
                     </Button>
                   </div>

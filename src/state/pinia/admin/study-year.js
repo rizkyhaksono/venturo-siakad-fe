@@ -68,6 +68,22 @@ export const useAdminStudyYearStore = defineStore("adminStudyYear", {
         };
       }
     },
+    async updateStudyYear(id, studyYear) {
+      try {
+        const res = await axios.put(`${this.apiUrl}/v1/admin/study-years/${id}`, studyYear);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.errors,
+        };
+      }
+    },
     async deleteStudyYear(id) {
       try {
         const res = await axios.delete(`${this.apiUrl}/v1/admin/study-years/${id}`);
