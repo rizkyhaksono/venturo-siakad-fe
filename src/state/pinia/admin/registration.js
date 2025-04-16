@@ -51,5 +51,23 @@ export const useAdminRegistrationStore = defineStore("adminRegistration", {
       this.current = 1;
       await this.getRegistrations();
     },
+    async updateStatusRegistration(registrationId, data) {
+      try {
+        const url = `${this.apiUrl}/v1/admin/registration/${registrationId}`;
+        const res = await axios.put(url, {
+          status: data.status,
+          assigned_to: data.assigned_to,
+        });
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+        };
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+        };
+      }
+    }
   }
 })

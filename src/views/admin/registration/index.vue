@@ -2,10 +2,9 @@
 import Button from "@/components/widgets/Button";
 import InputField from "@/components/widgets/Input";
 import Modal from "@/components/widgets/Modal.vue";
-import { showDeleteConfirmationDialog, showSuccessToast } from "@/helpers/alert.js";
 import Layout from "@/layouts/main.vue";
 import { useAdminRegistrationStore } from "@/state/pinia";
-import FormUser from "@/views/admin/user/form.vue";
+import FormRegistration from "@/views/admin/registration/form.vue";
 import { onMounted, ref } from "vue";
 
 const registrationStore = useAdminRegistrationStore();
@@ -28,38 +27,20 @@ const paginate = async (page) => {
   await getRegistrations();
 };
 
-const openClassModal = (mode, id = null) => {
+const openClassModal = (id = null) => {
   userModalRef.value.openModal();
-  if (mode === "edit" && id) {
-    selectedUser.value = rows.value.find((item) => item.id === id);
-    userModalTitle.value = "Ubah Kelas";
-  } else {
-    selectedUser.value = null;
-    userModalTitle.value = "Tambah Kelas";
-  }
+  selectedUser.value = rows.value.find((item) => item.id === id);
+  userModalTitle.value = `Update Registration Status: ${selectedUser.value.user.name}`;
 };
-const formUserRef = ref(null);
-const submitUserModal = () => {
-  if (formUserRef.value) {
-    formUserRef.value.saveUser();  // Panggil fungsi saveUser() di FormUser
+const formRegistrationRef = ref(null);
+const submitRegistrationModal = () => {
+  if (formRegistrationRef.value) {
+    formRegistrationRef.value.saveRegistration();
   }
 };
 
 const closeUserModal = () => {
   userModalRef.value.closeModal();
-};
-
-const deleteUser = async (id) => {
-  const confirmed = await showDeleteConfirmationDialog();
-  if (confirmed) {
-    try {
-      await registrationStore.deleteUser(id);
-      showSuccessToast("User berhasil dihapus");
-      await getRegistrations();
-    } catch (error) {
-      console.error(error);
-    }
-  }
 };
 
 onMounted(() => {
@@ -91,24 +72,21 @@ onMounted(() => {
             </div>
           </div>
           <div class="w-full md:w-72 flex justify-end">
-            <!-- Tombol trigger modal -->
-            <Button @click="openUserModal('add')" variant="solid" color="primary">
-              Tambah Teacher
-            </Button>
             <!-- Modal Form -->
             <Modal ref="userModalRef">
               <template #title>
                 <h1 class="text-xl font-bold">{{ userModalTitle }}</h1>
               </template>
               <template #body>
-                <FormUser ref="formUserRef" :user="selectedUser" @refresh="getRegistrations" @close="closeUserModal" />
+                <FormRegistration ref="formRegistrationRef" :user="selectedUser" @refresh="getRegistrations"
+                  @close="closeUserModal" />
               </template>
               <template #footer>
                 <div class="flex justify-end gap-2">
                   <Button @click="closeUserModal" variant="outline" color="secondary">
                     Close
                   </Button>
-                  <Button @click="submitUserModal" variant="solid" color="primary">
+                  <Button @click="submitRegistrationModal" variant="solid" color="primary">
                     Submit
                   </Button>
                 </div>
@@ -184,11 +162,8 @@ onMounted(() => {
                 </td>
                 <td class="p-3">
                   <div class="flex gap-2 justify-start">
-                    <Button @click="openClassModal('edit', row.id)" variant="outline" color="secondary">
-                      Edit
-                    </Button>
-                    <Button @click="deleteUser(row.id)" variant="outline" color="error">
-                      Delete
+                    <Button @click="openClassModal(row.id)" variant="outline" color="secondary">
+                      Update Status
                     </Button>
                   </div>
                 </td>
