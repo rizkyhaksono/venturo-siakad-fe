@@ -51,5 +51,54 @@ export const useAdminSubjectHourStore = defineStore("adminSubjectHour", {
       this.current = 1;
       await this.getSubjectHour();
     },
+    async postSubjectHour(subjectHour) {
+      try {
+        const res = await axios.post(`${this.apiUrl}/v1/admin/subject-hours`, subjectHour);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.errors,
+        }
+      }
+    },
+    async updateSubjectHour(id, subjectHour) {
+      try {
+        const res = await axios.put(`${this.apiUrl}/v1/admin/subject-hours/${id}`, subjectHour);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.errors,
+        };
+      }
+    },
+    async deleteSubjectHour(id) {
+      try {
+        const res = await axios.delete(`${this.apiUrl}/v1/admin/subject-hours/${id}`);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+        await this.getSubjectHour();
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.errors,
+        };
+      }
+    }
   }
 })

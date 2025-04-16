@@ -5,16 +5,17 @@ import Modal from "@/components/widgets/Modal.vue";
 import { showDeleteConfirmationDialog, showSuccessToast } from "@/helpers/alert.js";
 import Layout from "@/layouts/main.vue";
 import { useAdminSubjectHourStore } from "@/state/pinia";
-import FormUser from "@/views/admin/user/form.vue";
+import FormSubjectHour from "@/views/admin/subject-hour/form.vue";
 import { onMounted, ref } from "vue";
 
 const subjectHourStore = useAdminSubjectHourStore();
 const rows = ref([]);
-const userModalRef = ref(null);
-const selectedUser = ref(null);
-const userModalTitle = ref("");
+const modalRef = ref(null);
+const selectedSubjectHour = ref(null);
+const modalTitle = ref("");
+const formRef = ref(null);
 
-const getClassHistories = async () => {
+const getSubjectHour = async () => {
   await subjectHourStore.getSubjectHour();
   rows.value = subjectHourStore.subjectHour?.data?.data || [];
 };
@@ -25,37 +26,37 @@ const searchData = async () => {
 
 const paginate = async (page) => {
   await subjectHourStore.changePage(page);
-  await getClassHistories();
+  await getSubjectHour();
 };
 
-const openClassModal = (mode, id = null) => {
-  userModalRef.value.openModal();
+const openModal = (mode, id = null) => {
+  modalRef.value.openModal();
   if (mode === "edit" && id) {
-    selectedUser.value = rows.value.find((item) => item.id === id);
-    userModalTitle.value = "Ubah Kelas";
+    selectedSubjectHour.value = rows.value.find((item) => item.id === id);
+    modalTitle.value = "Ubah Subject Hour";
   } else {
-    selectedUser.value = null;
-    userModalTitle.value = "Tambah Kelas";
-  }
-};
-const formUserRef = ref(null);
-const submitUserModal = () => {
-  if (formUserRef.value) {
-    formUserRef.value.saveUser();  // Panggil fungsi saveUser() di FormUser
+    selectedSubjectHour.value = null;
+    modalTitle.value = "Tambah Subject Hour";
   }
 };
 
-const closeUserModal = () => {
-  userModalRef.value.closeModal();
+const submitModal = () => {
+  if (formRef.value) {
+    formRef.value.saveSubjectHour();
+  }
 };
 
-const deleteUser = async (id) => {
+const closeModal = () => {
+  modalRef.value.closeModal();
+};
+
+const deleteSubjectHour = async (id) => {
   const confirmed = await showDeleteConfirmationDialog();
   if (confirmed) {
     try {
-      await subjectHourStore.deleteUser(id);
-      showSuccessToast("User berhasil dihapus");
-      await getClassHistories();
+      await subjectHourStore.deleteSubjectHour(id);
+      showSuccessToast("Subject hour berhasil dihapus");
+      await getSubjectHour();
     } catch (error) {
       console.error(error);
     }
@@ -63,7 +64,7 @@ const deleteUser = async (id) => {
 };
 
 onMounted(() => {
-  getClassHistories();
+  getSubjectHour();
 });
 </script>
 
@@ -92,23 +93,24 @@ onMounted(() => {
           </div>
           <div class="w-full md:w-72 flex justify-end">
             <!-- Tombol trigger modal -->
-            <Button @click="openUserModal('add')" variant="solid" color="primary">
-              Tambah Subject
+            <Button @click="openModal('add')" variant="solid" color="primary">
+              Tambah Subject Hour
             </Button>
             <!-- Modal Form -->
-            <Modal ref="userModalRef">
+            <Modal ref="modalRef">
               <template #title>
-                <h1 class="text-xl font-bold">{{ userModalTitle }}</h1>
+                <h1 class="text-xl font-bold">{{ modalTitle }}</h1>
               </template>
               <template #body>
-                <FormUser ref="formUserRef" :user="selectedUser" @refresh="getClassHistories" @close="closeUserModal" />
+                <FormSubjectHour ref="formRef" :subject-hour="selectedSubjectHour" @refresh="getSubjectHour"
+                  @close="closeModal" />
               </template>
               <template #footer>
                 <div class="flex justify-end gap-2">
-                  <Button @click="closeUserModal" variant="outline" color="secondary">
+                  <Button @click="closeModal" variant="outline" color="secondary">
                     Close
                   </Button>
-                  <Button @click="submitUserModal" variant="solid" color="primary">
+                  <Button @click="submitModal" variant="solid" color="primary">
                     Submit
                   </Button>
                 </div>
@@ -166,10 +168,10 @@ onMounted(() => {
                 </td>
                 <td class="p-3">
                   <div class="flex gap-2 justify-start">
-                    <Button @click="openClassModal('edit', row.id)" variant="outline" color="secondary">
+                    <Button @click="openModal('edit', row.id)" variant="outline" color="secondary">
                       Edit
                     </Button>
-                    <Button @click="deleteUser(row.id)" variant="outline" color="error">
+                    <Button @click="deleteSubjectHour(row.id)" variant="outline" color="error">
                       Delete
                     </Button>
                   </div>
