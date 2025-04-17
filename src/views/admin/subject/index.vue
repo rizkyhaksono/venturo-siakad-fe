@@ -5,7 +5,7 @@ import Modal from "@/components/widgets/Modal.vue";
 import { showDeleteConfirmationDialog, showSuccessToast } from "@/helpers/alert.js";
 import Layout from "@/layouts/main.vue";
 import { useAdminSubjectStore } from "@/state/pinia";
-import FormUser from "@/views/admin/user/form.vue";
+import FormSubject from "@/views/admin/subject/form.vue";
 import { onMounted, ref } from "vue";
 
 const subjectStore = useAdminSubjectStore();
@@ -41,7 +41,7 @@ const openClassModal = (mode, id = null) => {
 const formUserRef = ref(null);
 const submitUserModal = () => {
   if (formUserRef.value) {
-    formUserRef.value.saveUser();  // Panggil fungsi saveUser() di FormUser
+    formUserRef.value.saveSubject();
   }
 };
 
@@ -49,11 +49,11 @@ const closeUserModal = () => {
   userModalRef.value.closeModal();
 };
 
-const deleteUser = async (id) => {
+const deleteSubject = async (id) => {
   const confirmed = await showDeleteConfirmationDialog();
   if (confirmed) {
     try {
-      await subjectStore.deleteUser(id);
+      await subjectStore.deleteSubject(id);
       showSuccessToast("User berhasil dihapus");
       await getClassHistories();
     } catch (error) {
@@ -92,7 +92,7 @@ onMounted(() => {
           </div>
           <div class="w-full md:w-72 flex justify-end">
             <!-- Tombol trigger modal -->
-            <Button @click="openUserModal('add')" variant="solid" color="primary">
+            <Button @click="openClassModal('add')" variant="solid" color="primary">
               Tambah Subject
             </Button>
             <!-- Modal Form -->
@@ -101,7 +101,8 @@ onMounted(() => {
                 <h1 class="text-xl font-bold">{{ userModalTitle }}</h1>
               </template>
               <template #body>
-                <FormUser ref="formUserRef" :user="selectedUser" @refresh="getClassHistories" @close="closeUserModal" />
+                <FormSubject ref="formUserRef" :user="selectedUser" @refresh="getClassHistories"
+                  @close="closeUserModal" />
               </template>
               <template #footer>
                 <div class="flex justify-end gap-2">
@@ -180,7 +181,7 @@ onMounted(() => {
                     <Button @click="openClassModal('edit', row.id)" variant="outline" color="secondary">
                       Edit
                     </Button>
-                    <Button @click="deleteUser(row.id)" variant="outline" color="error">
+                    <Button @click="deleteSubject(row.id)" variant="outline" color="error">
                       Delete
                     </Button>
                   </div>

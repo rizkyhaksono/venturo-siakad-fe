@@ -51,5 +51,55 @@ export const useAdminSubjectStore = defineStore("adminSubject", {
       this.current = 1;
       await this.getSubject();
     },
+    async postSubject(subject) {
+      try {
+        const res = await axios.post(`${this.apiUrl}/v1/admin/subjects`, subject);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+        await this.getSubject();
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+        };
+      }
+    },
+    async updateSubject(id, subject) {
+      try {
+        const res = await axios.put(`${this.apiUrl}/v1/admin/subjects/${id}`, subject);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+        await this.getSubject();
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.errors,
+        };
+      }
+    },
+    async deleteSubject(id) {
+      try {
+        const res = await axios.delete(`${this.apiUrl}/v1/admin/subjects/${id}`);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+        await this.getSubject();
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.errors,
+        };
+      }
+    }
   },
 })
