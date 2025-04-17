@@ -92,7 +92,7 @@ export const useAuthStore = defineStore("auth", {
         },
         async saveUserLogin() {
             try {
-                const response = await axios.get("/v1/auth/profile");
+                const response = await axios.get(`${this.apiUrl}/v1/auth/profile`);
                 this.userLogin = response.data.data;
             } catch (error) {
                 console.error("Failed to fetch user profile", error);

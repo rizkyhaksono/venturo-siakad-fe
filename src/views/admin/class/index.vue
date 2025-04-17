@@ -5,14 +5,15 @@ import Modal from "@/components/widgets/Modal.vue";
 import { showDeleteConfirmationDialog, showSuccessToast } from "@/helpers/alert.js";
 import Layout from "@/layouts/main.vue";
 import { useAdminClassStore } from "@/state/pinia";
-import FormUser from "@/views/admin/user/form.vue";
+import FormClass from "@/views/admin/class/form.vue";
 import { onMounted, ref } from "vue";
 
 const classStore = useAdminClassStore();
 const rows = ref([]);
-const userModalRef = ref(null);
-const selectedUser = ref(null);
-const userModalTitle = ref("");
+const modalRef = ref(null);
+const selectedClass = ref(null);
+const modalTitle = ref("");
+const formRef = ref(null);
 
 const getClasses = async () => {
   await classStore.getClasses();
@@ -28,33 +29,34 @@ const paginate = async (page) => {
   await getClasses();
 };
 
-const openClassModal = (mode, id = null) => {
-  userModalRef.value.openModal();
+const openModal = (mode, id = null) => {
+  modalRef.value.openModal();
   if (mode === "edit" && id) {
-    selectedUser.value = rows.value.find((item) => item.id === id);
-    userModalTitle.value = "Ubah Kelas";
+    const foundClass = classStore.classes.data.find((item) => item.id === id);
+    selectedClass.value = foundClass;
+    modalTitle.value = "Ubah Class";
   } else {
-    selectedUser.value = null;
-    userModalTitle.value = "Tambah Kelas";
-  }
-};
-const formUserRef = ref(null);
-const submitUserModal = () => {
-  if (formUserRef.value) {
-    formUserRef.value.saveUser();  // Panggil fungsi saveUser() di FormUser
+    selectedClass.value = null;
+    modalTitle.value = "Tambah Class";
   }
 };
 
-const closeUserModal = () => {
-  userModalRef.value.closeModal();
+const submitModal = () => {
+  if (formRef.value) {
+    formRef.value.saveClass();
+  }
 };
 
-const deleteUser = async (id) => {
+const closeModal = () => {
+  modalRef.value.closeModal();
+};
+
+const deleteClass = async (id) => {
   const confirmed = await showDeleteConfirmationDialog();
   if (confirmed) {
     try {
-      await classStore.deleteUser(id);
-      showSuccessToast("User berhasil dihapus");
+      await classStore.deleteClass(id);
+      showSuccessToast("Class berhasil dihapus");
       await getClasses();
     } catch (error) {
       console.error(error);
@@ -69,7 +71,7 @@ onMounted(() => {
 
 <template>
   <Layout>
-    <template #title>Data Kelas </template>
+    <template #title>Data Class</template>
     <div class="w-full mx-auto p-4 rounded-lg bg-gray-100 dark:bg-gray-900">
       <div class="w-full">
         <div class="mb-8 flex items-center justify-between gap-8">
@@ -91,23 +93,23 @@ onMounted(() => {
           </div>
           <div class="w-full md:w-72 flex justify-end">
             <!-- Tombol trigger modal -->
-            <Button @click="openUserModal('add')" variant="solid" color="primary">
-              Tambah User
+            <Button @click="openModal('add')" variant="solid" color="primary">
+              Tambah Class
             </Button>
             <!-- Modal Form -->
-            <Modal ref="userModalRef">
+            <Modal ref="modalRef">
               <template #title>
-                <h1 class="text-xl font-bold">{{ userModalTitle }}</h1>
+                <h1 class="text-xl font-bold">{{ modalTitle }}</h1>
               </template>
               <template #body>
-                <FormUser ref="formUserRef" :user="selectedUser" @refresh="getClasses" @close="closeUserModal" />
+                <FormClass ref="formRef" :class="selectedClass" @refresh="getClasses" @close="closeModal" />
               </template>
               <template #footer>
                 <div class="flex justify-end gap-2">
-                  <Button @click="closeUserModal" variant="outline" color="secondary">
+                  <Button @click="closeModal" variant="outline" color="secondary">
                     Close
                   </Button>
-                  <Button @click="submitUserModal" variant="solid" color="primary">
+                  <Button @click="submitModal" variant="solid" color="primary">
                     Submit
                   </Button>
                 </div>
@@ -167,10 +169,10 @@ onMounted(() => {
                 </td>
                 <td class="p-3">
                   <div class="flex gap-2 justify-start">
-                    <Button @click="openClassModal('edit', row.id)" variant="outline" color="secondary">
+                    <Button @click="openModal('edit', row.id)" variant="outline" color="secondary">
                       Edit
                     </Button>
-                    <Button @click="deleteUser(row.id)" variant="outline" color="error">
+                    <Button @click="deleteClass(row.id)" variant="outline" color="error">
                       Delete
                     </Button>
                   </div>

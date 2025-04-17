@@ -68,5 +68,38 @@ export const useAdminClassStore = defineStore("adminClass", {
         };
       }
     },
+    async updateClass(id, classes) {
+      try {
+        const res = await axios.put(`${this.apiUrl}/v1/admin/classes/${id}`, classes);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.errors,
+        };
+      }
+    },
+    async deleteClass(id) {
+      try {
+        const res = await axios.delete(`${this.apiUrl}/v1/admin/classes/${id}`);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+        await this.getClasses();
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.errors,
+        };
+      }
+    }
   }
 })
