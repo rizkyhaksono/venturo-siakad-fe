@@ -5,7 +5,7 @@ import Modal from "@/components/widgets/Modal.vue";
 import { showDeleteConfirmationDialog, showSuccessToast } from "@/helpers/alert.js";
 import Layout from "@/layouts/main.vue";
 import { useAdminClassHistoryStore } from "@/state/pinia";
-import FormUser from "@/views/admin/user/form.vue";
+import FormClassHistory from "@/views/admin/class-history/form.vue";
 import { onMounted, ref } from "vue";
 
 const classHistoryStore = useAdminClassHistoryStore();
@@ -13,6 +13,7 @@ const rows = ref([]);
 const userModalRef = ref(null);
 const selectedUser = ref(null);
 const userModalTitle = ref("");
+const formUserRef = ref(null);
 
 const getClassHistories = async () => {
   await classHistoryStore.getClassHistory();
@@ -32,16 +33,16 @@ const openClassModal = (mode, id = null) => {
   userModalRef.value.openModal();
   if (mode === "edit" && id) {
     selectedUser.value = rows.value.find((item) => item.id === id);
-    userModalTitle.value = "Ubah Kelas";
+    userModalTitle.value = "Ubah Class History";
   } else {
     selectedUser.value = null;
-    userModalTitle.value = "Tambah Kelas";
+    userModalTitle.value = "Tambah Class History";
   }
 };
-const formUserRef = ref(null);
+
 const submitUserModal = () => {
   if (formUserRef.value) {
-    formUserRef.value.saveUser();  // Panggil fungsi saveUser() di FormUser
+    formUserRef.value.saveClassHistory();
   }
 };
 
@@ -49,18 +50,19 @@ const closeUserModal = () => {
   userModalRef.value.closeModal();
 };
 
-const deleteUser = async (id) => {
+const deleteClassHistory = async (id) => {
   const confirmed = await showDeleteConfirmationDialog();
   if (confirmed) {
     try {
-      await classHistoryStore.deleteUser(id);
-      showSuccessToast("User berhasil dihapus");
+      await classHistoryStore.deleteClassHistory(id);
+      showSuccessToast("Riwayat kelas berhasil dihapus");
       await getClassHistories();
     } catch (error) {
       console.error(error);
     }
   }
 };
+
 
 onMounted(() => {
   getClassHistories();
@@ -92,8 +94,8 @@ onMounted(() => {
           </div>
           <div class="w-full md:w-72 flex justify-end">
             <!-- Tombol trigger modal -->
-            <Button @click="openUserModal('add')" variant="solid" color="primary">
-              Tambah User
+            <Button @click="openClassModal('add')" variant="solid" color="primary">
+              Tambah Class History
             </Button>
             <!-- Modal Form -->
             <Modal ref="userModalRef">
@@ -101,7 +103,8 @@ onMounted(() => {
                 <h1 class="text-xl font-bold">{{ userModalTitle }}</h1>
               </template>
               <template #body>
-                <FormUser ref="formUserRef" :user="selectedUser" @refresh="getClassHistories" @close="closeUserModal" />
+                <FormClassHistory ref="formUserRef" :user="selectedUser" @refresh="getClassHistories"
+                  @close="closeUserModal" />
               </template>
               <template #footer>
                 <div class="flex justify-end gap-2">
@@ -124,13 +127,13 @@ onMounted(() => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Nama Siswa
+                    NIS
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    NIS
+                    Nama Siswa
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
@@ -162,13 +165,13 @@ onMounted(() => {
             <tbody class="group text-sm text-gray-800 dark:text-white">
               <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
                 <td class="p-3">
-                  <small class="font-sans antialiased text-sm font-medium text-current">
-                    {{ row.student.name }}
+                  <small class="font-sans antialiased text-sm text-current">
+                    {{ row.student.student_number }}
                   </small>
                 </td>
                 <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
-                    {{ row.student.student_number }}
+                  <small class="font-sans antialiased text-sm font-medium text-current">
+                    {{ row.student.name }}
                   </small>
                 </td>
                 <td class="p-3">
@@ -191,7 +194,7 @@ onMounted(() => {
                     <Button @click="openClassModal('edit', row.id)" variant="outline" color="secondary">
                       Edit
                     </Button>
-                    <Button @click="deleteUser(row.id)" variant="outline" color="error">
+                    <Button @click="deleteClassHistory(row.id)" variant="outline" color="error">
                       Delete
                     </Button>
                   </div>

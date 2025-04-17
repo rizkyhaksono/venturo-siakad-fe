@@ -51,5 +51,53 @@ export const useAdminClassHistoryStore = defineStore("adminClassHistory", {
       this.current = 1;
       await this.getClassHistory();
     },
+    async postClassHstory(classHistory) {
+      try {
+        const res = await axios.post(`${this.apiUrl}/v1/admin/class-histories`, classHistory);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+        await this.getClassHistory();
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+        };
+      }
+    },
+    async updateClassHistory(id, classHistory) {
+      try {
+        const res = await axios.put(`${this.apiUrl}/v1/admin/class-histories/${id}`, classHistory);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+        await this.getClassHistory();
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+        };
+      }
+    },
+    async deleteClassHistory(id) {
+      try {
+        const res = await axios.delete(`${this.apiUrl}/v1/admin/class-histories/${id}`);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+        await this.getClassHistory();
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+        };
+      }
+    }
   }
 })
