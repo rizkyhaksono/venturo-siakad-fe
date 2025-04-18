@@ -122,6 +122,30 @@ export default [
         meta: { title: "Dashboard", authRequired: true },
         component: () => import("../views/student/dashboard"),
     },
+    {
+        path: "/student/profile",
+        name: "student-profile",
+        meta: { title: "Profile", authRequired: true },
+        component: () => import("../views/student/profile"),
+    },
+    {
+        path: "/student/class",
+        name: "student-class",
+        meta: { title: "Class", authRequired: true },
+        component: () => import("../views/student/class"),
+    },
+    {
+        path: "/student/class_history",
+        name: "student-class-history",
+        meta: { title: "Class History", authRequired: true },
+        component: () => import("../views/student/class-history"),
+    },
+    {
+        path: "/student/subject_schedule",
+        name: "student-subject-schedule",
+        meta: { title: "Subject Schedule", authRequired: true },
+        component: () => import("../views/student/subject-schedule"),
+    },
     // teacher routes
     {
         path: "/teacher/dashboard",
@@ -129,6 +153,31 @@ export default [
         meta: { title: "Dashboard", authRequired: true },
         component: () => import("../views/teacher/dashboard"),
     },
+    {
+        path: "/teacher/profile",
+        name: "teacher-profile",
+        meta: { title: "Profile", authRequired: true },
+        component: () => import("../views/teacher/profile"),
+    },
+    {
+        path: "/teacher/class",
+        name: "teacher-class",
+        meta: { title: "Class", authRequired: true },
+        component: () => import("../views/teacher/class"),
+    },
+    {
+        path: "/teacher/student",
+        name: "teacher-student",
+        meta: { title: "Student", authRequired: true },
+        component: () => import("../views/teacher/student"),
+    },
+    {
+        path: "/teacher/subject",
+        name: "teacher-subject",
+        meta: { title: "Subject", authRequired: true },
+        component: () => import("../views/teacher/subject"),
+    },
+    // auth routes
     {
         path: "/login",
         name: "login",

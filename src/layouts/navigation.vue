@@ -131,8 +131,7 @@ const getRolePrefix = (role) => {
 };
 const rolePrefix = getRolePrefix(getRole);
 
-// Data menu utama
-const menus = ref([
+const adminMenus = [
     { label: "Dashboard", to: `${rolePrefix}/dashboard`, icon: mdiHome },
     {
         label: "Users",
@@ -170,7 +169,44 @@ const menus = ref([
     { label: "Registration", to: `${rolePrefix}/registration`, icon: mdiInvoiceTextClock },
     { label: "Student", to: `${rolePrefix}/student`, icon: mdiCardAccountDetails },
     { label: "Study Year", to: `${rolePrefix}/study_year`, icon: mdiCounter },
-]);
+];
+
+const studentMenus = [
+    { label: "Dashboard", to: `${rolePrefix}/dashboard`, icon: mdiHome },
+    {
+        label: "Class",
+        icon: mdiSchool,
+        submenu: [
+            { label: "Class", to: `${rolePrefix}/class` },
+            { label: "Class History", to: `${rolePrefix}/class_history` },
+        ]
+    },
+    { label: "Subject Schedule", to: `${rolePrefix}/subject_schedule`, icon: mdiGoogleClassroom },
+];
+
+const teacherMenus = [
+    { label: "Dashboard", to: `${rolePrefix}/dashboard`, icon: mdiHome },
+    {
+        label: "Class",
+        icon: mdiSchool,
+        submenu: [
+            { label: "Class", to: `${rolePrefix}/class` },
+        ]
+    },
+    {
+        label: "Subject",
+        icon: mdiGoogleClassroom,
+        submenu: [
+            { label: "Subject", to: `${rolePrefix}/subject` },
+        ]
+    },
+    { label: "Student", to: `${rolePrefix}/student`, icon: mdiCardAccountDetails },
+];
+
+// Data menu utama
+const menus = ref(getRole === 'Admin' ? adminMenus :
+    getRole === 'Student' ? studentMenus :
+        getRole === 'Teacher' ? teacherMenus : []);
 </script>
 
 <style scoped>

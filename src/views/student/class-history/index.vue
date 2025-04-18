@@ -3,57 +3,58 @@ import Button from "@/components/widgets/Button";
 import InputField from "@/components/widgets/Input";
 import Modal from "@/components/widgets/Modal.vue";
 import Layout from "@/layouts/main.vue";
-import { useStudentClassStore } from "@/state/pinia";
-import FormClass from "@/views/admin/class/form.vue";
+import { useStudentClassHistoryStore } from "@/state/pinia";
+import FormClassHistory from "@/views/admin/class-history/form.vue";
 import { onMounted, ref } from "vue";
 
-const classStore = useStudentClassStore();
+const classHistoryStore = useStudentClassHistoryStore();
 const rows = ref([]);
-const modalRef = ref(null);
-const selectedClass = ref(null);
-const modalTitle = ref("");
-const formRef = ref(null);
+const userModalRef = ref(null);
+const selectedUser = ref(null);
+const userModalTitle = ref("");
+const formUserRef = ref(null);
 
-const getClasses = async () => {
-  await classStore.getClasses();
-  rows.value = classStore.classes.data.data || [];
+const getClassHistories = async () => {
+  await classHistoryStore.getClassHistory();
+  rows.value = classHistoryStore.classHistory?.data?.data || [];
 };
 
 const searchData = async () => {
-  await classStore.changePage(1);
+  await classHistoryStore.changePage(1);
 };
 
 const paginate = async (page) => {
-  await classStore.changePage(page);
-  await getClasses();
+  await classHistoryStore.changePage(page);
+  await getClassHistories();
 };
 
-const submitModal = () => {
-  if (formRef.value) {
-    formRef.value.saveClass();
+const submitUserModal = () => {
+  if (formUserRef.value) {
+    formUserRef.value.saveClassHistory();
   }
 };
 
-const closeModal = () => {
-  modalRef.value.closeModal();
+const closeUserModal = () => {
+  userModalRef.value.closeModal();
 };
 
 onMounted(() => {
-  getClasses();
+  getClassHistories();
 });
 </script>
 
 <template>
   <Layout>
-    <template #title>Data Class</template>
+    <template #title>Data Kelas</template>
     <div class="w-full mx-auto p-4 rounded-lg bg-gray-100 dark:bg-gray-900">
       <div class="w-full">
         <div class="mb-8 flex items-center justify-between gap-8">
           <div>
             <h6 class="font-sans antialiased font-bold text-base md:text-lg lg:text-xl text-current">
-              List Class
+              List Riwayat Kelas
             </h6>
-            <p class="font-sans antialiased text-base text-current mt-1">lihat informasi untuk semua class
+            <p class="font-sans antialiased text-base text-current mt-1">
+              Lihat informasi riwayat kelas siswa
             </p>
           </div>
         </div>
@@ -61,25 +62,26 @@ onMounted(() => {
           <div class="flex data-[orientation=horizontal]:flex-col data-[orientation=vertical]:flex-row gap-2"
             data-orientation="horizontal">
             <div class="relative w-full md:w-72">
-              <InputField v-model="classStore.searchQuery" placeholder="Search..." name="search"
+              <InputField v-model="classHistoryStore.searchQuery" placeholder="Search..." name="search"
                 v-debounce:500="searchData" />
             </div>
           </div>
           <div class="w-full md:w-72 flex justify-end">
             <!-- Modal Form -->
-            <Modal ref="modalRef">
+            <Modal ref="userModalRef">
               <template #title>
-                <h1 class="text-xl font-bold">{{ modalTitle }}</h1>
+                <h1 class="text-xl font-bold">{{ userModalTitle }}</h1>
               </template>
               <template #body>
-                <FormClass ref="formRef" :class="selectedClass" @refresh="getClasses" @close="closeModal" />
+                <FormClassHistory ref="formUserRef" :user="selectedUser" @refresh="getClassHistories"
+                  @close="closeUserModal" />
               </template>
               <template #footer>
                 <div class="flex justify-end gap-2">
-                  <Button @click="closeModal" variant="outline" color="secondary">
+                  <Button @click="closeUserModal" variant="outline" color="secondary">
                     Close
                   </Button>
-                  <Button @click="submitModal" variant="solid" color="primary">
+                  <Button @click="submitUserModal" variant="solid" color="primary">
                     Submit
                   </Button>
                 </div>
@@ -95,13 +97,25 @@ onMounted(() => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Nama Kelas
+                    Kelas
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
                     Tahun Ajaran
+                  </small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                  <small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    New Status
+                  </small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                  <small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Previous Status
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
@@ -125,23 +139,30 @@ onMounted(() => {
               </tr>
             </thead>
             <tbody class="group text-sm text-gray-800 dark:text-white">
-              <tr class="border-b border-gray-200 last:border-0" v-for="row in classStore?.classes?.data?.data"
-                :key="row.id">
-                <td class="p-3">
-                  <div class="flex items-center gap-3">
-                    <small class="font-sans antialiased text-sm font-medium text-current">
-                      {{ row.name }}
-                    </small>
-                  </div>
-                </td>
+              <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.study_year.year }}
+                    {{ row.class.name }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.study_year.semester }}
+                    {{ row.class.study_year.year }}
+                  </small>
+                </td>
+                <td class="p-3">
+                  <small class="font-sans antialiased text-sm text-current">
+                    {{ row.new_status }}
+                  </small>
+                </td>
+                <td class="p-3">
+                  <small class="font-sans antialiased text-sm text-current">
+                    {{ row.previous_status }}
+                  </small>
+                </td>
+                <td class="p-3">
+                  <small class="font-sans antialiased text-sm text-current">
+                    Semester {{ row.class.study_year.semester }}
                   </small>
                 </td>
                 <td class="p-3">
@@ -171,21 +192,20 @@ onMounted(() => {
           </table>
         </div>
         <div class="flex items-center justify-between border-gray-200 py-4"><small
-            class="font-sans antialiased text-sm text-current">Page {{ classStore.totalPage != 0 ?
-              classStore.current
-              : classStore.totalPage }} of {{
-              classStore.totalPage }}</small>
+            class="font-sans antialiased text-sm text-current">Page {{ classHistoryStore.totalPage != 0 ?
+              classHistoryStore.current
+              : classHistoryStore.totalPage }} of {{
+              classHistoryStore.totalPage }}</small>
           <div class="flex gap-2"><button
               class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="classStore.current === 1"
-              @click="paginate(classStore.current - 1)">Previous</button><button
+              data-shape="default" data-width="default" :disabled="classHistoryStore.current === 1"
+              @click="paginate(classHistoryStore.current - 1)">Previous</button><button
               class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="classStore.current >=
-                Math.ceil(classStore.totalData / classStore.perpage)
-                " @click="paginate(classStore.current + 1)">Next</button></div>
+              data-shape="default" data-width="default" :disabled="classHistoryStore.current >=
+                Math.ceil(classHistoryStore.totalData / classHistoryStore.perpage)
+                " @click="paginate(classHistoryStore.current + 1)">Next</button></div>
         </div>
       </div>
-
     </div>
   </Layout>
 </template>

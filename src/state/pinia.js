@@ -18,12 +18,20 @@ import { useAdminRegistrationStore } from "./pinia/admin/registration";
 import { useAdminStudentStore } from "./pinia/admin/student";
 import { useAdminStudyYearStore } from "./pinia/admin/study-year";
 
+// student
+import { useStudentClassStore } from "./pinia/student/class";
+import { useStudentClassHistoryStore } from "./pinia/student/class-history";
+import { useStudentSubjectScheduleStore } from "./pinia/student/subject-schedule";
+
 const pinia = createPinia();
 export default pinia;
 
 export {
+  // auth
   useAuthStore,
   useUserStore,
+
+  // admin
   useAdminUserStore,
   useAdminUserRoleStore,
   useAdminClassStore,
@@ -36,4 +44,9 @@ export {
   useAdminRegistrationStore,
   useAdminStudentStore,
   useAdminStudyYearStore,
+
+  // student
+  useStudentClassStore,
+  useStudentClassHistoryStore,
+  useStudentSubjectScheduleStore,
 };
