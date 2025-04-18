@@ -67,5 +67,39 @@ export const useAdminSubjectScheduleStore = defineStore("adminSubjectSchedule", 
         };
       }
     },
+    async updateSchedule(id, schedule) {
+      try {
+        const res = await axios.put(`${this.apiUrl}/v1/admin/subject-schedules/${id}`, schedule);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+        await this.getSchedules();
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.error || [],
+        };
+      }
+    },
+    async deleteSchedule(id) {
+      try {
+        const res = await axios.delete(`${this.apiUrl}/v1/admin/subject-schedules/${id}`);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+        await this.getSchedules();
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.error || [],
+        };
+      }
+    }
   }
 })

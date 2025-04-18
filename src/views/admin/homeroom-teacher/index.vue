@@ -2,17 +2,21 @@
 import Button from "@/components/widgets/Button";
 import InputField from "@/components/widgets/Input";
 import Modal from "@/components/widgets/Modal.vue";
-import { showDeleteConfirmationDialog, showSuccessToast } from "@/helpers/alert.js";
+import {
+  showDeleteConfirmationDialog,
+  showSuccessToast
+} from "@/helpers/alert.js";
 import Layout from "@/layouts/main.vue";
 import { useAdminHomeroomTeacherStore } from "@/state/pinia";
-import FormUser from "@/views/admin/user/form.vue";
+import FormHomeroomTeacher from "@/views/admin/homeroom-teacher/form.vue";
 import { onMounted, ref } from "vue";
 
 const homeroomTeacherStore = useAdminHomeroomTeacherStore();
 const rows = ref([]);
-const userModalRef = ref(null);
-const selectedUser = ref(null);
-const userModalTitle = ref("");
+const modalRef = ref(null);
+const selectedHomeroomTeacher = ref(null);
+const modalTitle = ref("");
+const formRef = ref(null);
 
 const gwtHomeroomTeacher = async () => {
   await homeroomTeacherStore.getHomeroomTeacher();
@@ -28,25 +32,25 @@ const paginate = async (page) => {
   await gwtHomeroomTeacher();
 };
 
-const openUserModal = (mode, id = null) => {
-  userModalRef.value.openModal();
+const openModal = (mode, id = null) => {
+  modalRef.value.openModal();
   if (mode === "edit" && id) {
-    selectedUser.value = rows.value.find((user) => user.id === id);
-    userModalTitle.value = "Ubah User";
+    selectedHomeroomTeacher.value = rows.value.find((user) => user.id === id);
+    modalTitle.value = "Ubah Homeroom Teacher";
   } else {
-    selectedUser.value = null;
-    userModalTitle.value = "Tambah User";
+    selectedHomeroomTeacher.value = null;
+    modalTitle.value = "Tambah Homeroom Teacher";
   }
 };
-const formUserRef = ref(null);
+
 const submitUserModal = () => {
-  if (formUserRef.value) {
-    formUserRef.value.saveUser();  // Panggil fungsi saveUser() di FormUser
+  if (formRef.value) {
+    formRef.value.saveHomeroomTeacher();
   }
 };
 
 const closeUserModal = () => {
-  userModalRef.value.closeModal();
+  modalRef.value.closeModal();
 };
 
 const deleteUser = async (id) => {
@@ -92,16 +96,16 @@ onMounted(() => {
           </div>
           <div class="w-full md:w-72 flex justify-end">
             <!-- Tombol trigger modal -->
-            <Button @click="openUserModal('add')" variant="solid" color="primary">
-              Tambah User
+            <Button @click="openModal('add')" variant="solid" color="primary">
+              Tambah Homeroom Teacher
             </Button>
             <!-- Modal Form -->
-            <Modal ref="userModalRef">
+            <Modal ref="modalRef">
               <template #title>
-                <h1 class="text-xl font-bold">{{ userModalTitle }}</h1>
+                <h1 class="text-xl font-bold">{{ modalTitle }}</h1>
               </template>
               <template #body>
-                <FormUser ref="formUserRef" :user="selectedUser" @refresh="gwtHomeroomTeacher"
+                <FormHomeroomTeacher ref="formRef" :user="selectedHomeroomTeacher" @refresh="gwtHomeroomTeacher"
                   @close="closeUserModal" />
               </template>
               <template #footer>
@@ -151,7 +155,7 @@ onMounted(() => {
                   </td>
                   <td class="p-3">
                     <div class="flex gap-2 justify-start">
-                      <Button @click="openUserModal('edit', row.id)" variant="outline" color="secondary">
+                      <Button @click="openModal('edit', row.id)" variant="outline" color="secondary">
                         Edit
                       </Button>
                       <Button @click="deleteUser(row.id)" variant="outline" color="error">

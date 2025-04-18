@@ -91,10 +91,6 @@ onMounted(() => {
             </div>
           </div>
           <div class="w-full md:w-72 flex justify-end">
-            <!-- Tombol trigger modal -->
-            <Button @click="openUserModal('add')" variant="solid" color="primary">
-              Tambah Teacher
-            </Button>
             <!-- Modal Form -->
             <Modal ref="userModalRef">
               <template #title>
