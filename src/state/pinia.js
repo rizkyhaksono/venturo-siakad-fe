@@ -23,6 +23,11 @@ import { useStudentClassStore } from "./pinia/student/class";
 import { useStudentClassHistoryStore } from "./pinia/student/class-history";
 import { useStudentSubjectScheduleStore } from "./pinia/student/subject-schedule";
 
+// teacher
+import { useTeacherClassStore } from "./pinia/teacher/class";
+import { useTeacherStudentStore } from "./pinia/teacher/student";
+import { useTeacherSubjectStore } from "./pinia/teacher/subject";
+
 const pinia = createPinia();
 export default pinia;
 
@@ -49,4 +54,9 @@ export {
   useStudentClassStore,
   useStudentClassHistoryStore,
   useStudentSubjectScheduleStore,
+
+  // teacher
+  useTeacherClassStore,
+  useTeacherStudentStore,
+  useTeacherSubjectStore,
 };
