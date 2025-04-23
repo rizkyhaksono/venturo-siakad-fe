@@ -17,7 +17,7 @@ const formUserRef = ref(null);
 
 const getClassHistories = async () => {
   await classHistoryStore.getClassHistory();
-  rows.value = classHistoryStore.classHistory?.data?.data.data || [];
+  rows.value = classHistoryStore.classHistory?.data?.data || [];
 };
 
 const searchData = async () => {

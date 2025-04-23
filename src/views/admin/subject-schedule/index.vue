@@ -17,7 +17,7 @@ const formUserRef = ref(null);
 
 const getClassHistories = async () => {
   await subjectScheduleStore.getSchedules();
-  rows.value = subjectScheduleStore.schedules.data
+  rows.value = subjectScheduleStore.schedules
 };
 
 const searchData = async () => {

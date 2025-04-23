@@ -31,7 +31,7 @@ export const useAdminHomeroomTeacherStore = defineStore("adminHomeroomTeacher", 
       try {
         const url = `${this.apiUrl}/v1/admin/homeroom-teachers?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`;
         const res = await axios.get(url);
-        const homeroomTeacherDataList = res.data.data;
+        const homeroomTeacherDataList = res.data;
         this.homeroomTeachers = homeroomTeacherDataList;
         this.totalData = res.data.meta.total;
         this.totalPage = Math.ceil(this.totalData / this.perpage);

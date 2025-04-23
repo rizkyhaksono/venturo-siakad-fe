@@ -20,7 +20,8 @@ const formRef = ref(null);
 
 const gwtHomeroomTeacher = async () => {
   await homeroomTeacherStore.getHomeroomTeacher();
-  rows.value = homeroomTeacherStore.homeroomTeachers || [];
+  console.log(homeroomTeacherStore.homeroomTeachers.data.data);
+  rows.value = homeroomTeacherStore.homeroomTeachers.data.data || [];
 };
 
 const searchData = async () => {

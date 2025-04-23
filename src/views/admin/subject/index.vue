@@ -16,7 +16,7 @@ const userModalTitle = ref("");
 
 const getClassHistories = async () => {
   await subjectStore.getSubject();
-  rows.value = subjectStore.subject?.data?.data || [];
+  rows.value = subjectStore.subject?.data || [];
 };
 
 const searchData = async () => {

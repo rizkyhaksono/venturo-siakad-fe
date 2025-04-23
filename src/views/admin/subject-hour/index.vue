@@ -17,7 +17,7 @@ const formRef = ref(null);
 
 const getSubjectHour = async () => {
   await subjectHourStore.getSubjectHour();
-  rows.value = subjectHourStore.subjectHour?.data?.data || [];
+  rows.value = subjectHourStore.subjectHour?.data || [];
 };
 
 const searchData = async () => {

@@ -16,7 +16,7 @@ const userModalTitle = ref("");
 
 const getClassHistories = async () => {
   await teacherStore.getTeachers();
-  rows.value = teacherStore.teachers.data.data
+  rows.value = teacherStore.teachers
 };
 
 const searchData = async () => {
@@ -132,12 +132,6 @@ onMounted(() => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Email
-                  </small>
-                </th>
-                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
-                  <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
                     Subject
                   </small>
                 </th>
@@ -159,11 +153,6 @@ onMounted(() => {
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
                     {{ row.name }}
-                  </small>
-                </td>
-                <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
-                    {{ row.user.email }}
                   </small>
                 </td>
                 <td class="p-3">

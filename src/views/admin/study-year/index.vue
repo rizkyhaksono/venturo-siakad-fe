@@ -16,7 +16,7 @@ const userModalTitle = ref("");
 
 const getStudyYears = async () => {
   await studyYearStore.getStudyYears();
-  rows.value = studyYearStore.studyYears.data.data
+  rows.value = studyYearStore.studyYears
 };
 
 const searchData = async () => {
