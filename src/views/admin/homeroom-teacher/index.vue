@@ -20,8 +20,7 @@ const formRef = ref(null);
 
 const gwtHomeroomTeacher = async () => {
   await homeroomTeacherStore.getHomeroomTeacher();
-  console.log(homeroomTeacherStore.homeroomTeachers.data.data);
-  rows.value = homeroomTeacherStore.homeroomTeachers.data.data || [];
+  rows.value = homeroomTeacherStore.homeroomTeachers.data || [];
 };
 
 const searchData = async () => {
@@ -128,7 +127,28 @@ onMounted(() => {
             <thead class="border-b border-gray-200 bg-gray-100 text-sm font-medium text-gray-600 dark:bg-gray-900">
               <tr>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium"><small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">User</small>
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Name</small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium"><small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Teacher Number</small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium"><small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Subject</small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium"><small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Class</small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium"><small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Semester</small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium"><small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Year</small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium"><small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
@@ -136,39 +156,63 @@ onMounted(() => {
               </tr>
             </thead>
             <tbody class="group text-sm text-gray-800 dark:text-white">
-              <template v-if="homeroomTeacherStore.users && homeroomTeacherStore.users.length > 0">
-                <tr class="border-b border-gray-200 last:border-0" v-for="row in homeroomTeacherStore.users"
-                  :key="row.id">
-                  <td class="p-3">
-                    <div class="flex items-center gap-3">
-                      <img :src="row.photo || '/src/assets/default_photo.jpg'" :alt="row.name"
-                        class="inline-block object-cover object-center data-[shape=square]:rounded-none data-[shape=circular]:rounded-full data-[shape=rounded]:rounded-[current] w-8 h-8 rounded"
-                        data-shape="circular" />
-                      <div class="flex flex-col">
-                        <small class="font-sans antialiased text-sm text-current">
-                          {{ row.name }}
-                        </small>
-                        <small class="font-sans antialiased text-sm text-current opacity-70">
-                          {{ row.email }}
-                        </small>
-                      </div>
+              <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
+                <td class="p-3">
+                  <div class="flex items-center gap-3">
+                    <img :src="row.photo || '/src/assets/default_photo.jpg'" :alt="row.name"
+                      class="inline-block object-cover object-center data-[shape=square]:rounded-none data-[shape=circular]:rounded-full data-[shape=rounded]:rounded-[current] w-8 h-8 rounded"
+                      data-shape="circular" />
+                    <div class="flex flex-col">
+                      <small class="font-sans antialiased text-sm text-current">
+                        {{ row.teacher.name }}
+                      </small>
                     </div>
-                  </td>
-                  <td class="p-3">
-                    <div class="flex gap-2 justify-start">
-                      <Button @click="openModal('edit', row.id)" variant="outline" color="secondary">
-                        Edit
-                      </Button>
-                      <Button @click="deleteUser(row.id)" variant="outline" color="error">
-                        Delete
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              </template>
-              <tr v-else>
-                <td colspan="2" class="border-b border-gray-200 last:border-0 ps-2 py-2">
-                  No results.
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="flex flex-col">
+                    <small class="font-sans antialiased text-sm text-current">
+                      {{ row.teacher.employee_number }}
+                    </small>
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="flex flex-col">
+                    <small class="font-sans antialiased text-sm text-current">
+                      {{ row.teacher.subject }}
+                    </small>
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="flex flex-col">
+                    <small class="font-sans antialiased text-sm text-current">
+                      {{ row.class.name }}
+                    </small>
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="flex flex-col">
+                    <small class="font-sans antialiased text-sm text-current">
+                      {{ row.study_year.semester }}
+                    </small>
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="flex flex-col">
+                    <small class="font-sans antialiased text-sm text-current">
+                      {{ row.study_year.year }}
+                    </small>
+                  </div>
+                </td>
+                <td class="p-3">
+                  <div class="flex gap-2 justify-start">
+                    <Button @click="openModal('edit', row.id)" variant="outline" color="secondary">
+                      Edit
+                    </Button>
+                    <Button @click="deleteUser(row.id)" variant="outline" color="error">
+                      Delete
+                    </Button>
+                  </div>
                 </td>
               </tr>
             </tbody>
