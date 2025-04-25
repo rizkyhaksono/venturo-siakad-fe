@@ -16,7 +16,7 @@ const formUserRef = ref(null);
 
 const getClassHistories = async () => {
   await classHistoryStore.getClassHistory();
-  rows.value = classHistoryStore.classHistory?.data?.data || [];
+  rows.value = classHistoryStore.classHistory.data || [];
 };
 
 const searchData = async () => {
@@ -142,12 +142,12 @@ onMounted(() => {
               <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.class.name }}
+                    {{ row.name }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.class.study_year.year }}
+                    {{ row.study_year.year }}
                   </small>
                 </td>
                 <td class="p-3">
@@ -162,7 +162,7 @@ onMounted(() => {
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    Semester {{ row.class.study_year.semester }}
+                    Semester {{ row.study_year.semester }}
                   </small>
                 </td>
                 <td class="p-3">

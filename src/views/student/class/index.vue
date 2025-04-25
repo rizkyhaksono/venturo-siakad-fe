@@ -16,7 +16,7 @@ const formRef = ref(null);
 
 const getClasses = async () => {
   await classStore.getClasses();
-  rows.value = classStore.classes.data.data || [];
+  rows.value = classStore.classes.data || [];
 };
 
 const searchData = async () => {
@@ -125,8 +125,7 @@ onMounted(() => {
               </tr>
             </thead>
             <tbody class="group text-sm text-gray-800 dark:text-white">
-              <tr class="border-b border-gray-200 last:border-0" v-for="row in classStore?.classes?.data?.data"
-                :key="row.id">
+              <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
                 <td class="p-3">
                   <div class="flex items-center gap-3">
                     <small class="font-sans antialiased text-sm font-medium text-current">
