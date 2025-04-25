@@ -136,7 +136,8 @@ onMounted(() => {
                                     :key="row.id">
                                     <td class="p-3">
                                         <div class="flex items-center gap-3">
-                                            <img :src="row.photo || '/src/assets/default_photo.jpg'" :alt="row.name"
+                                            <img :src="row.photo ? row.photo : '/src/assets/default_photo.jpg'"
+                                                :alt="row.name"
                                                 class="inline-block object-cover object-center data-[shape=square]:rounded-none data-[shape=circular]:rounded-full data-[shape=rounded]:rounded-[current] w-8 h-8 rounded"
                                                 data-shape="circular" />
                                             <div class="flex flex-col">
