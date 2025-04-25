@@ -9,7 +9,13 @@ import Input from "@/components/widgets/Input";
 import QuillEditor from "@/components/widgets/Quill";
 import Select from "@/components/widgets/Select";
 import Layout from "@/layouts/main.vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+
+import {
+    useAdminUserRoleStore,
+    useAdminUserStore,
+    useAdminRegistrationStore
+} from "@/state/pinia";
 
 const errorMessages = ref([]); // Simpan error jika ada
 
@@ -45,27 +51,84 @@ const gender = ref("");
 const password = ref("");
 const email = ref("");
 
+const users = ref([]);
+const userCounts = ref({
+    Admin: 0,
+    Teacher: 0,
+    Student: 0,
+});
+const userStore = useAdminUserStore();
+
+const roles = ref([]);
+const roleStore = useAdminUserRoleStore();
+
+// const registrationStore
+
+const getUsers = async () => {
+    await roleStore.getRoles();
+    const roleData = roleStore.roles;
+
+    const adminRoleId = roleData.find(role => role.name === 'Admin')?.id;
+    const teacherRoleId = roleData.find(role => role.name === 'Teacher')?.id;
+    const studentRoleId = roleData.find(role => role.name === 'Student')?.id;
+
+    await userStore.getUsers();
+    const userData = userStore.users.map(user => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.m_user_roles_id,
+    }));
+    users.value = userData;
+
+    userCounts.value = {
+        Admin: userData.filter(user => user.role === adminRoleId).length,
+        Teacher: userData.filter(user => user.role === teacherRoleId).length,
+        Student: userData.filter(user => user.role === studentRoleId).length
+    };
+};
+
+const getRoles = async () => {
+    await roleStore.getRoles();
+    roles.value = roleStore.roles.map(role => ({
+        id: role.id,
+        name: role.name,
+        access: role.access.split(',').map(item => item.trim())
+    }));
+    console.log("Roles:", roles.value);
+};
+
+onMounted(() => {
+    getUsers();
+    getRoles();
+});
+
 </script>
 
 <template>
     <Layout>
-        <div class="">
-            Welcome to admin dashboard
+        <div class="text-xl font-bold mb-4 text-center text-gray-800">
+            Welcome to Admin Dashboard
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-2 gap-6">
+            <!-- Donut Chart -->
+            <ApexChart type="donut" title="Total Roles" :categories="['Admin', 'Student', 'Teacher']"
+                :series="[userCounts.Admin || 0, userCounts.Student || 0, userCounts.Teacher || 0,]"
+                :colors="['#FF6384', '#36A2EB', '#FFCE56']" />
+
+            <!-- Area Chart -->
+            <ApexChart type="area" title="Registration User" :categories="['Sen', 'Sel', 'Rab', 'Kam']" :series="[
+                { name: 'User Aktif', data: [100, 200, 150, 250] }
+            ]" :colors="['#00C49F']" />
+
             <!-- Line Chart -->
-            <ApexChart type="line" title="Tren Pengunjung" :categories="['Jan', 'Feb', 'Mar', 'Apr']" :series="[
+            <ApexChart type="line" title="Class History" :categories="['Jan', 'Feb', 'Mar', 'Apr']" :series="[
                 { name: 'Desktop', data: [30, 40, 35, 50] },
                 { name: 'Mobile', data: [20, 30, 25, 45] }
             ]" :yAxisFormatter="currencyFormatter" :tooltipFormatter="tooltipFormat" />
 
-            <!-- Area Chart -->
-            <ApexChart type="area" title="Traffic Harian" :categories="['Sen', 'Sel', 'Rab', 'Kam']" :series="[
-                { name: 'User Aktif', data: [100, 200, 150, 250] }
-            ]" :colors="['#00C49F']" />
-
             <!-- Column Chart -->
-            <ApexChart type="column" title="Penjualan Bulanan" :categories="['Jan', 'Feb', 'Mar']" :series="[
+            <ApexChart type="column" title="Subject Schedule" :categories="['Jan', 'Feb', 'Mar']" :series="[
                 { name: 'Produk A', data: [400, 700, 500] }
             ]" :yAxisFormatter="currencyFormatter" />
 
@@ -78,9 +141,7 @@ const email = ref("");
             <ApexChart type="pie" title="Distribusi Jenis Kelamin" :categories="['Laki-laki', 'Perempuan']"
                 :series="[60, 40]" :colors="['#42A5F5', '#EF5350']" />
 
-            <!-- Donut Chart -->
-            <ApexChart type="donut" title="Market Share" :categories="['Brand A', 'Brand B', 'Brand C']"
-                :series="[40, 35, 25]" :colors="['#008FFB', '#00E396', '#FEB019']" />
+
 
             <!-- RadialBar Chart -->
             <ApexChart type="radialBar" title="Progress Target" :categories="['Target Tercapai']" :series="[75]"

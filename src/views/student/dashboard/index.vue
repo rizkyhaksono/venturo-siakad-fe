@@ -48,10 +48,10 @@ const email = ref("");
 
 <template>
   <Layout>
-    <div class="">
-      Welcome to student dashboard
+    <div class="text-xl font-bold mb-4 text-center text-gray-800">
+      Welcome to Student Dashboard
     </div>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <div class="grid grid-cols-2 md:grid-cols-2 gap-6">
       <!-- Line Chart -->
       <ApexChart type="line" title="Tren Pengunjung" :categories="['Jan', 'Feb', 'Mar', 'Apr']" :series="[
         { name: 'Desktop', data: [30, 40, 35, 50] },
