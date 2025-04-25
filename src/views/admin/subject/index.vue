@@ -14,28 +14,51 @@ const userModalRef = ref(null);
 const selectedUser = ref(null);
 const userModalTitle = ref("");
 
+const currentPage = ref(1);
+const lastPage = ref(1);
+const totalData = ref(0);
+const perPage = ref(10);
+
 const getClassHistories = async () => {
-  await subjectStore.getSubject();
-  rows.value = subjectStore.subject?.data || [];
+  try {
+    await subjectStore.getSubject({
+      page: currentPage.value,
+      per_page: perPage.value,
+      search: subjectStore.searchQuery
+    });
+
+    if (subjectStore.subject) {
+      rows.value = subjectStore.subject.data;
+      currentPage.value = subjectStore.current;
+      lastPage.value = Math.ceil(subjectStore.totalData / subjectStore.perpage);
+      totalData.value = subjectStore.totalData;
+      perPage.value = subjectStore.perpage;
+    }
+  } catch (error) {
+    console.error('Error fetching subjects:', error);
+  }
 };
 
 const searchData = async () => {
-  await subjectStore.changePage(1);
+  currentPage.value = 1;
+  await getClassHistories();
 };
 
 const paginate = async (page) => {
-  await subjectStore.changePage(page);
-  await getClassHistories();
+  if (page >= 1 && page <= lastPage.value) {
+    currentPage.value = page;
+    await getClassHistories();
+  }
 };
 
 const openClassModal = (mode, id = null) => {
   userModalRef.value.openModal();
   if (mode === "edit" && id) {
     selectedUser.value = rows.value.find((item) => item.id === id);
-    userModalTitle.value = "Ubah Kelas";
+    userModalTitle.value = "Edit Subject";
   } else {
     selectedUser.value = null;
-    userModalTitle.value = "Tambah Kelas";
+    userModalTitle.value = "Add Subject";
   }
 };
 const formUserRef = ref(null);
@@ -190,19 +213,20 @@ onMounted(() => {
             </tbody>
           </table>
         </div>
-        <div class="flex items-center justify-between border-gray-200 py-4"><small
-            class="font-sans antialiased text-sm text-current">Page {{ subjectStore.totalPage != 0 ?
-              subjectStore.current
-              : subjectStore.totalPage }} of {{
-              subjectStore.totalPage }}</small>
-          <div class="flex gap-2"><button
-              class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="subjectStore.current === 1"
-              @click="paginate(subjectStore.current - 1)">Previous</button><button
-              class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="subjectStore.current >=
-                Math.ceil(subjectStore.totalData / subjectStore.perpage)
-                " @click="paginate(subjectStore.current + 1)">Next</button></div>
+        <div class="flex items-center justify-between border-gray-200 py-4">
+          <small class="font-sans antialiased text-sm text-current">
+            Page {{ currentPage }} of {{ lastPage }} (Total: {{ totalData }} items)
+          </small>
+          <div class="flex gap-2">
+            <Button variant="outline" color="secondary" :disabled="currentPage === 1"
+              @click="paginate(currentPage - 1)">
+              Previous
+            </Button>
+            <Button variant="outline" color="secondary" :disabled="currentPage >= lastPage"
+              @click="paginate(currentPage + 1)">
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </div>

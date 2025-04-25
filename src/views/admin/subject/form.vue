@@ -62,10 +62,7 @@ const rules = {
 
 const v$ = useVuelidate(rules, formModel);
 
-watch(() => props.class, (newValue) => {
-  studyYearStore.getStudyYears();
-  teacherStore.getTeachers();
-  classStore.getClasses();
+watch(() => props.subject, (newValue) => {
   if (newValue) {
     formModel.name = newValue.name || "";
     formModel.study_year_id = newValue.study_year_id || "";
@@ -79,6 +76,7 @@ watch(() => props.class, (newValue) => {
   }
 }, { immediate: true });
 
+
 const saveSubject = async () => {
   const isValid = await v$.value.$validate();
   if (!isValid) {
@@ -87,7 +85,7 @@ const saveSubject = async () => {
   }
   try {
     if (props.class) {
-      await subjectStore.updateSubject(props.class, formModel);
+      subjectStore.updateSubject(props.class, formModel);
       if (classStore.response.status === 200) {
         showSuccessToast("Subject updated successfully!");
       } else {
@@ -95,7 +93,7 @@ const saveSubject = async () => {
       }
     } else {
       await subjectStore.postSubject(formModel);
-      if (classStore.response.status === 204) {
+      if (subjectStore.response.status === 200) {
         showSuccessToast("Subject added successfully!");
       } else {
         showErrorToast("Failed to add subject.");

@@ -31,20 +31,24 @@ export const useAdminSubjectHourStore = defineStore("adminSubjectHour", {
       try {
         const url = `${this.apiUrl}/v1/admin/subject-hours?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`;
         const res = await axios.get(url);
-        const subjectHourDataList = res.data;
-        this.subjectHour = subjectHourDataList;
-        this.totalData = res.data.total;
-        this.totalPage = Math.ceil(this.totalData / this.perpage);
+        this.subjectHour = res.data;
+        this.totalData = res.data.meta?.total || 0;
+        this.totalPage = Math.max(1, Math.ceil(this.totalData / this.perpage));
+        if (this.current > this.totalPage) {
+          this.current = this.totalPage;
+        }
       } catch (error) {
         this.response = {
           status: error.response?.status,
           message: error.message,
         };
+        this.totalData = 0;
+        this.totalPage = 1;
+        this.current = 1;
       }
     },
     async changePage(newPage) {
       this.current = newPage;
-      await this.getSubjectHour();
     },
     async searchSubjectHour(query) {
       this.searchQuery = query;

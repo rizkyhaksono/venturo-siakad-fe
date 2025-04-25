@@ -22,6 +22,7 @@ const getSubjectHour = async () => {
 
 const searchData = async () => {
   await subjectHourStore.changePage(1);
+  await getSubjectHour();
 };
 
 const paginate = async (page) => {
@@ -180,19 +181,21 @@ onMounted(() => {
             </tbody>
           </table>
         </div>
-        <div class="flex items-center justify-between border-gray-200 py-4"><small
-            class="font-sans antialiased text-sm text-current">Page {{ subjectHourStore.totalPage != 0 ?
-              subjectHourStore.current
-              : subjectHourStore.totalPage }} of {{
-              subjectHourStore.totalPage }}</small>
-          <div class="flex gap-2"><button
-              class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="subjectHourStore.current === 1"
-              @click="paginate(subjectHourStore.current - 1)">Previous</button><button
-              class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="subjectHourStore.current >=
-                Math.ceil(subjectHourStore.totalData / subjectHourStore.perpage)
-                " @click="paginate(subjectHourStore.current + 1)">Next</button></div>
+        <div class="flex items-center justify-between border-gray-200 py-4">
+          <small class="font-sans antialiased text-sm text-current">
+            Page {{ subjectHourStore.current }} of {{ subjectHourStore.totalPage }}
+          </small>
+          <div class="flex gap-2">
+            <Button variant="outline" color="secondary" :disabled="subjectHourStore.current === 1"
+              @click="paginate(subjectHourStore.current - 1)">
+              Previous
+            </Button>
+            <Button variant="outline" color="secondary"
+              :disabled="subjectHourStore.current >= subjectHourStore.totalPage"
+              @click="paginate(subjectHourStore.current + 1)">
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </div>

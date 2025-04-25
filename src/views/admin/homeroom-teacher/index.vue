@@ -25,11 +25,14 @@ const gwtHomeroomTeacher = async () => {
 
 const searchData = async () => {
   await homeroomTeacherStore.changePage(1);
+  await gwtHomeroomTeacher();
 };
 
 const paginate = async (page) => {
-  await homeroomTeacherStore.changePage(page);
-  await gwtHomeroomTeacher();
+  if (page >= 1 && page <= homeroomTeacherStore.totalPage) {
+    await homeroomTeacherStore.changePage(page);
+    await gwtHomeroomTeacher();
+  }
 };
 
 const openModal = (mode, id = null) => {
@@ -159,7 +162,7 @@ onMounted(() => {
               <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
                 <td class="p-3">
                   <div class="flex items-center gap-3">
-                    <img :src="row.photo || '/src/assets/default_photo.jpg'" :alt="row.name"
+                    <img :src="row.photo || '/default_photo.jpg'" :alt="row.name"
                       class="inline-block object-cover object-center data-[shape=square]:rounded-none data-[shape=circular]:rounded-full data-[shape=rounded]:rounded-[current] w-8 h-8 rounded"
                       data-shape="circular" />
                     <div class="flex flex-col">
@@ -218,22 +221,23 @@ onMounted(() => {
             </tbody>
           </table>
         </div>
-        <div class="flex items-center justify-between border-gray-200 py-4"><small
-            class="font-sans antialiased text-sm text-current">Page {{ homeroomTeacherStore.totalPage != 0 ?
-              homeroomTeacherStore.current
-              : homeroomTeacherStore.totalPage }} of {{
-              homeroomTeacherStore.totalPage }}</small>
-          <div class="flex gap-2"><button
-              class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="homeroomTeacherStore.current === 1"
-              @click="paginate(homeroomTeacherStore.current - 1)">Previous</button><button
-              class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="homeroomTeacherStore.current >=
-                Math.ceil(homeroomTeacherStore.totalData / homeroomTeacherStore.perpage)
-                " @click="paginate(homeroomTeacherStore.current + 1)">Next</button></div>
+        <div class="flex items-center justify-between border-gray-200 py-4">
+          <small class="font-sans antialiased text-sm text-current">
+            Page {{ homeroomTeacherStore.current }} of {{ homeroomTeacherStore.totalPage }}
+          </small>
+          <div class="flex gap-2">
+            <Button variant="outline" color="secondary" :disabled="homeroomTeacherStore.current <= 1"
+              @click="paginate(homeroomTeacherStore.current - 1)">
+              Previous
+            </Button>
+            <Button variant="outline" color="secondary"
+              :disabled="homeroomTeacherStore.current >= homeroomTeacherStore.totalPage"
+              @click="paginate(homeroomTeacherStore.current + 1)">
+              Next
+            </Button>
+          </div>
         </div>
       </div>
-
     </div>
   </Layout>
 </template>

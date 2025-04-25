@@ -31,15 +31,20 @@ export const useAdminSubjectScheduleStore = defineStore("adminSubjectSchedule", 
       try {
         const url = `${this.apiUrl}/v1/admin/subject-schedules?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`;
         const res = await axios.get(url);
-        const schedulesDataList = res.data.data;
-        this.schedules = schedulesDataList;
-        this.totalData = res.data.data.meta.total;
-        this.totalPage = Math.ceil(this.totalData / this.perpage);
+        this.schedules = res.data.data;
+        this.totalData = res.data.meta?.total || 0;
+        this.totalPage = Math.max(1, Math.ceil(this.totalData / this.perpage));
+        if (this.current > this.totalPage) {
+          this.current = this.totalPage;
+        }
       } catch (error) {
         this.response = {
           status: error.response?.status,
           message: error.message,
         };
+        this.totalData = 0;
+        this.totalPage = 1;
+        this.current = 1;
       }
     },
     async changePage(newPage) {

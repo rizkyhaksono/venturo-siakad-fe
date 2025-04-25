@@ -27,14 +27,20 @@ export const useAdminSubjectStore = defineStore("adminSubject", {
       this.modalAction.action = newAction;
       this.subjectDetail = subjectData;
     },
-    async getSubject() {
+    async getSubject(params = {}) {
       try {
-        const url = `${this.apiUrl}/v1/admin/subjects?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`;
-        const res = await axios.get(url);
-        const subjectDataList = res.data;
-        this.subject = subjectDataList;
-        this.totalData = res.data.total;
-        this.totalPage = Math.ceil(this.totalData / this.perpage);
+        const url = `${this.apiUrl}/v1/admin/subjects`;
+        const res = await axios.get(url, {
+          params: {
+            page: params.page || this.current,
+            per_page: params.per_page || this.perpage,
+            name: params.search || this.searchQuery
+          }
+        });
+        this.subject = res.data;
+        this.current = res.data.meta.current_page;
+        this.totalData = res.data.meta.total;
+        this.perpage = res.data.meta.per_page;
       } catch (error) {
         this.response = {
           status: error.response?.status,

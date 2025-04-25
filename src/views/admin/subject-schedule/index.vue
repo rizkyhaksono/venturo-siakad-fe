@@ -22,11 +22,14 @@ const getClassHistories = async () => {
 
 const searchData = async () => {
   await subjectScheduleStore.changePage(1);
+  await getClassHistories();
 };
 
 const paginate = async (page) => {
-  await subjectScheduleStore.changePage(page);
-  await getClassHistories();
+  if (page >= 1 && page <= subjectScheduleStore.totalPage) {
+    await subjectScheduleStore.changePage(page);
+    await getClassHistories();
+  }
 };
 
 const openClassModal = (mode, id = null) => {
@@ -213,19 +216,21 @@ onMounted(() => {
             </tbody>
           </table>
         </div>
-        <div class="flex items-center justify-between border-gray-200 py-4"><small
-            class="font-sans antialiased text-sm text-current">Page {{ subjectScheduleStore.totalPage != 0 ?
-              subjectScheduleStore.current
-              : subjectScheduleStore.totalPage }} of {{
-              subjectScheduleStore.totalPage }}</small>
-          <div class="flex gap-2"><button
-              class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="subjectScheduleStore.current === 1"
-              @click="paginate(subjectScheduleStore.current - 1)">Previous</button><button
-              class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="subjectScheduleStore.current >=
-                Math.ceil(subjectScheduleStore.totalData / subjectScheduleStore.perpage)
-                " @click="paginate(subjectScheduleStore.current + 1)">Next</button></div>
+        <div class="flex items-center justify-between border-gray-200 py-4">
+          <small class="font-sans antialiased text-sm text-current">
+            Page {{ subjectScheduleStore.current }} of {{ subjectScheduleStore.totalPage }}
+          </small>
+          <div class="flex gap-2">
+            <Button variant="outline" color="secondary" :disabled="subjectScheduleStore.current <= 1"
+              @click="paginate(subjectScheduleStore.current - 1)">
+              Previous
+            </Button>
+            <Button variant="outline" color="secondary"
+              :disabled="subjectScheduleStore.current >= subjectScheduleStore.totalPage"
+              @click="paginate(subjectScheduleStore.current + 1)">
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </div>
