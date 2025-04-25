@@ -10,7 +10,7 @@ const rows = ref([]);
 
 const getRegistrations = async () => {
   await studentStore.getStudents();
-  rows.value = studentStore.students.data
+  rows.value = studentStore.students
 };
 
 const searchData = async () => {

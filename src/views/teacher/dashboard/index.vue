@@ -1,375 +1,219 @@
 <script setup>
-import Layout from "@/layouts/main.vue";
-import Datepicker from "@/components/widgets/DatePicker";
-import { ref, onMounted } from "vue";
-import QuillEditor from "@/components/widgets/Quill";
-import Select from "@/components/widgets/Select";
-const errorMessages = ref([]); // Simpan error jika ada
-import CkEditor from "@/components/widgets/CkEditor";
-import Button from "@/components/widgets/Button";
-import Input from "@/components/widgets/Input";
-import Card from "@/components/widgets/Card";
-import ImageCropper from "@/components/widgets/Cropper";
 import ApexChart from "@/components/widgets/Apexchart";
+import Layout from "@/layouts/main.vue";
+import { onMounted } from "vue";
 
-const currencyFormatter = (val) => `Rp ${val.toLocaleString()}`;
-const percentageFormatter = (val) => `${val}%`;
-const tooltipFormat = (val, label) => `${label}: ${val}`;
+import {
+  useAuthStore,
+  useTeacherClassStore,
+  useTeacherStudentStore,
+  useTeacherSubjectStore
+} from "@/state/pinia";
 
-const selectedItem = ref(null); // Untuk single select
-const selectedItems = ref([]); // Untuk multi select
-const makanan = ref([
-  { value: "rendang", label: "Rendang" },
-  { value: "soto", label: "Soto" },
-  { value: "sate", label: "Sate" },
-  { value: "rawon", label: "Rawon" },
-  { value: "ayam geprek", label: "Ayam geprek" },
-]);
+const meStore = useAuthStore();
+const classStore = useTeacherClassStore();
+const studentStore = useTeacherStudentStore();
+const subjectStore = useTeacherSubjectStore();
 
-const contentQuill = ref(""); // Menyimpan teks editor
-const selectedRange = ref([]);
-const selectedDate = ref(null);
-const contentCk = ref("");
-const editorConfig = {
-  toolbar: ["italic", "link", "|", "undo", "redo"],
-  placeholder: "Tulis deskripsi di sini...",
-};
+const getMe = async () => {
+  await meStore.saveUserLogin();
+}
 
-const nama = ref("");
-const deskripsi = ref("");
-const setuju = ref(false);
-const hobi = ref([]);
-const kota = ref("");
-const gender = ref("");
-const password = ref("");
-const email = ref("");
+const getClass = async () => {
+  await classStore.getClasses();
+}
+
+const getStudent = async () => {
+  await studentStore.getStudents();
+}
+
+const getSubject = async () => {
+  await subjectStore.getSubjects();
+}
+
+onMounted(async () => {
+  await getMe();
+  await getClass();
+  await getStudent();
+  await getSubject();
+});
 
 </script>
 
 <template>
   <Layout>
-    <div class="text-xl font-bold mb-4 text-center text-gray-800">
-      Welcome to Teacher Dashboard
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-blue-600 to-blue-800 p-8 rounded-lg shadow-lg mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="space-y-3">
+            <h1 class="text-xl font-bold text-white mb-2 animate-fade-in">
+              Welcome, {{ meStore.userLogin.name }}!
+            </h1>
+            <p class="text-lg text-blue-100 opacity-90">
+              Your Teaching Dashboard
+              <span class="inline-block ml-2">
+                <svg class="w-6 h-6 inline animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="grid grid-cols-2 md:grid-cols-2 gap-6">
-      <!-- Line Chart -->
-      <ApexChart type="line" title="Tren Pengunjung" :categories="['Jan', 'Feb', 'Mar', 'Apr']" :series="[
-        { name: 'Desktop', data: [30, 40, 35, 50] },
-        { name: 'Mobile', data: [20, 30, 25, 45] }
-      ]" :yAxisFormatter="currencyFormatter" :tooltipFormatter="tooltipFormat" />
 
-      <!-- Area Chart -->
-      <ApexChart type="area" title="Traffic Harian" :categories="['Sen', 'Sel', 'Rab', 'Kam']" :series="[
-        { name: 'User Aktif', data: [100, 200, 150, 250] }
-      ]" :colors="['#00C49F']" />
+    <!-- Quick Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:border-blue-500 transition-all">
+        <div class="flex items-center">
+          <div class="p-4 rounded-full bg-blue-50 text-blue-600">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <div class="ml-6">
+            <p class="text-sm font-medium text-gray-500">Total Class</p>
+            <p class="text-2xl font-bold text-gray-800">
+              {{ classStore?.classes?.meta?.total }}
+            </p>
+          </div>
+        </div>
+      </div>
 
-      <!-- Column Chart -->
-      <ApexChart type="column" title="Penjualan Bulanan" :categories="['Jan', 'Feb', 'Mar']" :series="[
-        { name: 'Produk A', data: [400, 700, 500] }
-      ]" :yAxisFormatter="currencyFormatter" />
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:border-green-500 transition-all">
+        <div class="flex items-center">
+          <div class="p-4 rounded-full bg-green-50 text-green-600">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </div>
+          <div class="ml-6">
+            <p class="text-sm font-medium text-gray-500">Total Subject</p>
+            <p class="text-2xl font-bold text-gray-800">
+              {{ subjectStore?.subjects.meta?.total }}
+            </p>
+          </div>
+        </div>
+      </div>
 
-      <!-- Bar Chart -->
-      <ApexChart type="bar" title="Skor Siswa" :categories="['Ali', 'Budi', 'Cici']" :series="[
-        { name: 'Nilai', data: [85, 90, 78] }
-      ]" :yAxisFormatter="val => `${val}/100`" />
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:border-purple-500 transition-all">
+        <div class="flex items-center">
+          <div class="p-4 rounded-full bg-purple-50 text-purple-600">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <div class="ml-6">
+            <p class="text-sm font-medium text-gray-500">Total Students</p>
+            <p class="text-2xl font-bold text-gray-800">
+              {{ studentStore?.students?.length }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      <!-- Pie Chart -->
-      <ApexChart type="pie" title="Distribusi Jenis Kelamin" :categories="['Laki-laki', 'Perempuan']" :series="[60, 40]"
-        :colors="['#42A5F5', '#EF5350']" />
-
-      <!-- Donut Chart -->
-      <ApexChart type="donut" title="Market Share" :categories="['Brand A', 'Brand B', 'Brand C']"
-        :series="[40, 35, 25]" :colors="['#008FFB', '#00E396', '#FEB019']" />
-
-      <!-- RadialBar Chart -->
-      <ApexChart type="radialBar" title="Progress Target" :categories="['Target Tercapai']" :series="[75]"
-        :yAxisFormatter="percentageFormatter" />
-
-      <!-- PolarArea Chart -->
-      <ApexChart type="polarArea" title="Skor Departemen" :categories="['HR', 'Tech', 'Sales', 'Marketing']"
-        :series="[80, 90, 70, 60]" />
-
-      <!-- Heatmap -->
-      <ApexChart type="heatmap" title="Aktivitas Mingguan" :categories="['Sen', 'Sel', 'Rab', 'Kam', 'Jum']" :series="[
-        {
-          name: 'Minggu 1',
-          data: [10, 20, 30, 40, 50]
-        },
-        {
-          name: 'Minggu 2',
-          data: [20, 10, 40, 30, 60]
-        }
-      ]" :colors="['#FF5722']" />
-
-      <!-- Bubble Chart -->
-      <ApexChart type="bubble" title="Distribusi Ukuran Produk" :series="[
-        {
-          name: 'Produk A',
-          data: [
-            { x: 10, y: 20, z: 15 },
-            { x: 20, y: 30, z: 20 }
-          ]
-        }
-      ]" />
-
-      <!-- Candlestick Chart -->
-      <ApexChart type="candlestick" title="Harga Saham" :series="[
-        {
-          data: [
-            {
-              x: new Date('2023-01-01'),
-              y: [51, 55, 50, 54]
-            },
-            {
-              x: new Date('2023-01-02'),
-              y: [54, 56, 52, 55]
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Class Distribution</h3>
+        <ApexChart type="donut"
+          :categories="[subjectStore?.subjects?.data?.[0]?.study_year?.year + ' Semester ' + subjectStore?.subjects?.data?.[0]?.study_year?.semester]"
+          :series="[subjectStore?.subjects?.meta?.total || 0]" :colors="['#4F46E5']" :options="{
+            tooltip: {
+              y: {
+                formatter: function (value) {
+                  return value + ' Subject' + (value !== 1 ? 's' : '');
+                }
+              }
             }
-          ]
-        }
-      ]" />
+          }" />
+      </div>
 
-      <!-- Radar Chart -->
-      <ApexChart type="radar" title="Kemampuan Tim"
-        :categories="['Komunikasi', 'Teknik', 'Problem Solving', 'Leadership']" :series="[
-          {
-            name: 'Tim A',
-            data: [80, 85, 75, 90]
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Weekly Schedule</h3>
+        <ApexChart type="column" :categories="subjectStore?.subjects?.data?.map(subject => subject.name) || []" :series="[{
+          name: 'Subjects',
+          data: subjectStore?.subjects?.data?.map(() => 1) || []
+        }]" :colors="['#4F46E5']" :options="{
+          chart: {
+            toolbar: {
+              show: false
+            }
           },
-          {
-            name: 'Tim B',
-            data: [70, 78, 82, 88]
+          plotOptions: {
+            bar: {
+              borderRadius: 4,
+              horizontal: false,
+            }
+          },
+          dataLabels: {
+            enabled: false
+          },
+          tooltip: {
+            y: {
+              formatter: function (value) {
+                return value + ' Subject';
+              }
+            }
+          },
+          xaxis: {
+            labels: {
+              rotate: -45,
+              trim: true,
+              maxHeight: 120
+            }
           }
-        ]" />
-    </div>
-    <div class="tab-group">
-      <div class="tab-container" role="tablist">
-        <div class="tab-indicator"></div>
-        <a href="#" class="tab-link tab-link-active" data-tab-target="tab1-group">HTML</a>
-        <a href="#" class="tab-link" data-tab-target="tab2-group">React</a>
-        <a href="#" class="tab-link" data-tab-target="tab3-group">Vue</a>
-        <a href="#" class="tab-link" data-tab-target="tab4-group">Angular</a>
-        <a href="#" class="tab-link" data-tab-target="tab5-group">Svelte</a>
+        }" />
       </div>
 
-      <div class="tab-content-container">
-        <div id="tab1-group" class="tab-content">Konten HTML</div>
-        <div id="tab2-group" class="tab-content tab-content-hidden">Konten React</div>
-        <div id="tab3-group" class="tab-content tab-content-hidden">Konten Vue</div>
-        <div id="tab4-group" class="tab-content tab-content-hidden">Konten Angular</div>
-        <div id="tab5-group" class="tab-content tab-content-hidden">Konten Svelte</div>
-      </div>
-    </div>
-
-    <div data-stepper-container data-initial-step="1" class="stepper-container">
-      <div class="stepper">
-        <div aria-disabled="false" data-step class="group step"> <!-- Tambahkan `group` di HTML -->
-          <div class="relative">
-            <span class="step-circle">1</span>
-          </div>
-          <div class="step-line"></div>
-        </div>
-        <div aria-disabled="true" data-step class="group step"> <!-- Tambahkan `group` di HTML -->
-          <div class="relative">
-            <span class="step-circle">2</span>
-          </div>
-          <div class="step-line"></div>
-        </div>
-        <div aria-disabled="true" data-step class="group step"> <!-- Tambahkan `group` di HTML -->
-          <div class="relative">
-            <span class="step-circle">3</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-8">
-        <div data-step-content="1" class="step-content active">
-          <p class="text-xl font-semibold mb-4">Step 1 Content</p>
-          <p class="text-slate-500">This is the content for step 1. Add whatever content you need here.</p>
-        </div>
-        <div data-step-content="2" class="step-content">
-          <p class="text-xl font-semibold mb-4">Step 2 Content</p>
-          <p class="text-slate-500">This is the content for step 2. Add whatever content you need here.</p>
-        </div>
-        <div data-step-content="3" class="step-content">
-          <p class="text-xl font-semibold mb-4">Step 3 Content</p>
-          <p class="text-slate-500">This is the content for step 3. Add whatever content you need here.</p>
-        </div>
-      </div>
-
-      <div class="mt-6 flex w-full justify-between gap-4">
-        <button data-stepper-prev class="step-btn">Previous</button>
-        <button data-stepper-next class="step-btn">Next</button>
-      </div>
-    </div>
-
-
-
-    <div class="dropdown" data-placement="bottom-start">
-      <button data-toggle="dropdown" aria-expanded="false" class="btn-dropdown">
-        Open
-      </button>
-      <div data-role="menu" class="dropdown-menu hidden  ">
-        <a href="#" class="dropdown-item">Add Team</a>
-        <a href="#" class="dropdown-item">Add Project</a>
-        <a href="#" class="dropdown-item">My Profile</a>
-      </div>
-    </div>
-
-
-    <div class="">
-      <Card class="bg-gray-50 shadow-xl" :headerClass="'bg-blue-100 text-blue-900'" :bodyClass="'text-gray-700'"
-        :footerClass="'bg-gray-200 flex justify-between'">
-
-        <template #header>
-          <h5 class="text-lg font-bold">UI/UX Review Check</h5>
-        </template>
-
-        <template #body>
-          <p>
-            The place is close to Barceloneta Beach and bus stop just 2 min by walk and near to "Naviglio"
-            where you can enjoy the main night life in Barcelona.
-          </p>
-        </template>
-
-        <template #footer>
-          <button
-            class="px-4 py-2 text-sm font-medium text-gray-600 border border-gray-400 rounded-md hover:bg-gray-300 transition-all">
-            Close
-          </button>
-          <button
-            class="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-md hover:bg-gray-700 transition-all">
-            Read More
-          </button>
-        </template>
-      </Card>
-
-    </div>
-    <div>
-      <Button class="me-2" color="primary" variant="solid">Primary Solid</Button>
-      <Button class="me-2" color="secondary" variant="solid">Secondary Solid</Button>
-      <Button class="me-2" color="info" variant="solid">Info Solid</Button>
-      <Button class="me-2" color="success" variant="solid">Success Solid</Button>
-      <Button class="me-2" color="warning" variant="solid">Warning Solid</Button>
-      <Button class="me-2" color="error" variant="solid">Error Solid</Button>
-    </div>
-    <div>
-      <Button class="me-2" color="primary" variant="outline">Primary Outline</Button>
-      <Button class="me-2" color="secondary" variant="outline">Secondary Outline</Button>
-      <Button class="me-2" color="info" variant="outline">Info Outline</Button>
-      <Button class="me-2" color="success" variant="outline">Success Outline</Button>
-      <Button class="me-2" color="warning" variant="outline">Warning Outline</Button>
-      <Button class="me-2" color="error" variant="outline">Error Outline</Button>
-
-    </div>
-    <div>
-      <Button class="me-2" color="primary" variant="ghost">Primary Ghost</Button>
-      <Button class="me-2" color="secondary" variant="ghost">Secondary Ghost</Button>
-      <Button class="me-2" color="info" variant="ghost">Info Ghost</Button>
-      <Button class="me-2" color="success" variant="ghost">Success Ghost</Button>
-      <Button class="me-2" color="warning" variant="ghost">Warning Ghost</Button>
-      <Button class="me-2" color="error" variant="ghost">Error Ghost</Button>
-
-    </div>
-    <div>
-      <Button class="me-2" color="primary" variant="solid" :isLoading="true">Primary Solid Loading</Button>
-      <Button class="me-2" color="secondary" variant="outline" :isLoading="true">Secondary Outline
-        Loading</Button>
-      <Button class="me-2" color="info" variant="ghost" :isLoading="true">Info Ghost Loading</Button>
-    </div>
-    <div class="">
-      <div class="mb-4 pb-2">
-
-        <ImageCropper :aspectRatio="16 / 9" :inputAspectRatio="true"
-          :text="'Letakkan gambar disini atau klik untuk mengunggah'" />
-      </div>
-      <div class="mb-4 pb-2">
-
-        <ImageCropper :aspectRatio="16 / 9" :inputAspectRatio="true" :multiple=true
-          :text="'Letakkan gambar disini atau klik untuk mengunggah secara banyak'" />
-      </div>
-
-      <!-- Input Teks -->
-      <div class="mb-4 pb-2">
-        <Input v-model="nama" label="Nama Lengkap" placeholder="Masukkan nama Anda" />
-        <p class="mt-2">Input: {{ nama }}</p>
-      </div>
-
-      <!-- Input Textarea -->
-      <div class="mb-4 pb-2">
-        <Input v-model="deskripsi" type="textarea" label="Deskripsi" placeholder="Tulis sesuatu..." />
-        <p class="mt-2">Input: {{ deskripsi }}</p>
-      </div>
-
-
-      <div class="mb-4 pb-2">
-        <!-- Input Checkbox (Single) -->
-        <Input type="checkbox" label="Setuju dengan syarat dan ketentuan" v-model="setuju" />
-        <p class="mt-2">Selected: {{ setuju }}</p>
-      </div>
-      <div class="mb-4 pb-2">
-        <!-- Input Checkbox (Multiple) -->
-        <Input type="checkbox" label="Pilih Hobi" :options="[
-          { label: 'Membaca', value: 'membaca' },
-          { label: 'Menulis', value: 'menulis' },
-          { label: 'Berenang', value: 'berenang' }
-        ]" v-model="hobi" />
-        <p class="mt-2">Selected: {{ hobi }}</p>
-      </div>
-      <div class="mb-4 pb-2">
-        <!-- Input Select (Dropdown) -->
-        <Input type="select" label="Pilih Kota" :options="[
-          { label: 'Jakarta', value: 'jakarta' },
-          { label: 'Bandung', value: 'bandung' },
-          { label: 'Surabaya', value: 'surabaya' }
-        ]" v-model="kota" />
-        <p class="mt-2">Selected: {{ kota }}</p>
-      </div>
-      <div class="mb-4 pb-2">
-        <!-- Input Radio -->
-        <Input type="radio" label="Jenis Kelamin" :options="[
-          { label: 'Laki-laki', value: 'L' },
-          { label: 'Perempuan', value: 'P' }
-        ]" v-model="gender" />
-        <p class="mt-2">Selected: {{ gender }}</p>
-      </div>
-      <!-- Input Password -->
-      <div class="mb-4 pb-2">
-        <Input v-model="password" type="password" label="Password" placeholder="Masukkan password" />
-        <p class="mt-2">Input: ****** (disembunyikan)</p>
-      </div>
-
-      <!-- Input dengan Error -->
-      <div class="mb-4 pb-2">
-        <Input v-model="email" label="Email" placeholder="Masukkan email" :errors="['Email tidak valid']" />
-        <p class="mt-2">Input: {{ email }}</p>
-      </div>
-    </div>
-    <div class="">
-      <div class="mb-4 pb-2">
-        <Datepicker v-model="selectedDate" label="Pilih Tanggal" placeholder="Pilih tanggal" />
-        <p class="mt-2 text-sm">Tanggal yang dipilih: {{ selectedDate }}</p>
-      </div>
-      <div class="mb-4 pb-2">
-        <Datepicker v-model="selectedRange" label="Pilih Rentang Tanggal" placeholder="Pilih rentang tanggal"
-          :range="true" />
-        <p class="mt-2 text-sm">Rentang yang dipilih: {{ selectedRange }}</p>
-      </div>
-      <div class="mb-4 pb-2">
-        <Select v-model="selectedItem" label="Pilih Makanan" placeholder="Pilih negara..." :options="makanan" />
-        <p class="mt-4">Selected: {{ selectedItem }}</p>
-      </div>
-      <div class="mb-4 pb-2">
-        <Select v-model="selectedItems" label="Pilih Banyak Makanan" placeholder="Pilih banyak negara..."
-          :options="makanan" multiple />
-        <p class="mt-4">Selected: {{ selectedItems }}</p>
-      </div>
-      <div class="mb-4 pb-2">
-        <QuillEditor v-model="contentQuill" label="Deskripsi" placeholder="Tulis sesuatu..." :errors="errorMessages" />
-        <div v-html="contentQuill" class="border p-4"></div>
-      </div>
-      <div class="mb-4 pb-2">
-        <CkEditor v-model="contentCk" label="Deskripsi" :editorConfig="editorConfig" />
-        <div v-html="contentCk" class="border p-4"></div>
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 md:col-span-2">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Student Progress</h3>
+        <ApexChart type="line"
+          :categories="studentStore?.students?.map(student => student.classHistory.entry_date) || []" :series="[{
+            name: 'Students',
+            data: studentStore?.students?.map((_, index) => index + 1) || []
+          }]" :colors="['#4F46E5']" :options="{
+            chart: {
+              toolbar: {
+                show: false
+              }
+            },
+            stroke: {
+              curve: 'smooth',
+              width: 3
+            },
+            markers: {
+              size: 5
+            },
+            xaxis: {
+              labels: {
+                rotate: -45,
+                trim: true
+              },
+              title: {
+                text: 'Entry Date'
+              }
+            },
+            yaxis: {
+              title: {
+                text: 'Number of Students'
+              },
+              labels: {
+                formatter: (value) => `${value} Students`
+              }
+            },
+            tooltip: {
+              y: {
+                formatter: (value) => `${value} Students`
+              }
+            }
+          }" />
       </div>
     </div>
   </Layout>
