@@ -86,7 +86,6 @@ const getSubjectSchedule = async () => {
 const getStudents = async () => {
     await studentStore.getStudents();
     students.value = studentStore.students
-    console.log(students.value)
 }
 
 onMounted(async () => {
@@ -121,7 +120,7 @@ onMounted(async () => {
                     <div class="ml-4">
                         <p class="text-gray-500">Total Users</p>
                         <p class="text-xl font-semibold">{{ userCounts.Admin + userCounts.Student + userCounts.Teacher
-                            }}</p>
+                        }}</p>
                     </div>
                 </div>
             </div>
@@ -167,7 +166,7 @@ onMounted(async () => {
                     <div class="ml-4">
                         <p class="text-gray-500">Total Classes</p>
                         <p class="text-xl font-semibold">{{[...new Set(classHistory.map(item =>
-                            item.class.name))].length }}</p>
+                            item.class.name))].length}}</p>
                     </div>
                 </div>
             </div>

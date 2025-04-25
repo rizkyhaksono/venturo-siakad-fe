@@ -15,18 +15,34 @@ const selectedUser = ref(null);
 const userModalTitle = ref("");
 const formUserRef = ref(null);
 
+const currentPage = ref(1);
+const lastPage = ref(1);
+const total = ref(0);
+const perPage = ref(10);
+
 const getClassHistories = async () => {
   await classHistoryStore.getClassHistory();
   rows.value = classHistoryStore.classHistory?.data?.data || [];
+  currentPage.value = classHistoryStore.current || 1;
+  total.value = classHistoryStore.classHistory?.data?.data?.length || 0;
+  lastPage.value = Math.ceil(total.value / perPage.value);
 };
 
 const searchData = async () => {
+  currentPage.value = 1;
   await classHistoryStore.changePage(1);
+  await getClassHistories();
 };
 
 const paginate = async (page) => {
-  await classHistoryStore.changePage(page);
-  await getClassHistories();
+  if (page < 1 || page > lastPage.value) return;
+
+  try {
+    await classHistoryStore.changePage(page);
+    await getClassHistories();
+  } catch (error) {
+    console.error('Pagination error:', error);
+  }
 };
 
 const openClassModal = (mode, id = null) => {
@@ -62,7 +78,6 @@ const deleteClassHistory = async (id) => {
     }
   }
 };
-
 
 onMounted(() => {
   getClassHistories();
@@ -203,19 +218,20 @@ onMounted(() => {
             </tbody>
           </table>
         </div>
-        <div class="flex items-center justify-between border-gray-200 py-4"><small
-            class="font-sans antialiased text-sm text-current">Page {{ classHistoryStore.totalPage != 0 ?
-              classHistoryStore.current
-              : classHistoryStore.totalPage }} of {{
-              classHistoryStore.totalPage }}</small>
-          <div class="flex gap-2"><button
-              class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="classHistoryStore.current === 1"
-              @click="paginate(classHistoryStore.current - 1)">Previous</button><button
-              class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="classHistoryStore.current >=
-                Math.ceil(classHistoryStore.totalData / classHistoryStore.perpage)
-                " @click="paginate(classHistoryStore.current + 1)">Next</button></div>
+        <div class="flex items-center justify-between border-gray-200 py-4">
+          <small class="font-sans antialiased text-sm text-current">
+            Page {{ currentPage }} of {{ lastPage }} (Total: {{ total }} items)
+          </small>
+          <div class="flex gap-2">
+            <Button @click="paginate(currentPage - 1)" variant="outline" color="secondary"
+              :disabled="currentPage === 1">
+              Previous
+            </Button>
+            <Button @click="paginate(currentPage + 1)" variant="outline" color="secondary"
+              :disabled="currentPage >= lastPage">
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </div>

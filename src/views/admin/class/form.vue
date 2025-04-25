@@ -27,7 +27,7 @@ const formModel = reactive({
 });
 
 const studyYearOptions = computed(() => {
-  return studyYearStore?.studyYears?.data?.data?.map(item => ({
+  return studyYearStore?.studyYears?.map(item => ({
     label: `${item.year} - Semester ${item.semester}`,
     value: item.id
   })) || [];

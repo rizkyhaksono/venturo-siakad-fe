@@ -15,9 +15,16 @@ const selectedClass = ref(null);
 const modalTitle = ref("");
 const formRef = ref(null);
 
+const currentPage = ref(1);
+const lastPage = ref(1);
+const total = ref(0);
+
 const getClasses = async () => {
   await classStore.getClasses();
   rows.value = classStore.classes || [];
+  currentPage.value = rows.value.meta?.current_page || 1;
+  lastPage.value = rows.value.meta?.last_page || 1;
+  total.value = rows.value.meta?.total || 0;
 };
 
 const searchData = async () => {
@@ -149,7 +156,7 @@ onMounted(() => {
               </tr>
             </thead>
             <tbody class="group text-sm text-gray-800 dark:text-white">
-              <tr class="border-b border-gray-200 last:border-0" v-for="row in classStore.classes.data" :key="row.id">
+              <tr class="border-b border-gray-200 last:border-0" v-for="row in rows.data" :key="row.id">
                 <td class="p-3">
                   <div class="flex items-center gap-3">
                     <small class="font-sans antialiased text-sm font-medium text-current">
@@ -181,22 +188,22 @@ onMounted(() => {
             </tbody>
           </table>
         </div>
-        <div class="flex items-center justify-between border-gray-200 py-4"><small
-            class="font-sans antialiased text-sm text-current">Page {{ classStore.totalPage != 0 ?
-              classStore.current
-              : classStore.totalPage }} of {{
-              classStore.totalPage }}</small>
-          <div class="flex gap-2"><button
-              class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="classStore.current === 1"
-              @click="paginate(classStore.current - 1)">Previous</button><button
-              class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
-              data-shape="default" data-width="default" :disabled="classStore.current >=
-                Math.ceil(classStore.totalData / classStore.perpage)
-                " @click="paginate(classStore.current + 1)">Next</button></div>
+        <div class="flex items-center justify-between border-gray-200 py-4">
+          <small class="font-sans antialiased text-sm text-current">
+            Page {{ currentPage }} of {{ lastPage }} (Total: {{ total }} items)
+          </small>
+          <div class="flex gap-2">
+            <Button @click="paginate(currentPage - 1)" variant="outline" color="secondary"
+              :disabled="currentPage === 1">
+              Previous
+            </Button>
+            <Button @click="paginate(currentPage + 1)" variant="outline" color="secondary"
+              :disabled="currentPage >= lastPage">
+              Next
+            </Button>
+          </div>
         </div>
       </div>
-
     </div>
   </Layout>
 </template>

@@ -33,14 +33,14 @@ const formModel = reactive({
 });
 
 const studyYearOptions = computed(() => {
-  return studyYearStore?.studyYears?.data?.data?.map(item => ({
+  return studyYearStore?.studyYears?.map(item => ({
     label: `${item.year} - Semester ${item.semester}`,
     value: item.id
   })) || [];
 });
 
 const teacherOptions = computed(() => {
-  return teacherStore?.teachers?.data?.data?.map(item => ({
+  return teacherStore?.teachers?.map(item => ({
     label: item.name,
     value: item.id
   })) || [];

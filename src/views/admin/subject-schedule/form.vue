@@ -61,21 +61,21 @@ const classOptions = computed(() => {
 });
 
 const subjectOptions = computed(() => {
-  return subjectStore?.subject?.data?.data?.map(item => ({
+  return subjectStore?.subject?.data?.map(item => ({
     label: item.name,
     value: item.id
   })) || [];
 });
 
 const teacherOptions = computed(() => {
-  return teacherStore?.teachers?.data?.data?.map(item => ({
-    label: `${item.name} - ${item.user.email}`,
+  return teacherStore?.teachers.map(item => ({
+    label: `${item.name} - ${item.employee_number}`,
     value: item.id
   })) || [];
 });
 
 const subjectHourOptions = computed(() => {
-  return subjectHourStore?.subjectHour?.data?.data?.map(item => ({
+  return subjectHourStore?.subjectHour?.data?.map(item => ({
     label: `${item.start_hour} | ${item.start_time} - ${item.end_time}`,
     value: item.id
   })) || [];
