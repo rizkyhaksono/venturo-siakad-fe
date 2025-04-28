@@ -40,12 +40,31 @@ const togglePassword = () => {
     showPassword.value = !showPassword.value;
 };
 
+const handleErrorMessage = (error) => {
+    if (typeof error === 'object' && (error.email || error.password)) {
+        const messages = [];
+        if (error.email) messages.push(...error.email);
+        if (error.password) messages.push(...error.password);
+        return messages.join('\n');
+    }
+
+    if (Array.isArray(error)) {
+        return error[0];
+    }
+
+    if (typeof error === 'string') {
+        return error;
+    }
+
+    return "Invalid credentials. Please check your email and password.";
+};
+
 const login = async () => {
     const user = await authStore.login(formModel);
 
     if (statusCode.value !== 200) {
         toast.error("Login Failed", {
-            description: "Invalid credentials. Please check your email and password.",
+            description: handleErrorMessage(authStore.response.error),
             position: "bottom-right",
             duration: 3000,
             class: "bg-red-600 text-white border-none shadow-lg",
