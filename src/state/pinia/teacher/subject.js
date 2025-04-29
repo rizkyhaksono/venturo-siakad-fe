@@ -33,7 +33,7 @@ export const useTeacherSubjectStore = defineStore("teacherSubject", {
         const res = await axios.get(url);
         const subjectsDataList = res.data;
         this.subjects = subjectsDataList;
-        this.totalData = res.data.total;
+        this.totalData = res.data.meta.total;
         this.totalPage = Math.ceil(this.totalData / this.perpage);
       } catch (error) {
         this.response = {

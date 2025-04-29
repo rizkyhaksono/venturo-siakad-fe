@@ -33,7 +33,7 @@ export const useStudentSubjectScheduleStore = defineStore("studentSubjectSchedul
         const res = await axios.get(url);
         const schedulesDataList = res.data.data;
         this.schedules = schedulesDataList;
-        this.totalData = res.data.data.meta.total;
+        this.totalData = res.data.meta.total;
         this.totalPage = Math.ceil(this.totalData / this.perpage);
       } catch (error) {
         this.response = {

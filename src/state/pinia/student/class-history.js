@@ -33,7 +33,7 @@ export const useStudentClassHistoryStore = defineStore("studentClassHistory", {
         const res = await axios.get(url);
         const classHistoryDataList = res.data;
         this.classHistory = classHistoryDataList;
-        this.totalData = res.data.total;
+        this.totalData = res.data.data.length;
         this.totalPage = Math.ceil(this.totalData / this.perpage);
       } catch (error) {
         this.response = {

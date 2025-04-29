@@ -52,14 +52,14 @@ const formModel = reactive({
 });
 
 const studyYearOptions = computed(() => {
-  return studyYearStore?.studyYears?.data?.data?.map(item => ({
+  return studyYearStore?.studyYears.map(item => ({
     label: `${item.year} - Semester ${item.semester}`,
     value: item.id
   })) || [];
 });
 
 const studentOptions = computed(() => {
-  return studentStore?.students?.data?.data?.map(item => ({
+  return studentStore?.students.map(item => ({
     label: `${item.student_number} - ${item.name} - ${item.user.email}`,
     value: item.id
   })) || [];
@@ -122,7 +122,7 @@ const saveClassHistory = async () => {
       }
     } else {
       await classHistoryStore.postClassHstory(formModel);
-      if (classHistoryStore.response.status === 201) {
+      if (classHistoryStore.response.message === 201) {
         showSuccessToast("Class added successfully!");
       } else {
         showErrorToast("Failed to add Class.");

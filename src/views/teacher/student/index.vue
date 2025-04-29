@@ -152,7 +152,7 @@ onMounted(() => {
         </div>
         <div class="flex items-center justify-between border-gray-200 py-4">
           <small class="font-sans antialiased text-sm text-current">
-            Page {{ studentStore.students?.current_page || 1 }} of {{ studentStore.students?.last_page || 1 }}
+            Page {{ studentStore.students?.current_page || 1 }} of {{ studentStore.totalData || 1 }}
           </small>
           <div class="flex gap-2">
             <Button variant="outline" color="secondary" :disabled="!studentStore.students?.prev_page_url"

@@ -33,7 +33,7 @@ export const useTeacherClassStore = defineStore("teacherClass", {
         const res = await axios.get(url);
         const classesDataList = res.data;
         this.classes = classesDataList;
-        this.totalData = res.data.total;
+        this.totalData = res.data.meta.total;
         this.totalPage = Math.ceil(this.totalData / this.perpage);
       } catch (error) {
         this.response = {
