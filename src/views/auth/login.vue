@@ -145,8 +145,9 @@ const login = async () => {
                 </div>
 
                 <div class="flex items-center justify-between text-sm">
-                    <router-link to="/forgot-password" class="text-primary hover:underline">Forgot
-                        Password?</router-link>
+                    <router-link to="/forgot-password" class="text-primary hover:underline">
+                        Forgot Password?
+                    </router-link>
                 </div>
 
                 <button type="submit" class="w-full bg-primary text-white font-bold py-2 rounded-md mt-4">

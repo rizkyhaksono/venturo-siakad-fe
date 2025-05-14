@@ -17,6 +17,7 @@ import { useAdminTeacherStore } from "./pinia/admin/teacher";
 import { useAdminRegistrationStore } from "./pinia/admin/registration";
 import { useAdminStudentStore } from "./pinia/admin/student";
 import { useAdminStudyYearStore } from "./pinia/admin/study-year";
+import { useAdminRombelStore } from "./pinia/admin/rombel";
 
 // student
 import { useStudentClassStore } from "./pinia/student/class";
@@ -49,6 +50,7 @@ export {
   useAdminRegistrationStore,
   useAdminStudentStore,
   useAdminStudyYearStore,
+  useAdminRombelStore,
 
   // student
   useStudentClassStore,

@@ -154,24 +154,6 @@ onMounted(() => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Kelas
-                  </small>
-                </th>
-                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
-                  <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Guru Pengajar
-                  </small>
-                </th>
-                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
-                  <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Tahun Ajaran
-                  </small>
-                </th>
-                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
-                  <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
                     Actions
                   </small>
                 </th>
@@ -182,21 +164,6 @@ onMounted(() => {
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm font-medium text-current">
                     {{ row.name }}
-                  </small>
-                </td>
-                <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
-                    {{ row.class_id }}
-                  </small>
-                </td>
-                <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
-                    {{ row.teacher_id }}
-                  </small>
-                </td>
-                <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
-                    {{ row.study_year_id }}
                   </small>
                 </td>
                 <td class="p-3">

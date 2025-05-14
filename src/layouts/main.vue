@@ -63,7 +63,7 @@ const rolePrefix = getRolePrefix(getRole);
             class="fixed top-0 left-0 w-full z-50 flex h-14 lg:h-[60px] items-center justify-between border-b bg-gray-100 dark:bg-gray-900 px-4 lg:px-6">
             <!-- Logo -->
             <router-link :to="`${rolePrefix}/dashboard`" class="flex items-center gap-2 font-semibold">
-                <img src="../assets/logo-venturo.webp" class="w-32 h-auto">
+                <img src="https://natee.my.id/favicon.ico" class="size-8" alt="logo-siakad"> SIAKAD
             </router-link>
 
             <!-- Right Section (Theme Toggle + User Menu) -->

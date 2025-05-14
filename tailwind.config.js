@@ -34,16 +34,16 @@ module.exports = {
             colors: {
                 "vtd-primary": colors.sky,
                 "vtd-secondary": colors.gray,
-        
+
                 background: "hsl(210, 40%, 98%)", // Latar belakang terang
                 foreground: "hsl(210, 20%, 20%)", // Teks utama
 
                 primary: {
-                    DEFAULT: "hsl(193, 58%, 40%)",
+                    DEFAULT: "#5d5d5d",
                     foreground: "hsl(0, 0%, 100%)",
                 },
                 secondary: {
-                    DEFAULT: "hsl(193, 50%, 30%)",
+                    DEFAULT: "#b0b0b0",
                     foreground: "hsl(0, 0%, 100%)",
                 },
                 info: {

@@ -150,6 +150,11 @@ const adminMenus = [
         ]
     },
     {
+        label: "Rombel",
+        icon: mdiSchool,
+        to: `${rolePrefix}/rombel`,
+    },
+    {
         label: "Subject",
         icon: mdiGoogleClassroom,
         submenu: [

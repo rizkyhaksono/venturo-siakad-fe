@@ -62,6 +62,18 @@ export default [
         component: () => import("../views/admin/class"),
     },
     {
+        path: "/admin/rombel",
+        name: "rombe",
+        meta: { title: "Rombe Page", authRequired: true },
+        component: () => import("../views/admin/rombel"),
+    },
+    {
+        path: "/admin/rombel/create",
+        name: "rombe-create",
+        meta: { title: "Rombe Create Page", authRequired: true },
+        component: () => import("../views/admin/rombel/form.vue"),
+    },
+    {
         path: "/admin/class_history",
         name: "class-history",
         meta: { title: "Class History Page", authRequired: true },

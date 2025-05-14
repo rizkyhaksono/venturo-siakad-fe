@@ -70,7 +70,7 @@ const getRoles = async () => {
 
 const getRegistration = async () => {
     await registrationStore.getRegistrations();
-    registration.value = registrationStore.registrations.data
+    registration.value = registrationStore.registrations
 }
 
 const getClassHistory = async () => {
@@ -213,8 +213,8 @@ onMounted(async () => {
                             subjectSchedule.filter(schedule => schedule.day === 'Thursday').length,
                             subjectSchedule.filter(schedule => schedule.day === 'Friday').length
                         ]
-                    }]" :yAxisFormatter="val => `${val} Subjects`" :tooltipFormatter="(val, opts) => {
-                        const day = opts.w.globals.labels[opts.dataPointIndex];
+                    }]" :yAxisFormatter="val => `${val} Subjects`" :tooltipFormatter="(val, { w, dataPointIndex }) => {
+                        const day = w.config.xaxis.categories[dataPointIndex];
                         const subjects = subjectSchedule
                             .filter(schedule => schedule.day === day)
                             .map(schedule => `${schedule.subject.name} (${schedule.subject_hour.start_time}-${schedule.subject_hour.end_time})`)
