@@ -158,6 +158,12 @@ export default [
         meta: { title: "Subject Schedule", authRequired: true },
         component: () => import("../views/student/subject-schedule"),
     },
+    {
+        path: "/student/rombel",
+        name: "student-rombel",
+        meta: { title: "Rombel", authRequired: true },
+        component: () => import("../views/student/rombel"),
+    },
     // teacher routes
     {
         path: "/teacher/dashboard",

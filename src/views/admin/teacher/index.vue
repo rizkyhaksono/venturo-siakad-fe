@@ -132,7 +132,13 @@ onMounted(() => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Subject
+                    Total Class
+                  </small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                  <small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Assigned Class
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
@@ -157,7 +163,19 @@ onMounted(() => {
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.subject }}
+                    {{ row.total_classes }}
+                  </small>
+                </td>
+                <td class="p-3">
+                  <small class="font-sans antialiased text-sm text-current">
+                    <div v-if="row.assigned_classes && row.assigned_classes.length > 0">
+                      <div v-for="class_item in row.assigned_classes" :key="class_item.id">
+                        {{ class_item.name }}
+                      </div>
+                    </div>
+                    <div v-else>
+                      <span>-</span>
+                    </div>
                   </small>
                 </td>
                 <td class="p-3">

@@ -33,7 +33,7 @@ export const useAdminUserStore = defineStore("adminUser", {
         const res = await axios.get(url);
         const usersDataList = res.data.data.list.data;
         this.users = usersDataList;
-        this.totalData = res.data.data.meta.total;
+        this.totalData = res.data.data.list.total;
         this.totalPage = Math.ceil(this.totalData / this.perpage);
       } catch (error) {
         this.response = {

@@ -187,6 +187,7 @@ const studentMenus = [
         ]
     },
     { label: "Subject Schedule", to: `${rolePrefix}/subject_schedule`, icon: mdiGoogleClassroom },
+    { label: "Rombel", to: `${rolePrefix}/rombel`, icon: mdiGoogleClassroom },
 ];
 
 const teacherMenus = [

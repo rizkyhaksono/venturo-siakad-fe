@@ -10,7 +10,6 @@ const rows = ref([]);
 const getRombels = async () => {
   await rombelStore.getRombels();
   rows.value = rombelStore.rombels;
-  console.log(rows.value);
 };
 
 onMounted(() => {

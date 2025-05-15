@@ -18,6 +18,7 @@ const formModel = reactive({
 });
 
 const statusOptions = [
+  { value: "pending", label: "Pending" },
   { value: "accepted", label: "Accepted" },
   { value: "rejected", label: "Rejected" }
 ];

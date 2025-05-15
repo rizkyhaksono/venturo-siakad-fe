@@ -177,7 +177,7 @@ onMounted(() => {
             class="font-sans antialiased text-sm text-current">Page {{ roleStore.totalPage != 0 ?
               roleStore.current
               : roleStore.totalPage }} of {{
-              roleStore.totalPage }}</small>
+              roleStore.totalPage }} (Total {{ roleStore.totalData }})</small>
           <div class="flex gap-2"><button
               class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
               data-shape="default" data-width="default" :disabled="roleStore.current === 1"

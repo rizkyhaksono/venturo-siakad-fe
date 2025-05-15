@@ -121,12 +121,48 @@ onMounted(() => {
                         <thead
                             class="border-b border-gray-200 bg-gray-100 text-sm font-medium text-gray-600 dark:bg-gray-900">
                             <tr>
-                                <th class="cursor-pointer px-2.5 py-2 text-start font-medium"><small
-                                        class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">User</small>
-                                </th>
-                                <th class="cursor-pointer px-2.5 py-2 text-start font-medium"><small
+                                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                                    <small
                                         class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                                    </small>Action</th>
+                                        User
+                                    </small>
+                                </th>
+                                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                                    <small
+                                        class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                                        Wali
+                                    </small>
+                                </th>
+                                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                                    <small
+                                        class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                                        Pekerjaan Wali
+                                    </small>
+                                </th>
+                                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                                    <small
+                                        class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                                        Tanggal Lahir
+                                    </small>
+                                </th>
+                                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                                    <small
+                                        class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                                        Alamat
+                                    </small>
+                                </th>
+                                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                                    <small
+                                        class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                                        Gender
+                                    </small>
+                                </th>
+                                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                                    <small
+                                        class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                                        Action
+                                    </small>
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="group text-sm text-gray-800 dark:text-white">
@@ -147,6 +183,21 @@ onMounted(() => {
                                                 </small>
                                             </div>
                                         </div>
+                                    </td>
+                                    <td class="p-3">
+                                        {{ row.wali }}
+                                    </td>
+                                    <td class="p-3">
+                                        {{ row.pekerjaan }}
+                                    </td>
+                                    <td class="p-3">
+                                        {{ row.birth_date }}
+                                    </td>
+                                    <td class="p-3">
+                                        {{ row.address }}
+                                    </td>
+                                    <td class="p-3">
+                                        {{ row.gender }}
                                     </td>
                                     <td class="p-3">
                                         <div class="flex gap-2 justify-start">
@@ -173,7 +224,7 @@ onMounted(() => {
                         class="font-sans antialiased text-sm text-current">Page {{ userStore.totalPage != 0 ?
                             userStore.current
                             : userStore.totalPage }} of {{
-                            userStore.totalPage }}</small>
+                            userStore.totalPage }} (Total {{ userStore.totalData }})</small>
                     <div class="flex gap-2"><button
                             class="inline-flex items-center justify-center border align-middle select-none font-sans font-medium text-center transition-all duration-300 ease-in disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed data-[shape=pill]:rounded-full data-[width=full]:w-full focus:shadow-none text-sm rounded-md py-1.5 px-3 shadow-sm hover:shadow bg-transparent border-gray-200 text-gray-800 hover:bg-gray-200"
                             data-shape="default" data-width="default" :disabled="userStore.current === 1"
