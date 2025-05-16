@@ -63,14 +63,14 @@ export default [
     },
     {
         path: "/admin/rombel",
-        name: "rombe",
-        meta: { title: "Rombe Page", authRequired: true },
+        name: "admin-rombel",
+        meta: { title: "Rombel Page", authRequired: true },
         component: () => import("../views/admin/rombel"),
     },
     {
         path: "/admin/rombel/create",
-        name: "rombe-create",
-        meta: { title: "Rombe Create Page", authRequired: true },
+        name: "admin-rombel-create",
+        meta: { title: "Rombel Create Page", authRequired: true },
         component: () => import("../views/admin/rombel/form.vue"),
     },
     {
@@ -161,7 +161,7 @@ export default [
     {
         path: "/student/rombel",
         name: "student-rombel",
-        meta: { title: "Rombel", authRequired: true },
+        meta: { title: "student-rombel", authRequired: true },
         component: () => import("../views/student/rombel"),
     },
     // teacher routes

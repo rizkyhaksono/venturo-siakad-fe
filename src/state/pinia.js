@@ -23,11 +23,13 @@ import { useAdminRombelStore } from "./pinia/admin/rombel";
 import { useStudentClassStore } from "./pinia/student/class";
 import { useStudentClassHistoryStore } from "./pinia/student/class-history";
 import { useStudentSubjectScheduleStore } from "./pinia/student/subject-schedule";
+import { useStudentRombelStore } from "./pinia/student/rombel";
 
 // teacher
 import { useTeacherClassStore } from "./pinia/teacher/class";
 import { useTeacherStudentStore } from "./pinia/teacher/student";
 import { useTeacherSubjectStore } from "./pinia/teacher/subject";
+import { useTeacherRombelStore } from "./pinia/teacher/rombel";
 
 const pinia = createPinia();
 export default pinia;
@@ -56,9 +58,11 @@ export {
   useStudentClassStore,
   useStudentClassHistoryStore,
   useStudentSubjectScheduleStore,
+  useStudentRombelStore,
 
   // teacher
   useTeacherClassStore,
   useTeacherStudentStore,
   useTeacherSubjectStore,
+  useTeacherRombelStore,
 };
