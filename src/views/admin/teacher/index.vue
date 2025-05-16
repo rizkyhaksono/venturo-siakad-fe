@@ -163,13 +163,13 @@ onMounted(() => {
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.total_classes }}
+                    {{ row.total_rombel }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    <div v-if="row.assigned_classes && row.assigned_classes.length > 0">
-                      <div v-for="class_item in row.assigned_classes" :key="class_item.id">
+                    <div v-if="row.assigned_rombel && row.assigned_rombel.length > 0">
+                      <div v-for="class_item in row.assigned_rombel" :key="class_item.id">
                         {{ class_item.name }}
                       </div>
                     </div>

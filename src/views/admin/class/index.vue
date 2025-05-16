@@ -122,7 +122,6 @@ onMounted(() => {
                 </div>
               </template>
             </Modal>
-
           </div>
         </div>
         <div class="mt-4 w-full overflow-hidden rounded-lg border border-gray-200">

@@ -7,13 +7,16 @@ import { showErrorToast, showSuccessToast } from "@/helpers/alert.js";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { onMounted, ref, reactive, watch } from 'vue'
+import { useRouter } from "vue-router";
 import {
   useAdminStudentStore,
   useAdminSubjectScheduleStore,
   useAdminSubjectStore,
   useAdminClassStore,
   useAdminStudyYearStore,
-  useAdminTeacherStore
+  useAdminTeacherStore,
+  useAdminRombelStore,
+  useAdminSubjectHourStore
 } from "@/state/pinia";
 
 const days = ref(['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'])
@@ -25,21 +28,29 @@ const studyYears = ref([])
 const schedule = ref({})
 const subjects = ref([])
 const teachers = ref([])
+const subjectHours = ref([])
 
 const formModel = reactive({
   kelas: '',
   nama: '',
-  semester: '',
+  tahunAjaran: '',
   waliKelas: '',
-  schedule: {},
+  mataPelajaranJadwal: {},
+  student: {}
 });
 
 const rules = {
   kelas: { required },
   nama: { required },
-  semester: { required },
+  tahunAjaran: { required },
   waliKelas: { required },
-  schedule: {
+  mataPelajaranJadwal: {
+    required,
+    $each: {
+      required
+    }
+  },
+  student: {
     required,
     $each: {
       required
@@ -65,21 +76,57 @@ const isAllSelected = () => {
   return students.value.length > 0 && selectedStudents.value.length === students.value.length
 }
 
-const save = () => {
-  const selectedSchedules = Object.entries(schedule.value)
-    .filter(([key, value]) => value && key.includes('-'))
-    .reduce((acc, [key, value]) => {
-      acc[key] = value;
-      return acc;
-    }, {});
+const save = async () => {
+  try {
+    const dayTranslations = {
+      'Senin': 'Monday',
+      'Selasa': 'Tuesday',
+      'Rabu': 'Wednesday',
+      'Kamis': 'Thursday',
+      'Jumat': 'Friday',
+      'Sabtu': 'Saturday',
+      'Minggu': 'Sunday'
+    };
 
-  const submitData = {
-    ...formModel,
-    schedule: selectedSchedules
+    const router = useRouter();
+    const subjectScheduleStore = useAdminSubjectScheduleStore();
+    const rombelStore = useAdminRombelStore();
+
+    // Create sequential schedule submissions
+    for (const [key, value] of Object.entries(schedule.value)) {
+      if (value && key.includes('-')) {
+        const [hour, indonesianDay] = key.split('-');
+        const subjectHour = subjectHours.value.find(sh => sh.hour === parseInt(hour));
+
+        if (subjectHour) {
+          await subjectScheduleStore.postSchedule({
+            class_id: formModel.kelas,
+            subject_id: value,
+            teacher_id: formModel.waliKelas,
+            subject_hour_id: subjectHour.value,
+            day: dayTranslations[indonesianDay]
+          });
+        }
+      }
+    }
+
+    // Submit rombel data
+    for (const studentId of selectedStudents.value) {
+      await rombelStore.postRombel({
+        kelas: formModel.kelas,
+        nama: formModel.nama,
+        tahunAjaran: formModel.tahunAjaran,
+        waliKelas: formModel.waliKelas,
+        mataPelajaranJadwal: schedule.value[studentId],
+        student: studentId
+      });
+    }
+
+    showSuccessToast('Data saved successfully!');
+    router.push({ name: 'admin-rombel' });
+  } catch (error) {
+    showErrorToast('Error saving data: ' + error.message);
   }
-
-  console.log('Complete data:', submitData);
-  showSuccessToast('Data saved successfully!');
 }
 
 const getClasses = async () => {
@@ -107,12 +154,6 @@ const getStudents = async () => {
   students.value = studentStore.students
 }
 
-const getSchedules = async () => {
-  const subjectScheduleStore = useAdminSubjectScheduleStore()
-  await subjectScheduleStore.getSchedules()
-  schedule.value = subjectScheduleStore.schedules
-}
-
 const getSubjects = async () => {
   const subjectStore = useAdminSubjectStore()
   await subjectStore.getSubject()
@@ -120,6 +161,17 @@ const getSubjects = async () => {
     value: subject.id,
     label: subject.name,
     raw: subject
+  }));
+}
+
+const getSubjectHours = async () => {
+  const subjectHourStore = useAdminSubjectHourStore()
+  await subjectHourStore.getSubjectHour()
+  subjectHours.value = subjectHourStore.subjectHour.data.map(hour => ({
+    value: hour.id,
+    label: `${hour.start_time.substring(0, 5)} - ${hour.end_time.substring(0, 5)}`,
+    hour: hour.start_hour,
+    raw: hour
   }));
 }
 
@@ -143,9 +195,9 @@ onMounted(async () => {
   await getClasses()
   await getStudyYears()
   await getStudents()
-  await getSchedules()
   await getTeachers()
   await getSubjects()
+  await getSubjectHours()
 })
 </script>
 
@@ -167,9 +219,9 @@ onMounted(async () => {
 
         <div class="flex items-center">
           <label for="semester" class="w-32">Semester:</label>
-          <SelectField id="semester" v-model="formModel.semester" :options="studyYears" option-label="label"
+          <SelectField id="semester" v-model="formModel.tahunAjaran" :options="studyYears" option-label="label"
             option-value="value" placeholder="Pilih Semester" class="w-full"
-            :errors="v$.semester.$errors?.map(err => err.$message)" />
+            :errors="v$.tahunAjaran.$errors?.map(err => err.$message)" />
         </div>
 
         <div class="flex items-center">

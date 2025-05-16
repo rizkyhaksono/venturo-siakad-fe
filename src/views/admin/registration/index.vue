@@ -15,7 +15,7 @@ const userModalTitle = ref("");
 
 const getRegistrations = async () => {
   await registrationStore.getRegistrations();
-  rows.value = registrationStore.registrations
+  rows.value = registrationStore.registrations.data
 };
 
 const searchData = async () => {

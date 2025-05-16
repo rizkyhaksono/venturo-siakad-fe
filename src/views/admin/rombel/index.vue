@@ -1,16 +1,63 @@
 <script setup>
 import Button from "@/components/widgets/Button";
 import Layout from "@/layouts/main.vue";
-import { onMounted, ref } from "vue";
+import Modal from "@/components/widgets/Modal.vue";
+import InputField from "@/components/widgets/Input";
+import { onMounted, ref, computed } from "vue";
 import { useAdminRombelStore } from "@/state/pinia";
+import { showSuccessToast, showDeleteConfirmationDialog } from "@/helpers/alert.js";
 
 const rombelStore = useAdminRombelStore();
 const rows = ref([]);
+const rombelModalRef = ref(null);
+const selectedRombel = ref(null);
+const rombelModalTitle = ref("");
 
 const getRombels = async () => {
   await rombelStore.getRombels();
   rows.value = rombelStore.rombels;
 };
+
+const openEditRombelModal = (mode, id = null) => {
+  rombelModalRef.value.openModal();
+  if (mode === "edit" && id) {
+    selectedRombel.value = rows.value.find((item) => item.id === id);
+    rombelModalTitle.value = "Edit Rombel";
+  } else {
+    selectedRombel.value = null;
+    rombelModalTitle.value = "Add Rombel";
+  }
+};
+
+const closeRombelModal = () => {
+  rombelModalRef.value.closeModal();
+};
+
+const deleteRombel = async (id) => {
+  const rombelStore = useAdminRombelStore();
+  const confirmed = await showDeleteConfirmationDialog("Are you sure you want to delete this data?");
+  if (confirmed) {
+    await rombelStore.deleteRombel(id);
+    await getRombels();
+    showSuccessToast('Data deleted successfully!');
+  }
+}
+
+const groupedRows = computed(() => {
+  const grouped = {};
+  rows.value.forEach(row => {
+    const key = `${row.class.name}-${row.name}`;
+    if (!grouped[key]) {
+      grouped[key] = {
+        ...row,
+        students: [row.student]
+      };
+    } else {
+      grouped[key].students.push(row.student);
+    }
+  });
+  return Object.values(grouped);
+});
 
 onMounted(() => {
   getRombels();
@@ -46,6 +93,24 @@ onMounted(() => {
               </Button>
             </router-link>
           </div>
+          <Modal ref="modalRef">
+            <template #title>
+              <h1 class="text-xl font-bold">{{ modalTitle }}</h1>
+            </template>
+            <template #body>
+              <FormClass ref="formRef" :class="selectedClass" @refresh="getClasses" @close="closeRombelModal" />
+            </template>
+            <template #footer>
+              <div class="flex justify-end gap-2">
+                <Button @click="closeRombelModal" variant="outline" color="secondary">
+                  Close
+                </Button>
+                <Button @click="submitModal" variant="solid" color="primary">
+                  Submit
+                </Button>
+              </div>
+            </template>
+          </Modal>
         </div>
         <div class="mt-4 w-full overflow-hidden rounded-lg border border-gray-200">
           <table class="w-full">
@@ -72,13 +137,19 @@ onMounted(() => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Murid
+                  </small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                  <small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
                     Actions
                   </small>
                 </th>
               </tr>
             </thead>
             <tbody class="group text-sm text-gray-800 dark:text-white">
-              <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
+              <tr class="border-b border-gray-200 last:border-0" v-for="row in groupedRows" :key="row.id">
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm font-medium text-current">
                     {{ row.class.name }}
@@ -95,8 +166,15 @@ onMounted(() => {
                   </small>
                 </td>
                 <td class="p-3">
+                  <small class="font-sans antialiased text-sm text-current">
+                    <div v-for="student in row.students" :key="student.id">
+                      {{ student.name }}
+                    </div>
+                  </small>
+                </td>
+                <td class="p-3">
                   <div class="flex gap-2 justify-start">
-                    <Button @click="openRombelModal(row)" variant="solid" color="primary">
+                    <Button @click="openEditRombelModal(row)" variant="solid" color="primary">
                       Edit
                     </Button>
                     <Button @click="deleteRombel(row.id)" variant="outline" color="danger">

@@ -51,5 +51,56 @@ export const useAdminRombelStore = defineStore("adminRombel", {
       this.current = 1;
       await this.getRombels();
     },
+    async postRombel(rombel) {
+      try {
+        const res = await axios.post(`${this.apiUrl}/v1/admin/rombels`, rombel);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.error || [],
+        };
+        throw error;
+      }
+    },
+    async updateRombel(rombel, id) {
+      try {
+        const res = await axios.put(`${this.apiUrl}/v1/admin/rombels/${id}`, rombel);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.error || [],
+        };
+        throw error;
+      }
+    },
+    async deleteRombel(id) {
+      try {
+        const res = await axios.delete(`${this.apiUrl}/v1/admin/rombels/${id}`);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.error || [],
+        };
+        throw error;
+      }
+    }
   }
 })
