@@ -87,7 +87,7 @@ onMounted(() => {
             </div>
           </div>
           <div class="w-full md:w-72 flex justify-end">
-            <router-link :to="{ name: 'rombe-create' }">
+            <router-link :to="{ name: 'admin-rombel-create' }">
               <Button variant="solid" color="primary">
                 Add Rombel
               </Button>
@@ -137,7 +137,19 @@ onMounted(() => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Tahun Pelajaran
+                  </small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                  <small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
                     Murid
+                  </small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                  <small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Wali Kelas
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
@@ -162,6 +174,11 @@ onMounted(() => {
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
+                    {{ row.study_year.semester }} - {{ row.study_year.year }}
+                  </small>
+                </td>
+                <td class="p-3">
+                  <small class="font-sans antialiased text-sm text-current">
                     {{ row.class.total_rombel }}
                   </small>
                 </td>
@@ -170,6 +187,11 @@ onMounted(() => {
                     <div v-for="student in row.students" :key="student.id">
                       {{ student.name }}
                     </div>
+                  </small>
+                </td>
+                <td class="p-3">
+                  <small class="font-sans antialiased text-sm text-current">
+                    {{ row.teacher.name }}
                   </small>
                 </td>
                 <td class="p-3">

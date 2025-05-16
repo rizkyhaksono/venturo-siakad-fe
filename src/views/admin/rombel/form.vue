@@ -19,6 +19,7 @@ import {
   useAdminSubjectHourStore
 } from "@/state/pinia";
 
+const router = useRouter();
 const days = ref(['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'])
 const activeTab = ref('jadwal')
 const selectedStudents = ref([])
@@ -78,6 +79,11 @@ const isAllSelected = () => {
 
 const save = async () => {
   try {
+    if (selectedStudents.value.length === 0) {
+      showErrorToast('Please select at least one student');
+      return;
+    }
+
     const dayTranslations = {
       'Senin': 'Monday',
       'Selasa': 'Tuesday',
@@ -88,27 +94,8 @@ const save = async () => {
       'Minggu': 'Sunday'
     };
 
-    const router = useRouter();
     const subjectScheduleStore = useAdminSubjectScheduleStore();
     const rombelStore = useAdminRombelStore();
-
-    // Create sequential schedule submissions
-    for (const [key, value] of Object.entries(schedule.value)) {
-      if (value && key.includes('-')) {
-        const [hour, indonesianDay] = key.split('-');
-        const subjectHour = subjectHours.value.find(sh => sh.hour === parseInt(hour));
-
-        if (subjectHour) {
-          await subjectScheduleStore.postSchedule({
-            class_id: formModel.kelas,
-            subject_id: value,
-            teacher_id: formModel.waliKelas,
-            subject_hour_id: subjectHour.value,
-            day: dayTranslations[indonesianDay]
-          });
-        }
-      }
-    }
 
     // Submit rombel data
     for (const studentId of selectedStudents.value) {
@@ -122,8 +109,27 @@ const save = async () => {
       });
     }
 
+    // Create sequential schedule submissions with delay
+    for (const [key, value] of Object.entries(schedule.value)) {
+      if (value && key.includes('-')) {
+        const [hour, indonesianDay] = key.split('-');
+        const subjectHour = subjectHours.value.find(sh => sh.hour === parseInt(hour));
+
+        if (subjectHour) {
+          await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+          await subjectScheduleStore.postSchedule({
+            class_id: formModel.kelas,
+            subject_id: value,
+            teacher_id: formModel.waliKelas,
+            subject_hour_id: subjectHour.value,
+            day: dayTranslations[indonesianDay],
+          });
+        }
+      }
+    }
+
     showSuccessToast('Data saved successfully!');
-    router.push({ name: 'admin-rombel' });
+    await router.replace({ name: 'admin-rombel' });
   } catch (error) {
     showErrorToast('Error saving data: ' + error.message);
   }
@@ -315,7 +321,7 @@ onMounted(async () => {
       </div>
 
       <div class="flex justify-end gap-2 mt-4">
-        <router-link :to="{ name: 'rombe' }">
+        <router-link :to="{ name: 'admin-rombel' }">
           <Button variant="outline" color="secondary" @click="cancel">Batal</Button>
         </router-link>
         <Button variant="solid" @click="save">Simpan</Button>
