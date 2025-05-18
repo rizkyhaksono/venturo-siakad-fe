@@ -103,18 +103,6 @@ onMounted(() => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Semester
-                  </small>
-                </th>
-                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
-                  <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Tahun
-                  </small>
-                </th>
-                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
-                  <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
                     Created At
                   </small>
                 </th>
@@ -131,16 +119,6 @@ onMounted(() => {
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm font-medium text-current">
                     {{ row.name }}
-                  </small>
-                </td>
-                <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
-                    {{ row.study_year.semester }}
-                  </small>
-                </td>
-                <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
-                    {{ row.study_year.year }}
                   </small>
                 </td>
                 <td class="p-3">

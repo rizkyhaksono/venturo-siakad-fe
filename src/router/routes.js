@@ -195,6 +195,12 @@ export default [
         meta: { title: "Subject", authRequired: true },
         component: () => import("../views/teacher/subject"),
     },
+    {
+        path: "/teacher/rombel",
+        name: "teacher-rombel",
+        meta: { title: "Rombel", authRequired: true },
+        component: () => import("../views/teacher/rombel"),
+    },
     // auth routes
     {
         path: "/login",
