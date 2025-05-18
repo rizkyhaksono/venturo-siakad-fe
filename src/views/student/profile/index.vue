@@ -21,7 +21,7 @@ onMounted(() => {
         <div class="flex items-center mb-6">
           <div class="relative">
             <img
-              :src="(authStore.userLogin?.photo_url === 'http://localhost/storage/../assets/img/no-image.png' ? '/src/assets/default_photo.jpg' : authStore.userLogin?.photo_url)"
+              :src="(authStore.userLogin?.photo_url?.includes('localhost') ? '/default_photo.jpg' : authStore.userLogin?.photo_url || '/default_photo.jpg')"
               :alt="authStore.userLogin.name" class="w-24 h-24 rounded-full object-cover border-4 border-gray-200" />
             <button class="absolute bottom-0 right-0 bg-blue-500 rounded-full p-2 text-white">
               <i class="fas fa-camera"></i>

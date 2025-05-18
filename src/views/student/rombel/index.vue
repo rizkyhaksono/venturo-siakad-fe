@@ -60,7 +60,7 @@ onMounted(() => {
   <Layout>
     <div class="p-3">
       <div class="mb-4 bg-white rounded-lg shadow-sm">
-        <div class="px-4 py-3 bg-gray-600 text-white rounded-t-lg">
+        <div class="px-4 py-3 bg-secondary text-white rounded-t-lg">
           <h5 class="text-lg font-semibold">Informasi Kelas</h5>
         </div>
         <div class="p-4">
@@ -85,7 +85,7 @@ onMounted(() => {
       </div>
 
       <div class="bg-white rounded-lg shadow-sm">
-        <div class="px-4 py-3 bg-gray-600 text-white rounded-t-lg flex justify-between items-center">
+        <div class="px-4 py-3 bg-secondary text-white rounded-t-lg flex justify-between items-center">
           <h5 class="text-lg font-semibold">Jadwal Pelajaran</h5>
         </div>
         <div class="p-4">
