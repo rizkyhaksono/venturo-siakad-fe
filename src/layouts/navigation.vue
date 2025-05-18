@@ -80,7 +80,8 @@ import {
     mdiCounter,
     mdiInvoiceTextClock,
     mdiAccountGroup,
-    mdiCardAccountDetails
+    mdiCardAccountDetails,
+    mdiHumanMaleBoardPoll,
 } from "@mdi/js";
 
 // Ambil route aktif
@@ -178,6 +179,7 @@ const adminMenus = [
 
 const studentMenus = [
     { label: "Dashboard", to: `${rolePrefix}/dashboard`, icon: mdiHome },
+    { label: "Rombel", to: `${rolePrefix}/rombel`, icon: mdiGoogleClassroom },
     {
         label: "Class",
         icon: mdiSchool,
@@ -187,11 +189,11 @@ const studentMenus = [
         ]
     },
     { label: "Subject Schedule", to: `${rolePrefix}/subject_schedule`, icon: mdiGoogleClassroom },
-    { label: "Rombel", to: `${rolePrefix}/rombel`, icon: mdiGoogleClassroom },
 ];
 
 const teacherMenus = [
     { label: "Dashboard", to: `${rolePrefix}/dashboard`, icon: mdiHome },
+    { label: "Rombel", to: `${rolePrefix}/rombel`, icon: mdiHumanMaleBoardPoll },
     {
         label: "Class",
         icon: mdiSchool,
