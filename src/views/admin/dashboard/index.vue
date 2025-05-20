@@ -70,7 +70,7 @@ const getRoles = async () => {
 
 const getRegistration = async () => {
     await registrationStore.getRegistrations();
-    registration.value = registrationStore.registrations
+    registration.value = registrationStore.registrations.dataw
 }
 
 const getClassHistory = async () => {

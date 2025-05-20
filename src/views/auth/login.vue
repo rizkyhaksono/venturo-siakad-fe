@@ -157,7 +157,8 @@ const login = async () => {
 
             <div class="text-center text-sm mt-4">
                 Don't have an account?
-                <router-link to="/register" class="text-primary hover:underline">Register</router-link>
+                <router-link to="/register"
+                    class="text-primary hover:underline hover:underline-offset-2">Register</router-link>
             </div>
 
             <div class="text-center text-xs text-gray-500 mt-6">

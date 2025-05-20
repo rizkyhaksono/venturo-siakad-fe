@@ -3,7 +3,7 @@ import Button from "@/components/widgets/Button";
 import Layout from "@/layouts/main.vue";
 import Modal from "@/components/widgets/Modal.vue";
 import InputField from "@/components/widgets/Input";
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref } from "vue";
 import { useAdminRombelStore } from "@/state/pinia";
 import { showSuccessToast, showDeleteConfirmationDialog } from "@/helpers/alert.js";
 
@@ -42,22 +42,6 @@ const deleteRombel = async (id) => {
     showSuccessToast('Data deleted successfully!');
   }
 }
-
-const groupedRows = computed(() => {
-  const grouped = {};
-  rows.value.forEach(row => {
-    const key = `${row.class.name}-${row.name}`;
-    if (!grouped[key]) {
-      grouped[key] = {
-        ...row,
-        students: [row.student]
-      };
-    } else {
-      grouped[key].students.push(row.student);
-    }
-  });
-  return Object.values(grouped);
-});
 
 onMounted(() => {
   getRombels();
@@ -161,7 +145,7 @@ onMounted(() => {
               </tr>
             </thead>
             <tbody class="group text-sm text-gray-800 dark:text-white">
-              <tr class="border-b border-gray-200 last:border-0" v-for="row in groupedRows" :key="row.id">
+              <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm font-medium text-current">
                     {{ row.class.name }}
@@ -174,19 +158,17 @@ onMounted(() => {
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.study_year.semester }} - {{ row.study_year.year }}
-                  </small>
-                </td>
-                <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
                     {{ row.class.total_rombel }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    <div v-for="student in row.students" :key="student.id">
-                      {{ student.name }}
-                    </div>
+                    {{ row.study_year.semester }} - {{ row.study_year.year }}
+                  </small>
+                </td>
+                <td class="p-3">
+                  <small class="font-sans antialiased text-sm text-current">
+                    {{ row.student.name }} - {{ row.student.student_number }}
                   </small>
                 </td>
                 <td class="p-3">
