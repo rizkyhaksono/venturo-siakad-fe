@@ -1,43 +1,19 @@
 <script setup>
 import Layout from "@/layouts/main.vue";
-import { useAdminSPPHistoryStore } from "@/state/pinia/student/spp-history";
-import { onMounted, ref } from "vue";
-import Button from "@/components/widgets/Button.vue";
-
-const sppHistoryStore = useAdminSPPHistoryStore();
-const rows = ref([]);
-
-const getSPPHistory = async () => {
-  await sppHistoryStore.getSPPHistory();
-  rows.value = sppHistoryStore.sppHistory.data;
-};
-
-const formatRupiah = (amount) => {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0
-  }).format(amount);
-};
-
-onMounted(async () => {
-  await getSPPHistory();
-});
-
 </script>
 
 <template>
   <Layout>
-    <template #title>Data SPP History</template>
+    <template #title>Data Nilai Siswa/i</template>
     <div class="w-full mx-auto p-4 rounded-lg bg-gray-100 dark:bg-gray-900">
       <div class="w-full">
         <div class="mb-8 flex items-center justify-between gap-8">
           <div>
             <h6 class="font-sans antialiased font-bold text-base md:text-lg lg:text-xl text-current">
-              List SPP History
+              List Nilai
             </h6>
             <p class="font-sans antialiased text-base text-current mt-1">
-              Lihat Informasi riwayat Sumbangan Pembinaan Pendidikan
+              Lihat Informasi nilai berdasarkan mata pelajaran
             </p>
           </div>
         </div>
@@ -78,25 +54,13 @@ onMounted(async () => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Nama Siswa
+                    Name
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Tipe Biaya
-                  </small>
-                </th>
-                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
-                  <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Metode Pembayaran
-                  </small>
-                </th>
-                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
-                  <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Status
+                    Jenis Biaya
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
@@ -108,7 +72,7 @@ onMounted(async () => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Tanggal Pembayaran
+                    Tahun Ajaran
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
@@ -123,38 +87,22 @@ onMounted(async () => {
               <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm font-medium text-current">
-                    {{ row.user.name }}
+                    {{ row.name }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm font-medium text-current">
-                    {{ row.spp.name }}
-                  </small>
-                </td>
-                <td class="p-3">
-                  <small class="font-sans antialiased text-sm font-medium text-current">
-                    {{ row.payment_method }}
-                  </small>
-                </td>
-                <td class="p-3">
-                  <small class="font-sans antialiased text-sm font-medium text-current">
-                    {{ row.payment_status }}
+                    {{ row.jenis_biaya }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ formatRupiah(row.spp.total) }}
+                    {{ formatRupiah(row.total) }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ new Date(row.created_at).toLocaleDateString('id-ID', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    }) }}
+                    Semester {{ row.study_year?.semester }} - {{ row.study_year?.year }}
                   </small>
                 </td>
                 <td class="p-3">

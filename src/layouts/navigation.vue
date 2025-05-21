@@ -84,6 +84,7 @@ import {
     mdiHumanMaleBoardPoll,
     mdiCashMultiple,
     mdiCardAccountDetailsOutline,
+    mdiFormatListNumbered,
 } from "@mdi/js";
 
 // Ambil route aktif
@@ -190,10 +191,8 @@ const adminMenus = [
 const studentMenus = [
     { label: "Dashboard", to: `${rolePrefix}/dashboard`, icon: mdiHome },
     { label: "Rombel", to: `${rolePrefix}/rombel`, icon: mdiGoogleClassroom },
-    { label: "Subject Schedule", to: `${rolePrefix}/subject_schedule`, icon: mdiGoogleClassroom },
-    {
-        label: "SPP", icon: mdiCashMultiple, to: `${rolePrefix}/spp`,
-    },
+    { label: "Nilai Siswa", icon: mdiFormatListNumbered, to: `${rolePrefix}/student-assesment` },
+    { label: "SPP", icon: mdiCashMultiple, to: `${rolePrefix}/spp` },
 ];
 
 const teacherMenus = [

@@ -182,6 +182,18 @@ export default [
         meta: { title: "SPP", authRequired: true },
         component: () => import("../views/student/spp"),
     },
+    {
+        path: "/student/spp-history",
+        name: "student-spp-history",
+        meta: { title: "SPP History", authRequired: true },
+        component: () => import("../views/student/spp-history"),
+    },
+    {
+        path: "/student/student-assesment",
+        name: "student-assesment",
+        meta: { title: "Student Assesment", authRequired: true },
+        component: () => import("../views/student/student-assesment"),
+    },
     // teacher routes
     {
         path: "/teacher/dashboard",

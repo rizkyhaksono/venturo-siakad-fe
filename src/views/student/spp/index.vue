@@ -129,9 +129,10 @@ onMounted(async () => {
             </div>
 
             <div class="pt-3 text-center">
-              <button class="text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium">
+              <router-link class="text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                :to="'/student/spp-history'">
                 Lihat Semua Riwayat
-              </button>
+              </router-link>
             </div>
           </div>
         </div>
