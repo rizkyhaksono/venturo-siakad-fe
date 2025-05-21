@@ -70,7 +70,7 @@ const getRoles = async () => {
 
 const getRegistration = async () => {
     await registrationStore.getRegistrations();
-    registration.value = registrationStore.registrations.dataw
+    registration.value = registrationStore.registrations.data
 }
 
 const getClassHistory = async () => {
@@ -120,7 +120,7 @@ onMounted(async () => {
                     <div class="ml-4">
                         <p class="text-gray-500">Total Users</p>
                         <p class="text-xl font-semibold">{{ userCounts.Admin + userCounts.Student + userCounts.Teacher
-                        }}</p>
+                            }}</p>
                     </div>
                 </div>
             </div>

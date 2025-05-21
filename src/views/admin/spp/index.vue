@@ -1,86 +1,42 @@
 <script setup>
-import Button from "@/components/widgets/Button";
-import InputField from "@/components/widgets/Input";
-import Modal from "@/components/widgets/Modal.vue";
-import { showDeleteConfirmationDialog, showSuccessToast } from "@/helpers/alert.js";
 import Layout from "@/layouts/main.vue";
-import { useAdminStudentStore } from "@/state/pinia";
-import FormUser from "@/views/admin/user/form.vue";
+import { useAdminSPPStore } from "@/state/pinia";
 import { onMounted, ref } from "vue";
+import Button from "@/components/widgets/Button.vue";
 
-const studentStore = useAdminStudentStore();
+const sppStore = useAdminSPPStore();
 const rows = ref([]);
-const userModalRef = ref(null);
-const selectedUser = ref(null);
-const userModalTitle = ref("");
 
-const getRegistrations = async () => {
-  await studentStore.getStudents();
-  rows.value = studentStore.students
+const getSPP = async () => {
+  await sppStore.getSPP();
+  rows.value = sppStore.spp.data;
 };
 
-const searchData = async () => {
-  await studentStore.changePage(1);
+const formatRupiah = (amount) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0
+  }).format(amount);
 };
 
-const paginate = async (page) => {
-  await studentStore.changePage(page);
-  await getRegistrations();
-};
-
-const openClassModal = (mode, id = null) => {
-  userModalRef.value.openModal();
-  if (mode === "edit" && id) {
-    selectedUser.value = rows.value.find((item) => item.id === id);
-    userModalTitle.value = "Edit Student";
-  } else {
-    selectedUser.value = null;
-    userModalTitle.value = "Add Student";
-  }
-};
-const formUserRef = ref(null);
-const submitUserModal = () => {
-  if (formUserRef.value) {
-    formUserRef.value.saveUser();  // Panggil fungsi saveUser() di FormUser
-  }
-};
-
-const closeUserModal = () => {
-  userModalRef.value.closeModal();
-};
-
-const deleteUser = async (id) => {
-  const confirmed = await showDeleteConfirmationDialog();
-  if (confirmed) {
-    try {
-      await studentStore.deleteUser(id);
-      showSuccessToast("User berhasil dihapus");
-      await getRegistrations();
-    } catch (error) {
-      console.error(error);
-    }
-  }
-};
-
-onMounted(() => {
-  getRegistrations();
+onMounted(async () => {
+  getSPP();
 });
 </script>
 
-tempeeeek
-
 <template>
   <Layout>
-    <template #title>Data Student</template>
+    <template #title>Data SPP</template>
     <div class="w-full mx-auto p-4 rounded-lg bg-gray-100 dark:bg-gray-900">
       <div class="w-full">
         <div class="mb-8 flex items-center justify-between gap-8">
           <div>
             <h6 class="font-sans antialiased font-bold text-base md:text-lg lg:text-xl text-current">
-              List Student
+              List SPP
             </h6>
             <p class="font-sans antialiased text-base text-current mt-1">
-              Lihat informasi student
+              Lihat Informasi Sumbangan Pembinaan Pendidikan
             </p>
           </div>
         </div>
@@ -88,13 +44,13 @@ tempeeeek
           <div class="flex data-[orientation=horizontal]:flex-col data-[orientation=vertical]:flex-row gap-2"
             data-orientation="horizontal">
             <div class="relative w-full md:w-72">
-              <InputField v-model="studentStore.searchQuery" placeholder="Search..." name="search"
-                v-debounce:500="searchData" />
+              <!-- <InputField v-model="studentStore.searchQuery" placeholder="Search..." name="search"
+                v-debounce:500="searchData" /> -->
             </div>
           </div>
           <div class="w-full md:w-72 flex justify-end">
             <!-- Modal Form -->
-            <Modal ref="userModalRef">
+            <!-- <Modal ref="userModalRef">
               <template #title>
                 <h1 class="text-xl font-bold">{{ userModalTitle }}</h1>
               </template>
@@ -111,8 +67,7 @@ tempeeeek
                   </Button>
                 </div>
               </template>
-            </Modal>
-
+            </Modal> -->
           </div>
         </div>
         <div class="mt-4 w-full overflow-hidden rounded-lg border border-gray-200">
@@ -122,31 +77,25 @@ tempeeeek
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Student Number
-                  </small>
-                </th>
-                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
-                  <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
                     Name
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Email
+                    Jenis Biaya
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Gender
+                    Total
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Status
+                    Tahun Ajaran
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
@@ -161,34 +110,22 @@ tempeeeek
               <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm font-medium text-current">
-                    {{ row.student_number }}
-                  </small>
-                </td>
-                <td class="p-3">
-                  <small class="font-sans antialiased text-sm font-medium text-current">
                     {{ row.name }}
                   </small>
                 </td>
                 <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
-                    {{ row.user.email }}
+                  <small class="font-sans antialiased text-sm font-medium text-current">
+                    {{ row.jenis_biaya }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.user.gender || '-' }}
+                    {{ formatRupiah(row.total) }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    <span :class="{
-                      'px-2 py-1 rounded-full text-xs font-semibold': true,
-                      'bg-green-100 text-green-800': row.status === 'accepted',
-                      'bg-yellow-100 text-yellow-800': row.status === 'pending',
-                      'bg-red-100 text-red-800': row.status === 'rejected'
-                    }">
-                      {{ row.status }}
-                    </span>
+                    Semester {{ row.study_year?.semester }} - {{ row.study_year?.year }}
                   </small>
                 </td>
                 <td class="p-3">
@@ -205,7 +142,7 @@ tempeeeek
             </tbody>
           </table>
         </div>
-        <div class="flex items-center justify-between border-gray-200 py-4">
+        <!-- <div class="flex items-center justify-between border-gray-200 py-4">
           <small class="font-sans antialiased text-sm text-current">
             Page {{ studentStore.students?.current_page || 1 }} of {{ studentStore.students?.last_page || 1 }}
           </small>
@@ -219,7 +156,7 @@ tempeeeek
               Next
             </Button>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </Layout>

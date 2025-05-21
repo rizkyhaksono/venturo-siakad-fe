@@ -82,6 +82,8 @@ import {
     mdiAccountGroup,
     mdiCardAccountDetails,
     mdiHumanMaleBoardPoll,
+    mdiCashMultiple,
+    mdiCardAccountDetailsOutline,
 } from "@mdi/js";
 
 // Ambil route aktif
@@ -152,7 +154,7 @@ const adminMenus = [
     },
     {
         label: "Rombel",
-        icon: mdiSchool,
+        icon: mdiCardAccountDetailsOutline,
         to: `${rolePrefix}/rombel`,
     },
     {
@@ -175,20 +177,23 @@ const adminMenus = [
     { label: "Registration", to: `${rolePrefix}/registration`, icon: mdiInvoiceTextClock },
     { label: "Student", to: `${rolePrefix}/student`, icon: mdiCardAccountDetails },
     { label: "Study Year", to: `${rolePrefix}/study_year`, icon: mdiCounter },
+    {
+        label: "SPP",
+        icon: mdiCashMultiple,
+        submenu: [
+            { label: "SPP", to: `${rolePrefix}/spp` },
+            { label: "SPP History", to: `${rolePrefix}/spp-history` }
+        ]
+    },
 ];
 
 const studentMenus = [
     { label: "Dashboard", to: `${rolePrefix}/dashboard`, icon: mdiHome },
     { label: "Rombel", to: `${rolePrefix}/rombel`, icon: mdiGoogleClassroom },
-    {
-        label: "Class",
-        icon: mdiSchool,
-        submenu: [
-            { label: "Class", to: `${rolePrefix}/class` },
-            { label: "Class History", to: `${rolePrefix}/class_history` },
-        ]
-    },
     { label: "Subject Schedule", to: `${rolePrefix}/subject_schedule`, icon: mdiGoogleClassroom },
+    {
+        label: "SPP", icon: mdiCashMultiple, to: `${rolePrefix}/spp`,
+    },
 ];
 
 const teacherMenus = [

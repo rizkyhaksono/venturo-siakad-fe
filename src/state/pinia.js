@@ -18,12 +18,14 @@ import { useAdminRegistrationStore } from "./pinia/admin/registration";
 import { useAdminStudentStore } from "./pinia/admin/student";
 import { useAdminStudyYearStore } from "./pinia/admin/study-year";
 import { useAdminRombelStore } from "./pinia/admin/rombel";
+import { useAdminSPPStore } from "./pinia/admin/spp";
 
 // student
 import { useStudentClassStore } from "./pinia/student/class";
 import { useStudentClassHistoryStore } from "./pinia/student/class-history";
 import { useStudentSubjectScheduleStore } from "./pinia/student/subject-schedule";
 import { useStudentRombelStore } from "./pinia/student/rombel";
+import { useStudentSPPStore } from "./pinia/student/spp";
 
 // teacher
 import { useTeacherClassStore } from "./pinia/teacher/class";
@@ -54,12 +56,14 @@ export {
   useAdminStudentStore,
   useAdminStudyYearStore,
   useAdminRombelStore,
+  useAdminSPPStore,
 
   // student
   useStudentClassStore,
   useStudentClassHistoryStore,
   useStudentSubjectScheduleStore,
   useStudentRombelStore,
+  useStudentSPPStore,
 
   // teacher
   useTeacherClassStore,
