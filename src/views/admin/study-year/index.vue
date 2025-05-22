@@ -84,7 +84,7 @@ onMounted(() => {
         </div>
         <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
           <div class="flex data-[orientation=horizontal]:flex-col data-[orientation=vertical]:flex-row gap-2"
-            data-orientation="horizontal">
+            data-orientation="horizontal">vw
             <div class="relative w-full md:w-72">
               <InputField v-model="studyYearStore.searchQuery" placeholder="Search..." name="search"
                 v-debounce:500="searchData" />

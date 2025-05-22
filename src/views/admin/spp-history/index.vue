@@ -1,8 +1,9 @@
 <script setup>
 import Layout from "@/layouts/main.vue";
-import { useAdminSPPHistoryStore } from "@/state/pinia/student/spp-history";
+import { useAdminSPPHistoryStore } from "@/state/pinia";
 import { onMounted, ref } from "vue";
 import Button from "@/components/widgets/Button.vue";
+import InputField from "@/components/widgets/Input.vue";
 
 const sppHistoryStore = useAdminSPPHistoryStore();
 const rows = ref([]);
@@ -10,6 +11,10 @@ const rows = ref([]);
 const getSPPHistory = async () => {
   await sppHistoryStore.getSPPHistory();
   rows.value = sppHistoryStore.sppHistory.data;
+};
+
+const searchData = async () => {
+  await sppHistoryStore.changePage(1);
 };
 
 const formatRupiah = (amount) => {
@@ -45,11 +50,14 @@ onMounted(async () => {
           <div class="flex data-[orientation=horizontal]:flex-col data-[orientation=vertical]:flex-row gap-2"
             data-orientation="horizontal">
             <div class="relative w-full md:w-72">
-              <!-- <InputField v-model="studentStore.searchQuery" placeholder="Search..." name="search"
-                v-debounce:500="searchData" /> -->
+              <InputField v-model="sppHistoryStore.searchQuery" placeholder="Search..." name="search"
+                v-debounce:500="searchData" />
             </div>
           </div>
           <div class="w-full md:w-72 flex justify-end">
+            <Button @click="openClassModal('add')" variant="solid" color="primary">
+              Tambah SPP History
+            </Button>
             <!-- Modal Form -->
             <!-- <Modal ref="userModalRef">
               <template #title>
