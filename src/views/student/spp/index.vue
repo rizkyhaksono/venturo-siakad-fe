@@ -1,15 +1,33 @@
 <script setup>
 import Layout from "@/layouts/main.vue";
-import { useStudentSPPStore } from "@/state/pinia";
+import {
+  useStudentSPPStore,
+  useStudentSPPHistoryStore
+} from "@/state/pinia";
 import { onMounted, ref } from "vue";
 import Button from "@/components/widgets/Button.vue";
 
 const sppStore = useStudentSPPStore();
-const rows = ref([]);
+const sppHistoryStore = useStudentSPPHistoryStore();
+const sppRows = ref([]);
+const sppHistoryRows = ref([]);
+
+const paymentModal = ref(false);
+const selectedSpp = ref(null);
+
+const openPaymentModal = (sppItem) => {
+  selectedSpp.value = sppItem;
+  paymentModal.value = true;
+};
 
 const getSPP = async () => {
   await sppStore.getSPP();
-  rows.value = sppStore.spp.data;
+  sppRows.value = sppStore.spp.data;
+};
+
+const getSPPHistory = async () => {
+  await sppHistoryStore.getSPPHistory();
+  sppHistoryRows.value = sppHistoryStore.sppHistory.data;
 };
 
 const formatRupiah = (amount) => {
@@ -20,8 +38,55 @@ const formatRupiah = (amount) => {
   }).format(amount);
 };
 
+const checkPaymentStatus = (sppId) => {
+  const paymentRecord = sppHistoryRows.value.find(
+    history => history.spp_id === sppId && history.payment_status === 'paid'
+  );
+  return paymentRecord ? 'LUNAS' : 'BELUM LUNAS';
+};
+
+const getStatusClass = (status) => {
+  return status === 'LUNAS'
+    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 px-2 py-1 rounded-full font-medium'
+    : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 px-2 py-1 rounded-full font-medium';
+};
+
+const shouldShowPayButton = (sppId) => {
+  return checkPaymentStatus(sppId) !== 'LUNAS';
+};
+
+const calculateFinancialSummary = () => {
+  const totalBill = sppRows.value.reduce((sum, row) => sum + row.total, 0);
+
+  const paidAmount = sppHistoryRows.value.reduce((sum, history) => {
+    if (history.payment_status === 'paid') {
+      return sum + history.amount_paid;
+    }
+    return sum;
+  }, 0);
+
+  const unpaidAmount = totalBill - paidAmount;
+  const paymentPercentage = totalBill > 0 ? Math.round((paidAmount / totalBill) * 100) : 0;
+
+  return {
+    totalBill,
+    paidAmount,
+    unpaidAmount,
+    paymentPercentage
+  };
+};
+
+const financialSummary = ref({
+  totalBill: 0,
+  paidAmount: 0,
+  unpaidAmount: 0,
+  paymentPercentage: 0
+});
+
 onMounted(async () => {
   await getSPP();
+  await getSPPHistory();
+  financialSummary.value = calculateFinancialSummary();
 });
 </script>
 
@@ -58,23 +123,27 @@ onMounted(async () => {
             <div class="space-y-4">
               <div class="flex justify-between items-center">
                 <span class="text-gray-600 dark:text-gray-300">Total Tagihan</span>
-                <span class="font-medium">Rp 5.000.000</span>
+                <span class="font-medium">{{ formatRupiah(financialSummary.totalBill) }}</span>
               </div>
               <div class="flex justify-between items-center">
                 <span class="text-gray-600 dark:text-gray-300">Sudah Dibayar</span>
-                <span class="font-medium text-green-600 dark:text-green-400">Rp 3.500.000</span>
+                <span class="font-medium text-green-600 dark:text-green-400">{{
+                  formatRupiah(financialSummary.paidAmount)
+                }}</span>
               </div>
               <div class="flex justify-between items-center">
                 <span class="text-gray-600 dark:text-gray-300">Tunggakan</span>
-                <span class="font-medium text-red-600 dark:text-red-400">Rp 1.500.000</span>
+                <span class="font-medium text-red-600 dark:text-red-400">{{ formatRupiah(financialSummary.unpaidAmount)
+                }}</span>
               </div>
 
               <div class="pt-3">
                 <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-2">
-                  <div class="bg-green-600 dark:bg-green-500 h-2.5 rounded-full" style="width: 70%"></div>
+                  <div class="bg-green-600 dark:bg-green-500 h-2.5 rounded-full"
+                    :style="`width: ${financialSummary.paymentPercentage}%`"></div>
                 </div>
                 <div class="text-sm text-gray-600 dark:text-gray-400 text-right">
-                  70% terbayar
+                  {{ financialSummary.paymentPercentage }}% terbayar
                 </div>
               </div>
             </div>
@@ -94,36 +163,15 @@ onMounted(async () => {
             </div>
 
             <div class="space-y-4 max-h-60 overflow-y-auto">
-              <div class="border-b border-gray-200 dark:border-gray-700 pb-3">
+              <div class="border-b border-gray-200 dark:border-gray-700 pb-3"
+                v-for="payment in sppHistoryRows.slice(0, 3)" :key="payment.id">
                 <div class="flex justify-between mb-1">
-                  <span class="font-medium">Pembayaran SPP</span>
-                  <span class="text-green-600 dark:text-green-400">Rp 1.000.000</span>
+                  <span class="font-medium">{{ payment.spp.name }}</span>
+                  <span class="text-green-600 dark:text-green-400">{{ formatRupiah(payment.amount_paid) }}</span>
                 </div>
                 <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                  <span>15 Mei 2025</span>
-                  <span>Lunas</span>
-                </div>
-              </div>
-
-              <div class="border-b border-gray-200 dark:border-gray-700 pb-3">
-                <div class="flex justify-between mb-1">
-                  <span class="font-medium">Pembayaran SPP</span>
-                  <span class="text-green-600 dark:text-green-400">Rp 1.500.000</span>
-                </div>
-                <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                  <span>10 April 2025</span>
-                  <span>Lunas</span>
-                </div>
-              </div>
-
-              <div class="border-b border-gray-200 dark:border-gray-700 pb-3">
-                <div class="flex justify-between mb-1">
-                  <span class="font-medium">Pembayaran SPP</span>
-                  <span class="text-green-600 dark:text-green-400">Rp 1.000.000</span>
-                </div>
-                <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                  <span>15 Maret 2025</span>
-                  <span>Lunas</span>
+                  <span>{{ new Date(payment.payment_date).toLocaleDateString('id-ID') }}</span>
+                  <span>{{ payment.payment_status === 'paid' ? 'Lunas' : 'Proses' }}</span>
                 </div>
               </div>
             </div>
@@ -211,7 +259,7 @@ onMounted(async () => {
               </tr>
             </thead>
             <tbody class="group text-sm text-gray-800 dark:text-white">
-              <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
+              <tr class="border-b border-gray-200 last:border-0" v-for="row in sppRows" :key="row.id">
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm font-medium text-current">
                     {{ row.name }}
@@ -233,13 +281,14 @@ onMounted(async () => {
                   </small>
                 </td>
                 <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
-                    BL (Belum Lunas)
+                  <small :class="getStatusClass(checkPaymentStatus(row.id))">
+                    {{ checkPaymentStatus(row.id) }}
                   </small>
                 </td>
                 <td class="p-3">
                   <div class="flex gap-2 justify-start">
-                    <Button @click="openClassModal('edit', row.id)" variant="outline" color="secondary">
+                    <Button v-if="shouldShowPayButton(row.id)" @click="openPaymentModal(row)" variant="outline"
+                      color="secondary">
                       Bayar
                     </Button>
                   </div>

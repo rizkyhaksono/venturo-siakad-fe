@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
-export const useStudentSPPHistoryStore = defineStore("studentSPPHistory", {
+export const useStudentAssesmentStore = defineStore("studentAssesment", {
   state: () => ({
     apiUrl: import.meta.env.VITE_APP_APIURL,
-    sppHistory: [],
-    sppHistoryData: null,
+    assesments: [],
+    assesment: null,
     response: {
       status: null,
       message: null,
@@ -23,17 +23,17 @@ export const useStudentSPPHistoryStore = defineStore("studentSPPHistory", {
     searchQuery: "",
   }),
   actions: {
-    openForm(newAction, sppHistoryData) {
+    openForm(newAction, assesmentData) {
       this.modalAction.action = newAction;
-      this.sppHistoryData = sppHistoryData;
+      this.assesment = assesmentData;
     },
-    async getSPPHistory() {
+    async getAssesments() {
       try {
-        const url = `${this.apiUrl}/v1/student/spp-history?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`;
+        const url = `${this.apiUrl}/v1/student/student-assesments?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`;
         const res = await axios.get(url);
-        const sppHistoryDataList = res.data;
-        this.sppHistory = sppHistoryDataList;
-        this.totalData = res.data.total;
+        const assesmentsDataList = res.data;
+        this.assesments = assesmentsDataList;
+        this.totalData = res.data.meta.total;
         this.totalPage = Math.ceil(this.totalData / this.perpage);
       } catch (error) {
         this.response = {
@@ -42,14 +42,11 @@ export const useStudentSPPHistoryStore = defineStore("studentSPPHistory", {
         };
       }
     },
-    async postSPPHistory(data) {
+    async getByIdAssesment(id) {
       try {
-        const url = `${this.apiUrl}/v1/student/spp-history`;
-        const res = await axios.post(url, data);
-        this.response = {
-          status: res.status,
-          message: res.data.message,
-        };
+        const url = `${this.apiUrl}/v1/student/assesments/${id}`;
+        const res = await axios.get(url);
+        this.assesment = res.data;
       } catch (error) {
         this.response = {
           status: error.response?.status,
@@ -59,7 +56,7 @@ export const useStudentSPPHistoryStore = defineStore("studentSPPHistory", {
     },
     async changePage(newPage) {
       this.current = newPage;
-      await this.getSPPHistory();
+      await this.getAssesments();
     },
   }
 })

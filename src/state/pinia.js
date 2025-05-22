@@ -19,6 +19,7 @@ import { useAdminStudentStore } from "./pinia/admin/student";
 import { useAdminStudyYearStore } from "./pinia/admin/study-year";
 import { useAdminRombelStore } from "./pinia/admin/rombel";
 import { useAdminSPPStore } from "./pinia/admin/spp";
+import { useAdminSPPHistoryStore } from "./pinia/admin/spp-history";
 
 // student
 import { useStudentClassStore } from "./pinia/student/class";
@@ -26,6 +27,8 @@ import { useStudentClassHistoryStore } from "./pinia/student/class-history";
 import { useStudentSubjectScheduleStore } from "./pinia/student/subject-schedule";
 import { useStudentRombelStore } from "./pinia/student/rombel";
 import { useStudentSPPStore } from "./pinia/student/spp";
+import { useStudentSPPHistoryStore } from "./pinia/student/spp-history";
+import { useStudentAssesmentStore } from "./pinia/student/student-assesment";
 
 // teacher
 import { useTeacherClassStore } from "./pinia/teacher/class";
@@ -57,6 +60,7 @@ export {
   useAdminStudyYearStore,
   useAdminRombelStore,
   useAdminSPPStore,
+  useAdminSPPHistoryStore,
 
   // student
   useStudentClassStore,
@@ -64,6 +68,8 @@ export {
   useStudentSubjectScheduleStore,
   useStudentRombelStore,
   useStudentSPPStore,
+  useStudentSPPHistoryStore,
+  useStudentAssesmentStore,
 
   // teacher
   useTeacherClassStore,

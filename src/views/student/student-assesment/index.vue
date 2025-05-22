@@ -1,5 +1,24 @@
 <script setup>
 import Layout from "@/layouts/main.vue";
+import { useStudentAssesmentStore } from "@/state/pinia";
+import { onMounted, ref } from "vue";
+import Button from "@/components/widgets/Button.vue";
+
+const studentStore = useStudentAssesmentStore();
+const rows = ref([]);
+
+const getStudentAssesments = async () => {
+  try {
+    const response = await studentStore.getAssesments();
+    rows.value = response.data;
+  } catch (error) {
+    console.error("Error fetching student assessments:", error);
+  }
+};
+
+onMounted(async () => {
+  await getStudentAssesments();
+});
 </script>
 
 <template>
