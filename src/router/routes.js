@@ -122,6 +122,12 @@ export default [
         component: () => import("../views/admin/student"),
     },
     {
+        path: "/admin/student-assesment",
+        name: "Student Assesment",
+        meta: { title: "Student Assesment", authRequired: true },
+        component: () => import("../views/admin/student-assesment"),
+    },
+    {
         path: "/admin/study_year",
         name: "Study Year",
         meta: { title: "Study Year", authRequired: true },

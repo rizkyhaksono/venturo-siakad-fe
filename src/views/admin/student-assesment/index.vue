@@ -1,17 +1,17 @@
 <script setup>
 import Layout from "@/layouts/main.vue";
-import { useAdminSPPStore } from "@/state/pinia";
-import { onMounted, ref } from "vue";
-import Button from "@/components/widgets/Button.vue";
-import InputField from "@/components/widgets/Input.vue";
+import Button from "@/components/widgets/Button";
+import InputField from "@/components/widgets/Input";
 import Modal from "@/components/widgets/Modal.vue";
-import FormSpp from "@/views/admin/spp/form.vue";
+import { onMounted, ref } from "vue";
+import { useAdminStudentAssesment } from "@/state/pinia";
+import FormAssesment from "@/views/admin/student-assesment/form.vue";
 import { showDeleteConfirmationDialog, showSuccessToast } from "@/helpers/alert.js";
 
-const sppStore = useAdminSPPStore();
+const studentAssesmentStore = useAdminStudentAssesment();
 const rows = ref([]);
 const modalRef = ref(null);
-const selectedSpp = ref(null);
+const selectedAssesment = ref(null);
 const modalTitle = ref("");
 const formRef = ref(null);
 
@@ -19,38 +19,39 @@ const currentPage = ref(1);
 const lastPage = ref(1);
 const total = ref(0);
 
-const getSPP = async () => {
-  await sppStore.getSPP();
-  rows.value = sppStore.spp.data;
+const getStudentAssesment = async () => {
+  await studentAssesmentStore.getStudentAssesments();
+  rows.value = studentAssesmentStore.studentAssesments || [];
   currentPage.value = rows.value.meta?.current_page || 1;
   lastPage.value = rows.value.meta?.last_page || 1;
   total.value = rows.value.meta?.total || 0;
-};
+}
 
 const searchData = async () => {
-  await sppStore.changePage(1);
+  await studentAssesmentStore.changePage(1);
+  await getStudentAssesment();
 };
 
 const paginate = async (page) => {
-  await sppStore.changePage(page);
-  await getSPP();
+  await studentAssesmentStore.changePage(page);
+  await getStudentAssesment();
 };
 
 const openModal = (mode, id = null) => {
   modalRef.value.openModal();
   if (mode === "edit" && id) {
-    const foundSpp = sppStore.spps.data.find((item) => item.id === id);
-    selectedSpp.value = foundSpp;
-    modalTitle.value = "Ubah SPP";
+    const foundAssesment = studentAssesmentStore.studentAssesments.data.find((item) => item.id === id);
+    selectedAssesment.value = foundAssesment;
+    modalTitle.value = "Ubah Nilai";
   } else {
-    selectedSpp.value = null;
-    modalTitle.value = "Tambah SPP";
+    selectedAssesment.value = null;
+    modalTitle.value = "Tambah Nilai";
   }
 };
 
 const submitModal = () => {
   if (formRef.value) {
-    formRef.value.saveSpp();
+    formRef.value.saveAssesment();
   }
 };
 
@@ -58,43 +59,36 @@ const closeModal = () => {
   modalRef.value.closeModal();
 };
 
-const deleteSpp = async (id) => {
+const deleteAssesment = async (id) => {
   const confirmed = await showDeleteConfirmationDialog();
   if (confirmed) {
     try {
-      await sppStore.deleteSpp(id);
-      showSuccessToast("SPP berhasil dihapus");
-      await getSPP();
+      await studentAssesmentStore.deleteStudentAssesment(id);
+      showSuccessToast("Nilai berhasil dihapus");
+      await getStudentAssesment();
     } catch (error) {
       console.error(error);
     }
   }
 };
 
-const formatRupiah = (amount) => {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0
-  }).format(amount);
-};
-
 onMounted(async () => {
-  getSPP();
-});
+  await getStudentAssesment();
+})
 </script>
 
 <template>
   <Layout>
-    <template #title>Data SPP</template>
+    <template #title>Data Student Assesment</template>
     <div class="w-full mx-auto p-4 rounded-lg bg-gray-100 dark:bg-gray-900">
       <div class="w-full">
         <div class="mb-8 flex items-center justify-between gap-8">
           <div>
             <h6 class="font-sans antialiased font-bold text-base md:text-lg lg:text-xl text-current">
-              List SPP
+              List Student Assesment
             </h6>
-            <p class="font-sans antialiased text-base text-current mt-1">lihat informasi untuk semua SPP
+            <p class="font-sans antialiased text-base text-current mt-1">
+              Lihat informasi student assesments
             </p>
           </div>
         </div>
@@ -102,14 +96,13 @@ onMounted(async () => {
           <div class="flex data-[orientation=horizontal]:flex-col data-[orientation=vertical]:flex-row gap-2"
             data-orientation="horizontal">
             <div class="relative w-full md:w-72">
-              <InputField v-model="sppStore.searchQuery" placeholder="Search..." name="search"
+              <InputField v-model="studentAssesmentStore.searchQuery" placeholder="Search..." name="search"
                 v-debounce:500="searchData" />
             </div>
           </div>
           <div class="w-full md:w-72 flex justify-end">
-            <!-- Tombol trigger modal -->
             <Button @click="openModal('add')" variant="solid" color="primary">
-              Tambah SPP
+              Tambah Nilai
             </Button>
             <!-- Modal Form -->
             <Modal ref="modalRef">
@@ -117,7 +110,8 @@ onMounted(async () => {
                 <h1 class="text-xl font-bold">{{ modalTitle }}</h1>
               </template>
               <template #body>
-                <FormSpp ref="formRef" :spp="selectedSpp" @refresh="getSpps" @close="closeModal" />
+                <FormAssesment ref="formRef" :assesment="selectedAssesment" @refresh="getStudentAssesment"
+                  @close="closeModal" />
               </template>
               <template #footer>
                 <div class="flex justify-end gap-2">
@@ -139,19 +133,61 @@ onMounted(async () => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Nama SPP
+                    Student Number
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Nominal
+                    Name
+                  </small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                  <small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Subject Name
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
                     Tahun Ajaran
+                  </small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                  <small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Nilai UTS
+                  </small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                  <small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Nilai UAS
+                  </small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                  <small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Nilai Tugas
+                  </small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                  <small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Nilai Ke-aktivitasan
+                  </small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                  <small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Total Nilai
+                  </small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                  <small
+                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    Notes
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
@@ -165,20 +201,53 @@ onMounted(async () => {
             <tbody class="group text-sm text-gray-800 dark:text-white">
               <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
                 <td class="p-3">
-                  <div class="flex items-center gap-3">
-                    <small class="font-sans antialiased text-sm font-medium text-current">
-                      {{ row.name }}
-                    </small>
-                  </div>
+                  <small class="font-sans antialiased text-sm font-medium text-current">
+                    {{ row.student.student_number }}
+                  </small>
                 </td>
                 <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
-                    {{ formatRupiah(row.total) }}
+                  <small class="font-sans antialiased text-sm font-medium text-current">
+                    {{ row.student.name }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.study_year?.year }}
+                    {{ row.subject.name }}
+                  </small>
+                </td>
+                <td class="p-3">
+                  <small class="font-sans antialiased text-sm text-current">
+                    {{ row.study_year.semester }} - {{ row.study_year.year }}
+                  </small>
+                </td>
+                <td class="p-3">
+                  <small class="font-sans antialiased text-sm text-current">
+                    {{ row.uts_score }}
+                  </small>
+                </td>
+                <td class="p-3">
+                  <small class="font-sans antialiased text-sm text-current">
+                    {{ row.uas_score }}
+                  </small>
+                </td>
+                <td class="p-3">
+                  <small class="font-sans antialiased text-sm text-current">
+                    {{ row.tugas_score }}
+                  </small>
+                </td>
+                <td class="p-3">
+                  <small class="font-sans antialiased text-sm text-current">
+                    {{ row.activity_score }}
+                  </small>
+                </td>
+                <td class="p-3">
+                  <small class="font-sans antialiased text-sm text-current">
+                    {{ (row.total_score == 0) ? '-' : row.total_score }}
+                  </small>
+                </td>
+                <td class="p-3">
+                  <small class="font-sans antialiased text-sm text-current">
+                    {{ row.notes }}
                   </small>
                 </td>
                 <td class="p-3">
@@ -186,7 +255,7 @@ onMounted(async () => {
                     <Button @click="openModal('edit', row.id)" variant="outline" color="secondary">
                       Edit
                     </Button>
-                    <Button @click="deleteSpp(row.id)" variant="outline" color="error">
+                    <Button @click="deleteAssesment(row.id)" variant="outline" color="error">
                       Delete
                     </Button>
                   </div>

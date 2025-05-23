@@ -16,6 +16,7 @@ import { useAdminHomeroomTeacherStore } from "./pinia/admin/homeroom-teacher";
 import { useAdminTeacherStore } from "./pinia/admin/teacher";
 import { useAdminRegistrationStore } from "./pinia/admin/registration";
 import { useAdminStudentStore } from "./pinia/admin/student";
+import { useAdminStudentAssesment } from "./pinia/admin/student-assesment";
 import { useAdminStudyYearStore } from "./pinia/admin/study-year";
 import { useAdminRombelStore } from "./pinia/admin/rombel";
 import { useAdminSPPStore } from "./pinia/admin/spp";
@@ -61,6 +62,7 @@ export {
   useAdminRombelStore,
   useAdminSPPStore,
   useAdminSPPHistoryStore,
+  useAdminStudentAssesment,
 
   // student
   useStudentClassStore,
