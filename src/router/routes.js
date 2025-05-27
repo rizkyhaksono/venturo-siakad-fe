@@ -128,6 +128,18 @@ export default [
         component: () => import("../views/admin/student-assesment"),
     },
     {
+        path: "/admin/student-assesment/form2",
+        name: "Student Assesment Form 2",
+        meta: { title: "Student Assesment", authRequired: true },
+        component: () => import("../views/admin/student-assesment/form-2.vue"),
+    },
+    {
+        path: "/admin/student-assesment/form3",
+        name: "Student Assesment Form 3",
+        meta: { title: "Student Assesment", authRequired: true },
+        component: () => import("../views/admin/student-assesment/form-3.vue"),
+    },
+    {
         path: "/admin/study_year",
         name: "Study Year",
         meta: { title: "Study Year", authRequired: true },

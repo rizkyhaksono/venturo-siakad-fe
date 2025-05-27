@@ -102,7 +102,7 @@ onMounted(async () => {
           </div>
           <div class="w-full md:w-72 flex justify-end">
             <Button @click="openModal('add')" variant="solid" color="primary">
-              Tambah Nilai
+              Isi Nilai Siswa/i
             </Button>
             <!-- Modal Form -->
             <Modal ref="modalRef">

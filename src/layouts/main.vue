@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, onMounted, onBeforeUnmount } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useColorMode } from "@vueuse/core";
 import { useAuthStore } from "@/state/pinia";
@@ -54,26 +54,53 @@ const getRolePrefix = (role) => {
     return '';
 };
 const rolePrefix = getRolePrefix(getRole);
+
+const currentTime = ref(new Date());
+let clockInterval;
+
+function updateTime() {
+    currentTime.value = new Date();
+}
+
+onMounted(() => {
+    updateTime();
+    clockInterval = setInterval(updateTime, 1000);
+});
+
+onBeforeUnmount(() => {
+    if (clockInterval) clearInterval(clockInterval);
+});
+
+function formatTime(date) {
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+}
 </script>
 
 <template>
     <div class="grid min-h-screen w-full grid-rows-[auto_auto_1fr]">
         <!-- Navbar Baris 1 -->
         <header
-            class="fixed top-0 left-0 w-full z-50 flex h-14 lg:h-[60px] items-center justify-between border-b bg-gray-100 dark:bg-gray-900 px-4 lg:px-6">
+            class="fixed top-0 left-0 w-full z-50 flex h-14 lg:h-[60px] items-center justify-between border-b bg-gray-100 dark:bg-gray-950 px-4 lg:px-6">
             <!-- Logo -->
             <router-link :to="`${rolePrefix}/dashboard`" class="flex items-center gap-2 font-semibold">
                 <img src="https://natee.my.id/favicon.ico" class="size-8" alt="logo-siakad"> SIAKAD
             </router-link>
 
+            <div class="text-base md:text-lg font-semibold text-gray-800 dark:text-gray-200">
+                {{ formatTime(currentTime) }}
+            </div>
+
             <!-- Right Section (Theme Toggle + User Menu) -->
             <div class="flex items-center gap-4">
                 <!-- Toggle Theme -->
-                <!-- <button @click="toggleTheme" class="p-2 rounded-full bg-gray-300 dark:bg-gray-700">
+                <button @click="toggleTheme" class="p-2 rounded-full bg-gray-300 dark:bg-gray-700">
                     <svg class="h-5 w-5" viewBox="0 0 24 24">
                         <path :d="mode === 'light' ? mdiWeatherNight : mdiWhiteBalanceSunny" />
                     </svg>
-                </button> -->
+                </button>
 
                 <!-- User Dropdown -->
                 <div class="dropdown relative">

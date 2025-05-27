@@ -1,9 +1,12 @@
 import axios from "axios";
 import { defineStore } from "pinia";
+import decrypt from "@/utils/decrypt";
+import { encryptedEnv } from "@/utils/encryptedEnv";
 
 export const useUserStore = defineStore("user", {
     state: () => ({
-        apiUrl: import.meta.env.VITE_APP_APIURL,
+        // apiUrl: import.meta.env.VITE_APP_APIURL,
+        apiUrl: decrypt(encryptedEnv.VUE_APP_APIURL),
         users: [],
         user: null,
         response: {

@@ -115,12 +115,6 @@ onMounted(() => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
-                    Total Rombel
-                  </small>
-                </th>
-                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
-                  <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
                     Tahun Pelajaran
                   </small>
                 </th>
@@ -158,17 +152,20 @@ onMounted(() => {
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.class.total_rombel }}
-                  </small>
-                </td>
-                <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
                     {{ row.study_year.semester }} - {{ row.study_year.year }}
                   </small>
                 </td>
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
-                    {{ row.student.name }} - {{ row.student.student_number }}
+                    <div class="flex flex-col gap-1 items-start">
+                      <template v-for="(student, index) in row.students" :key="index">
+                        <span
+                          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                          {{ student.name }}
+                        </span>
+                      </template>
+                      <span v-if="!row.students.length" class="text-gray-400">No students</span>
+                    </div>
                   </small>
                 </td>
                 <td class="p-3">
@@ -195,14 +192,14 @@ onMounted(() => {
             Page {{ rombelStore.current || 1 }} of {{ rombelStore.totalData || 1 }}
           </small>
           <div class="flex gap-2">
-            <!-- <Button variant="outline" color="secondary" :disabled="!registrationStore.teachers?.prev_page_url"
-              @click="paginate(registrationStore.teachers?.current_page - 1)">
+            <Button variant="outline" color="secondary" :disabled="!rombelStore.prev_page_url"
+              @click="paginate(rombelStore.current_page - 1)">
               Previous
-            </Button> -->
-            <!-- <Button variant="outline" color="secondary" :disabled="!registrationStore.teachers?.next_page_url"
-              @click="paginate(registrationStore.teachers?.current_page + 1)">
+            </Button>
+            <Button variant="outline" color="secondary" :disabled="!rombelStore.next_page_url"
+              @click="paginate(rombelStore.current_page + 1)">
               Next
-            </Button> -->
+            </Button>
           </div>
         </div>
       </div>

@@ -18,7 +18,14 @@ export default defineConfig(({ mode }) => {
             },
         },
         plugins: [vue(), commonjs()],
+        define: {
+            'process.env': {},
+        },
         resolve: {
+            fallback: {
+                crypto: require.resolve('crypto-browserify'),
+                buffer: require.resolve('buffer/'),
+            },
             alias: {
                 "@": path.resolve(pathSegments, "./src"),
             },

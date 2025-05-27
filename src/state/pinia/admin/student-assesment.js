@@ -53,7 +53,7 @@ export const useAdminStudentAssesment = defineStore("adminStudentAssesment", {
     },
     async postStudentAssesment(studentAssesments) {
       try {
-        const res = await axios.post(`${this.apiUrl}/v1/admin/student-assessments`, studentAssesments);
+        const res = await axios.post(`${this.apiUrl}/v1/admin/student-assesments`, studentAssesments);
         this.response = {
           status: res.status,
           message: res.data.message,
@@ -67,6 +67,40 @@ export const useAdminStudentAssesment = defineStore("adminStudentAssesment", {
           error: error.response?.data.errors,
         };
       }
-    }
+    },
+    async putStudentAssesment(studentAssesments) {
+      try {
+        const res = await axios.put(`${this.apiUrl}/v1/admin/student-assesments/${studentAssesments.id}`, studentAssesments);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+        await this.getStudentAssesments();
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.errors,
+        };
+      }
+    },
+    async deleteStudentAssesment(studentAssesmentId) {
+      try {
+        const res = await axios.delete(`${this.apiUrl}/v1/admin/student-assesments/${studentAssesmentId}`);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+        await this.getStudentAssesments();
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.errors,
+        };
+      }
+    },
   }
 })

@@ -1,10 +1,10 @@
 <template>
-    <div class="flex items-center justify-start bg-primary dark:bg-gray-900 px-4 lg:px-6 overflow-x-auto">
-        <nav class="flex gap-6 text-sm font-semibold text-white min-w-max">
-            <template v-for="(menu, index) in menus" :key="menu.label">
+    <div class="flex items-center justify-start bg-primary dark:bg-gray-900 px-4 lg:px-6">
+        <nav class="flex gap-6 text-sm font-semibold text-white">
+            <template v-for="(menu) in menus" :key="menu.label">
                 <!-- Menu utama -->
                 <router-link v-if="!menu.submenu" :to="menu.to"
-                    class="relative flex items-center gap-2 px-3 py-2 rounded-lg transition h-12 lg:h-[48px] whitespace-nowrap"
+                    class="relative flex items-center gap-2 px-3 py-2 rounded-lg transition h-12 lg:h-[48px]"
                     :class="{ 'font-bold': isActiveMenu(menu) }">
                     <span class="absolute bottom-0 right-0 w-full h-1 border-b-[5px] border-white rounded-t-[10px]"
                         :class="{ 'block': isActiveMenu(menu), 'hidden': !isActiveMenu(menu) }" />
@@ -17,7 +17,7 @@
                 <!-- Dropdown Menu -->
                 <div v-else class="relative" ref="dropdownRefs">
                     <button @click="toggleMenu(menu.label)"
-                        class="relative flex items-center gap-2 px-3 py-2 rounded-lg transition h-12 lg:h-[48px] whitespace-nowrap"
+                        class="relative flex items-center gap-2 px-3 py-2 rounded-lg transition h-12 lg:h-[48px]"
                         :class="{ 'font-bold': isActiveMenu(menu) }">
                         <span class="absolute bottom-0 right-0 w-full h-1 border-b-[5px] border-white rounded-t-[10px]"
                             :class="{ 'block': isActiveMenu(menu), 'hidden': !isActiveMenu(menu) }" />
@@ -33,7 +33,7 @@
 
                     <!-- Submenu -->
                     <div v-if="openMenu === menu.label"
-                        class="absolute left-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-1 z-50 fixed-dropdown">
+                        class="absolute left-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg p-1 z-10">
                         <template v-for="sub in menu.submenu" :key="sub.label">
                             <router-link v-if="!sub.submenu" :to="sub.to"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
@@ -53,7 +53,7 @@
                                     </svg>
                                 </p>
                                 <div
-                                    class="absolute left-full top-0 mt-0 hidden group-hover:block bg-white border border-gray-300 rounded-lg shadow-lg p-1 w-40 z-50">
+                                    class="absolute left-full top-0 mt-0 hidden group-hover:block bg-white border border-gray-300 rounded-lg shadow-lg p-1 w-40">
                                     <router-link v-for="nested in sub.submenu" :key="nested.label" :to="nested.to"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
                                         :class="{ 'bg-gray-100': isActiveMenu(nested) }">
@@ -127,6 +127,8 @@ onUnmounted(() => {
 });
 
 const getRole = localStorage.getItem("venturo_siakad_role");
+const menus = ref([]);
+
 const getRolePrefix = (role) => {
     if (role === 'Admin') return '/admin';
     if (role === 'Teacher') return '/teacher';
@@ -195,11 +197,15 @@ const adminMenus = [
     },
 ];
 
-const studentMenus = [
+const studentMenusAccepted = [
     { label: "Dashboard", to: `${rolePrefix}/dashboard`, icon: mdiHome },
     { label: "Rombel", to: `${rolePrefix}/rombel`, icon: mdiGoogleClassroom },
     { label: "Nilai Siswa", icon: mdiFormatListNumbered, to: `${rolePrefix}/student-assesment` },
     { label: "SPP", icon: mdiCashMultiple, to: `${rolePrefix}/spp` },
+];
+
+const studentMenusPending = [
+    { label: "Dashboard", to: `${rolePrefix}/dashboard`, icon: mdiHome },
 ];
 
 const teacherMenus = [
@@ -222,14 +228,26 @@ const teacherMenus = [
     { label: "Student", to: `${rolePrefix}/student`, icon: mdiCardAccountDetails },
 ];
 
-// Data menu utama
-const menus = ref(getRole === 'Admin' ? adminMenus :
-    getRole === 'Student' ? studentMenus :
-        getRole === 'Teacher' ? teacherMenus : []);
+setMenusByRole();
+
+function setMenusByRole() {
+    if (getRole === 'Admin') {
+        menus.value = adminMenus;
+    } else if (getRole === 'Student') {
+        menus.value = studentMenusPending;
+        setTimeout(() => {
+            const status = localStorage.getItem("venturo_siakad_status");
+            menus.value = status === 'accepted' ? studentMenusAccepted : studentMenusPending;
+        }, 100);
+    } else if (getRole === 'Teacher') {
+        menus.value = teacherMenus;
+    } else {
+        menus.value = [];
+    }
+}
 </script>
 
 <style scoped>
-/* Styling tambahan */
 .group:hover>div {
     display: block;
 }

@@ -88,15 +88,23 @@ export const useAuthStore = defineStore("auth", {
                 this.removeToken();
                 this.removeUser();
                 this.removeRole();
+                this.removeStatus();
             }
         },
         async saveUserLogin() {
             try {
                 const response = await axios.get(`${this.apiUrl}/v1/auth/profile`);
+                this.saveStatus(response.data.data.registration.status);
                 this.userLogin = response.data.data;
             } catch (error) {
                 console.error("Failed to fetch user profile", error);
             }
+        },
+        async removeStatus() {
+            localStorage.removeItem("venturo_siakad_status");
+        },
+        async saveStatus(status) {
+            localStorage.setItem("venturo_siakad_status", status);
         },
         async saveRole(token) {
             localStorage.setItem("venturo_siakad_role", token);

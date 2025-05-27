@@ -50,6 +50,7 @@ const getUsers = async () => {
         email: user.email,
         role: user.m_user_roles_id,
     }));
+    console.log(userStore.users);
     users.value = userData;
 
     userCounts.value = {
@@ -120,7 +121,7 @@ onMounted(async () => {
                     <div class="ml-4">
                         <p class="text-gray-500">Total Users</p>
                         <p class="text-xl font-semibold">{{ userCounts.Admin + userCounts.Student + userCounts.Teacher
-                            }}</p>
+                        }}</p>
                     </div>
                 </div>
             </div>

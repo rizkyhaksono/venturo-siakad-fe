@@ -173,15 +173,17 @@ onMounted(() => {
         </div>
         <div class="flex items-center justify-between border-gray-200 py-4">
           <small class="font-sans antialiased text-sm text-current">
-            Page {{ registrationStore.teachers?.current_page || 1 }} of {{ registrationStore.teachers?.last_page || 1 }}
+            Page {{ registrationStore.registrations?.current_page || 1 }} of {{
+              registrationStore.registrations?.last_page
+            || 1 }}
           </small>
           <div class="flex gap-2">
-            <Button variant="outline" color="secondary" :disabled="!registrationStore.teachers?.prev_page_url"
-              @click="paginate(registrationStore.teachers?.current_page - 1)">
+            <Button variant="outline" color="secondary" :disabled="!registrationStore.registrations?.prev_page_url"
+              @click="paginate(registrationStore.registrations?.current_page - 1)">
               Previous
             </Button>
-            <Button variant="outline" color="secondary" :disabled="!registrationStore.teachers?.next_page_url"
-              @click="paginate(registrationStore.teachers?.current_page + 1)">
+            <Button variant="outline" color="secondary" :disabled="!registrationStore.registrations?.next_page_url"
+              @click="paginate(registrationStore.registrations?.current_page + 1)">
               Next
             </Button>
           </div>
