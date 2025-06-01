@@ -42,6 +42,17 @@ export const useAdminStudentStore = defineStore("adminStudent", {
         };
       }
     },
+    async getStudentById(id) {
+      try {
+        const res = await axios.get(`${this.apiUrl}/v1/admin/students/${id}`);
+        this.student = res.data.data;
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+        };
+      }
+    },
     async changePage(newPage) {
       this.current = newPage;
       await this.getStudents();

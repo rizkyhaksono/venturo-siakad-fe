@@ -101,7 +101,7 @@ onMounted(() => {
                 </td>
                 <td class="p-3">
                   <div class="flex gap-2 justify-start">
-                    <router-link :to="`/admin/student-assesment/form/${row.id}`"
+                    <router-link :to="`/admin/student-assesment/form/${row.name}`"
                       class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-gray-600/80 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                       <span class="flex items-center gap-2">
                         Isi Nilai Siswa

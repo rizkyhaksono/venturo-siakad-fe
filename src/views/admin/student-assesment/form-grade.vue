@@ -6,18 +6,20 @@ import SelectField from "@/components/widgets/Select";
 import {
   useAdminStudentAssesment,
   useAdminStudentStore,
-  useAdminSubjectStore,
   useAdminStudyYearStore
 } from '@/state/pinia';
 import { showSuccessToast, showErrorToast } from "@/helpers/alert.js";
+import { useRoute } from 'vue-router';
 
-// Store instances
+const route = useRoute();
+const studentId = route.params.id;
+
+console.log('Student ID::', studentId);
+
 const studentAssesmentStore = useAdminStudentAssesment();
 const studentStore = useAdminStudentStore();
-const subjectStore = useAdminSubjectStore();
 const studyYearStore = useAdminStudyYearStore();
 
-// Student data form
 const formData = ref({
   student_id: '',
   student_name: 'Ricky Hadianto',
@@ -27,12 +29,10 @@ const formData = ref({
   class: 'A',
 });
 
-// Options for select fields
 const students = ref([]);
 const studyYears = ref([]);
 const loading = ref(false);
 
-// Assessment data structure
 const subjects = ref([
   {
     id: 1,
@@ -116,7 +116,6 @@ const subjects = ref([
   },
 ]);
 
-// Calculate averages
 const averages = computed(() => {
   const total = subjects.value.length;
 
@@ -133,7 +132,6 @@ const averages = computed(() => {
   };
 });
 
-// Calculate final average
 const finalAverage = computed(() => {
   const sum = subjects.value.reduce((sum, subject) => {
     return sum + subject.uts + subject.uas + subject.tugas + subject.keaktifan;
@@ -142,7 +140,6 @@ const finalAverage = computed(() => {
   return (sum / (subjects.value.length * 4)).toFixed(5);
 });
 
-// Data fetching functions
 const getStudents = async () => {
   try {
     loading.value = true;
@@ -159,6 +156,19 @@ const getStudents = async () => {
     loading.value = false;
   }
 };
+
+const getStudentById = async (id) => {
+  try {
+    loading.value = true;
+    await studentStore.getStudentById(id);
+    console.log('Fetched student:', studentStore.student);
+  } catch (error) {
+    console.error('Error fetching student:', error);
+    showErrorToast('Gagal memuat data siswa');
+  } finally {
+    loading.value = false;
+  }
+}
 
 const getStudyYears = async () => {
   try {
@@ -177,12 +187,10 @@ const getStudyYears = async () => {
   }
 };
 
-// Handle save action
 const saveAssessment = async () => {
   try {
     loading.value = true;
 
-    // Validation
     for (const subject of subjects.value) {
       if (subject.uts < 0 || subject.uts > 100 ||
         subject.uas < 0 || subject.uas > 100 ||
@@ -193,7 +201,6 @@ const saveAssessment = async () => {
       }
     }
 
-    // Format data for submission
     const assessmentData = subjects.value.map(subject => ({
       subject_id: subject.id,
       student_id: formData.value.student_id,
@@ -217,147 +224,130 @@ const saveAssessment = async () => {
   }
 };
 
-// Handle cancel action
 const cancelAssessment = () => {
-  // Navigate back or clear form
   window.history.back();
 };
 
 onMounted(async () => {
   await getStudents();
   await getStudyYears();
+  if (studentId) {
+    await getStudentById(studentId);
+  }
 });
 </script>
 
 <template>
   <Layout>
-    <div class="student-assessment-form p-4">
-      <h3 class="text-center mb-4">Add Nilai Siswa/i</h3>
+    <div class="px-4 py-6 bg-white shadow-sm rounded-lg">
+      <h3 class="text-2xl font-semibold text-center text-gray-800 mb-6">Add Nilai Siswa/i</h3>
 
-      <div class="student-info mb-4">
-        <div class="row mb-2">
-          <div class="col-md-6">
+      <div class="mb-6 bg-gray-50 p-4 rounded-lg">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
             <SelectField v-model="formData.student_id" label="Nama Siswa" placeholder="Pilih siswa" name="student_id"
-              :options="students" required />
+              :options="students" required class="w-full" />
           </div>
-          <div class="col-md-6">
+          <div>
             <SelectField v-model="formData.study_year_id" label="Tahun Pelajaran" placeholder="Pilih tahun ajaran"
-              name="study_year_id" :options="studyYears" required />
+              name="study_year_id" :options="studyYears" required class="w-full" />
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
             <InputField v-model="formData.student_nis" label="NIS" placeholder="Nomor Induk Siswa" name="student_nis"
-              disabled />
+              disabled class="w-full" />
           </div>
-          <div class="col-md-6">
-            <InputField v-model="formData.class" label="Kelas" placeholder="Kelas" name="class" disabled />
+          <div>
+            <InputField v-model="formData.class" label="Kelas" placeholder="Kelas" name="class" disabled
+              class="w-full" />
           </div>
         </div>
       </div>
 
-      <div class="assessment-table">
-        <table class="table table-bordered">
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
           <thead>
-            <tr>
-              <th class="text-center" rowspan="2">No</th>
-              <th class="text-center" rowspan="2">Komponen</th>
-              <th class="text-center" rowspan="2">KKM</th>
-              <th class="text-center" colspan="4">Nilai Hasil Belajar</th>
+            <tr class="bg-gray-100">
+              <th scope="row" class="border border-gray-300 px-2 py-2 text-center align-middle" rowspan="2">
+                No
+              </th>
+              <th id="komponen" scope="col" class="border border-gray-300 px-2 py-2 text-center align-middle"
+                rowspan="2">Komponen
+              </th>
+              <th scope="row" id="kkm" class="border border-gray-300 px-2 py-2 text-center align-middle" rowspan="2">KKM
+              </th>
+              <th scope="row" id="hasil-nilai" class="border border-gray-300 px-2 py-2 text-center align-middle"
+                colspan="4">Nilai Hasil
+                Belajar</th>
             </tr>
-            <tr>
-              <th class="text-center">UTS</th>
-              <th class="text-center">UAS</th>
-              <th class="text-center">Tugas</th>
-              <th class="text-center">Keaktifan</th>
+            <tr class="bg-gray-100">
+              <th scope="col" class="border border-gray-300 px-2 py-2 text-center">UTS</th>
+              <th scope="col" class="border border-gray-300 px-2 py-2 text-center">UAS</th>
+              <th scope="col" class="border border-gray-300 px-2 py-2 text-center">Tugas</th>
+              <th scope="col" class="border border-gray-300 px-2 py-2 text-center">Keaktifan</th>
             </tr>
           </thead>
           <tbody>
             <template v-for="(subject, index) in subjects" :key="subject.id">
               <tr v-if="index === 0 || subjects[index - 1].type !== subject.type">
-                <td colspan="7">{{ subject.type }}</td>
+                <td class="border border-gray-300 px-2 py-2 bg-blue-50 font-medium" colspan="7">{{ subject.type }}</td>
               </tr>
-              <tr>
-                <td class="text-center">{{ index + 1 }}</td>
-                <td>{{ subject.name }}</td>
-                <td class="text-center">
+              <tr :class="index % 2 === 0 ? 'bg-gray-50' : 'bg-white'">
+                <td class="border border-gray-300 px-2 py-2 text-center">{{ index + 1 }}</td>
+                <td class="border border-gray-300 px-2 py-2">{{ subject.name }}</td>
+                <td class="border border-gray-300 px-2 py-2 text-center w-20">
                   <InputField type="number" v-model="subject.kkm" name="kkm"
-                    classes="form-control form-control-sm text-center" min="0" max="100" />
+                    classes="w-full text-center text-sm rounded py-1 px-2" min="0" max="100" />
                 </td>
-                <td class="text-center">
+                <td class="border border-gray-300 px-2 py-2 text-center w-20">
                   <InputField type="number" v-model="subject.uts" name="uts"
-                    classes="form-control form-control-sm text-center" min="0" max="100" />
+                    classes="w-full text-center text-sm rounded py-1 px-2" min="0" max="100" />
                 </td>
-                <td class="text-center">
+                <td class="border border-gray-300 px-2 py-2 text-center w-20">
                   <InputField type="number" v-model="subject.uas" name="uas"
-                    classes="form-control form-control-sm text-center" min="0" max="100" />
+                    classes="w-full text-center text-sm rounded py-1 px-2" min="0" max="100" />
                 </td>
-                <td class="text-center">
+                <td class="border border-gray-300 px-2 py-2 text-center w-20">
                   <InputField type="number" v-model="subject.tugas" name="tugas"
-                    classes="form-control form-control-sm text-center" min="0" max="100" />
+                    classes="w-full text-center text-sm rounded py-1 px-2" min="0" max="100" />
                 </td>
-                <td class="text-center">
+                <td class="border border-gray-300 px-2 py-2 text-center w-20">
                   <InputField type="number" v-model="subject.keaktifan" name="keaktifan"
-                    classes="form-control form-control-sm text-center" min="0" max="100" />
+                    classes="w-full text-center text-sm rounded py-1 px-2" min="0" max="100" />
                 </td>
               </tr>
             </template>
-            <tr>
-              <td colspan="3" class="text-center">Rata-rata</td>
-              <td class="text-center">{{ averages.uts }}</td>
-              <td class="text-center">{{ averages.uas }}</td>
-              <td class="text-center">{{ averages.tugas }}</td>
-              <td class="text-center">{{ averages.keaktifan }}</td>
+            <tr class="bg-blue-50">
+              <td colspan="3" class="border border-gray-300 px-2 py-2 text-center font-medium">Rata-rata</td>
+              <td class="border border-gray-300 px-2 py-2 text-center">{{ averages.uts }}</td>
+              <td class="border border-gray-300 px-2 py-2 text-center">{{ averages.uas }}</td>
+              <td class="border border-gray-300 px-2 py-2 text-center">{{ averages.tugas }}</td>
+              <td class="border border-gray-300 px-2 py-2 text-center">{{ averages.keaktifan }}</td>
             </tr>
-            <tr>
-              <td colspan="6" class="text-center">Total</td>
-              <td class="text-center">{{ finalAverage }}</td>
+            <tr class="bg-blue-100">
+              <td colspan="6" class="border border-gray-300 px-2 py-2 text-center font-medium">Total</td>
+              <td class="border border-gray-300 px-2 py-2 text-center font-bold">{{ finalAverage }}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="d-flex justify-content-end mt-3">
-        <button class="btn btn-secondary me-2" @click="cancelAssessment" :disabled="loading">Batal</button>
-        <button class="btn btn-primary" @click="saveAssessment" :disabled="loading">
-          <span v-if="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+      <div class="flex justify-end mt-6 gap-3">
+        <button
+          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
+          @click="cancelAssessment" :disabled="loading">
+          Batal
+        </button>
+        <button
+          class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-70"
+          @click="saveAssessment" :disabled="loading">
+          <span v-if="loading"
+            class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
           Simpan
         </button>
       </div>
     </div>
   </Layout>
 </template>
-
-<style scoped>
-.student-assessment-form {
-  max-width: 1200px;
-  margin: 0 auto;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.table {
-  font-size: 14px;
-}
-
-.table th,
-.table td {
-  vertical-align: middle;
-}
-
-h3 {
-  font-weight: 600;
-}
-
-:deep(.form-control-sm) {
-  width: 60px !important;
-  text-align: center !important;
-  padding: 0.25rem 0.5rem !important;
-}
-
-:deep(.form-label) {
-  font-weight: 500;
-}
-</style>
