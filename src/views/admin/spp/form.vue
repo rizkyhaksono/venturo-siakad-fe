@@ -28,7 +28,8 @@ const sppStore = useAdminSPPStore();
 const studyYearStore = useAdminStudyYearStore();
 const formData = ref({
   name: '',
-  nominal: '',
+  jenis_biaya: '',
+  total: '',
   study_year_id: ''
 });
 const studyYears = ref([]);
@@ -38,7 +39,10 @@ const getStudyYears = async () => {
   try {
     loading.value = true;
     await studyYearStore.getStudyYears();
-    studyYears.value = studyYearStore.studyYears.data;
+    studyYears.value = studyYearStore.studyYears.map(year => ({
+      value: year.id,
+      label: `${year.semester} - ${year.year}`
+    }));
   } catch (error) {
     console.error('Error fetching study years:', error);
     showErrorToast('Gagal memuat tahun ajaran');
@@ -51,13 +55,15 @@ watchEffect(() => {
   if (props.spp) {
     formData.value = {
       name: props.spp.name || '',
-      nominal: props.spp.nominal || '',
+      jenis_biaya: props.spp.jenis_biaya || '',
+      total: props.spp.total || '',
       study_year_id: props.spp.study_year_id || ''
     };
   } else {
     formData.value = {
       name: '',
-      nominal: '',
+      jenis_biaya: '',
+      total: '',
       study_year_id: ''
     };
   }
@@ -66,7 +72,7 @@ watchEffect(() => {
 const saveSpp = async () => {
   try {
     loading.value = true;
-    if (!formData.value.name || !formData.value.nominal || !formData.value.study_year_id) {
+    if (!formData.value.name || !formData.value.total || !formData.value.study_year_id) {
       showErrorToast('Mohon lengkapi semua field');
       loading.value = false;
       return;
@@ -74,14 +80,14 @@ const saveSpp = async () => {
 
     const dataToSubmit = {
       ...formData.value,
-      nominal: Number(formData.value.nominal)
+      total: Number(formData.value.total)
     };
 
     if (props.spp) {
-      await sppStore.updateSpp(props.spp.id, dataToSubmit);
+      await sppStore.updateSPP(props.spp.id, dataToSubmit);
       showSuccessToast('SPP berhasil diperbarui');
     } else {
-      await sppStore.createSpp(dataToSubmit);
+      await sppStore.postSPP(dataToSubmit);
       showSuccessToast('SPP berhasil ditambahkan');
     }
 
@@ -111,8 +117,16 @@ onMounted(async () => {
     </div>
 
     <div class="mb-4">
-      <InputField v-model="formData.nominal" label="Nominal" placeholder="Masukkan nominal" name="nominal" type="number"
-        required />
+      <SelectField v-model="formData.jenis_biaya" label="Jenis Biaya" placeholder="Pilih jenis biaya" name="jenis_biaya"
+        :options="[
+          { value: 'Reguler', label: 'Reguler' },
+          { value: 'Mandiri', label: 'Mandiri' },
+        ]" required />
+    </div>
+
+    <div class="mb-4">
+      <InputField v-model="formData.total" label="Total Nominal" placeholder="Masukkan total nominal" name="total"
+        type="number" required />
     </div>
 
     <div class="mb-4">

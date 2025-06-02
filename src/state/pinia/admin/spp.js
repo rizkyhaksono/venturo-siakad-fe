@@ -59,6 +59,52 @@ export const useAdminSPPStore = defineStore("adminSPP", {
           message: res.data.message,
           error: [],
         };
+        await this.getSPP();
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.errors,
+        };
+      }
+    },
+    async getSPPById(id) {
+      try {
+        const res = await axios.get(`${this.apiUrl}/v1/admin/spp/${id}`);
+        this.sppData = res.data;
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+        };
+      }
+    },
+    async updateSPP(id, spp) {
+      try {
+        const res = await axios.put(`${this.apiUrl}/v1/admin/spp/${id}`, spp);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+        await this.getSPP();
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.errors,
+        };
+      }
+    },
+    async deleteSPP(id) {
+      try {
+        const res = await axios.delete(`${this.apiUrl}/v1/admin/spp/${id}`);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+        await this.getSPP();
       } catch (error) {
         this.response = {
           status: error.response?.status,

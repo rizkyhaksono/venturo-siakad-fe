@@ -39,7 +39,7 @@ const paginate = async (page) => {
 const openModal = (mode, id = null) => {
   modalRef.value.openModal();
   if (mode === "edit" && id) {
-    const foundSpp = sppStore.spps.data.find((item) => item.id === id);
+    const foundSpp = sppStore.spp.data.find((item) => item.id === id);
     selectedSpp.value = foundSpp;
     modalTitle.value = "Ubah SPP";
   } else {
@@ -62,7 +62,7 @@ const deleteSpp = async (id) => {
   const confirmed = await showDeleteConfirmationDialog();
   if (confirmed) {
     try {
-      await sppStore.deleteSpp(id);
+      await sppStore.deleteSPP(id);
       showSuccessToast("SPP berhasil dihapus");
       await getSPP();
     } catch (error) {
