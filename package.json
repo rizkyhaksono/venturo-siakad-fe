@@ -43,6 +43,7 @@
         "dropzone": "^6.0.0-beta.2",
         "echarts": "^5.4.3",
         "firebase": "^10.4.0",
+        "jsencrypt": "^3.3.2",
         "maska": "^2.1.9",
         "pinia": "^2.1.6",
         "pinia-plugin-persistedstate": "^4.0.1",
