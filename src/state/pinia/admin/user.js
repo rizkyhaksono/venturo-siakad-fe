@@ -51,9 +51,21 @@ export const useAdminUserStore = defineStore("adminUser", {
       this.current = 1;
       await this.getUsers();
     },
+    async getSignature(data) {
+      const res = await axios.post(`${this.apiUrl}/sign-payload`, data);
+      const { signature, token } = res.data;
+      return { signature, token };
+    },
     async postUser(users) {
       try {
-        const res = await axios.post(`${this.apiUrl}/v1/admin/users`, users);
+        const { signature, token } = await this.getSignature(users);
+        const res = await axios.post(`${this.apiUrl}/v1/admin/users`, users, {
+          headers: {
+            'X-Signature': signature,
+            'X-Signature-Token': token
+          }
+        });
+        this.users = res.data;
         this.response = {
           status: res.status,
           message: res.data.message,
