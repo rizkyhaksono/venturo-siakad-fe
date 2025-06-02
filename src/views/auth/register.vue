@@ -25,12 +25,24 @@ const formModel = reactive({
   name: "",
   email: "",
   password: "",
-  phone: "",
+  phone_number: "", // Updated from phone to phone_number to match API
+  wali: "",
+  pekerjaan: "",
+  birth_date: "",
+  address: "",
+  gender: "Laki-laki", // Default value
 });
 
 const errorList = reactive({
+  name: null,
   email: null,
   password: null,
+  phone_number: null,
+  wali: null,
+  pekerjaan: null,
+  birth_date: null,
+  address: null,
+  gender: null,
 });
 
 const togglePassword = () => {
@@ -42,13 +54,13 @@ const register = async () => {
 
   if (user.data.status_code !== 200) {
     toast.error("Register Failed", {
-      description: "Invalid credentials. Please check your email and password.",
+      description: "Invalid credentials. Please check your input fields.",
       position: "bottom-right",
       duration: 3000,
       class: "bg-red-600 text-white border-none shadow-lg",
     });
   } else {
-    toast.success("Register successfull", {
+    toast.success("Register successful", {
       description: "You have registered.",
       position: "bottom-right",
       duration: 3000,
@@ -67,6 +79,7 @@ const register = async () => {
       </div>
       <h2 class="text-lg font-semibold text-center text-gray-700 mb-4">Register your account</h2>
       <form @submit.prevent="register">
+        <!-- Name field -->
         <div class="mb-4 space-y-1.5">
           <label for="name" class="text-sm text-slate-800 font-bold">Name</label>
           <input id="name" v-model="formModel.name" type="text" placeholder="Masukkan Nama"
@@ -78,6 +91,7 @@ const register = async () => {
           </div>
         </div>
 
+        <!-- Email field -->
         <div class="mb-4 space-y-1.5">
           <label for="email" class="text-sm text-slate-800 font-bold">Email</label>
           <input id="email" v-model="formModel.email" type="email" placeholder="Masukkan Email"
@@ -89,17 +103,89 @@ const register = async () => {
           </div>
         </div>
 
+        <!-- Wali field -->
         <div class="mb-4 space-y-1.5">
-          <label for="phone" class="text-sm text-slate-800 font-bold">Phone Number</label>
-          <input id="phone" v-model="formModel.phone" type="text" placeholder="Masukkan Nomor Telepon"
+          <label for="wali" class="text-sm text-slate-800 font-bold">Nama Wali</label>
+          <input id="wali" v-model="formModel.wali" type="text" placeholder="Masukkan Nama Wali"
             class="w-full border border-slate-200 rounded-md py-2 px-2.5 text-sm shadow-sm hover:border-slate-800 focus:border-slate-800 focus:ring focus:ring-slate-800/10" />
-          <div v-if="errorList?.phone" class="text-red-500 text-xs">
-            <span v-for="(err, index) in errorList.phone" :key="index">
+          <div v-if="errorList?.wali" class="text-red-500 text-xs">
+            <span v-for="(err, index) in errorList.wali" :key="index">
               {{ err }}
             </span>
           </div>
         </div>
 
+        <!-- Pekerjaan field -->
+        <div class="mb-4 space-y-1.5">
+          <label for="pekerjaan" class="text-sm text-slate-800 font-bold">Pekerjaan</label>
+          <input id="pekerjaan" v-model="formModel.pekerjaan" type="text" placeholder="Masukkan Pekerjaan"
+            class="w-full border border-slate-200 rounded-md py-2 px-2.5 text-sm shadow-sm hover:border-slate-800 focus:border-slate-800 focus:ring focus:ring-slate-800/10" />
+          <div v-if="errorList?.pekerjaan" class="text-red-500 text-xs">
+            <span v-for="(err, index) in errorList.pekerjaan" :key="index">
+              {{ err }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Birth Date field -->
+        <div class="mb-4 space-y-1.5">
+          <label for="birth_date" class="text-sm text-slate-800 font-bold">Tanggal Lahir</label>
+          <input id="birth_date" v-model="formModel.birth_date" type="date"
+            class="w-full border border-slate-200 rounded-md py-2 px-2.5 text-sm shadow-sm hover:border-slate-800 focus:border-slate-800 focus:ring focus:ring-slate-800/10" />
+          <div v-if="errorList?.birth_date" class="text-red-500 text-xs">
+            <span v-for="(err, index) in errorList.birth_date" :key="index">
+              {{ err }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Address field -->
+        <div class="mb-4 space-y-1.5">
+          <label for="address" class="text-sm text-slate-800 font-bold">Alamat</label>
+          <textarea id="address" v-model="formModel.address" placeholder="Masukkan Alamat"
+            class="w-full border border-slate-200 rounded-md py-2 px-2.5 text-sm shadow-sm hover:border-slate-800 focus:border-slate-800 focus:ring focus:ring-slate-800/10"></textarea>
+          <div v-if="errorList?.address" class="text-red-500 text-xs">
+            <span v-for="(err, index) in errorList.address" :key="index">
+              {{ err }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Gender field -->
+        <div class="mb-4 space-y-1.5">
+          <label class="text-sm text-slate-800 font-bold">Jenis Kelamin</label>
+          <div class="flex gap-4 mt-1">
+            <label class="inline-flex items-center">
+              <input type="radio" v-model="formModel.gender" value="Laki-laki"
+                class="form-radio text-primary focus:border-slate-800 focus:ring focus:ring-slate-800/10" />
+              <span class="ml-2 text-sm">Laki-laki</span>
+            </label>
+            <label class="inline-flex items-center">
+              <input type="radio" v-model="formModel.gender" value="Perempuan"
+                class="form-radio text-primary focus:border-slate-800 focus:ring focus:ring-slate-800/10" />
+              <span class="ml-2 text-sm">Perempuan</span>
+            </label>
+          </div>
+          <div v-if="errorList?.gender" class="text-red-500 text-xs">
+            <span v-for="(err, index) in errorList.gender" :key="index">
+              {{ err }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Phone Number field -->
+        <div class="mb-4 space-y-1.5">
+          <label for="phone_number" class="text-sm text-slate-800 font-bold">Phone Number</label>
+          <input id="phone_number" v-model="formModel.phone_number" type="number" placeholder="Masukkan Nomor Telepon"
+            class="w-full border border-slate-200 rounded-md py-2 px-2.5 text-sm shadow-sm hover:border-slate-800 focus:border-slate-800 focus:ring focus:ring-slate-800/10" />
+          <div v-if="errorList?.phone_number" class="text-red-500 text-xs">
+            <span v-for="(err, index) in errorList.phone_number" :key="index">
+              {{ err }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Password field -->
         <div class="mb-4 space-y-1.5">
           <label for="password" class="text-sm text-slate-800 font-bold">Password</label>
           <div class="relative">
