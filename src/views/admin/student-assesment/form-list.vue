@@ -9,7 +9,6 @@ import {
 
 const route = useRoute();
 const rombelName = route.params.id;
-
 const rombelStore = useAdminRombelStore();
 
 const filters = ref({
@@ -42,10 +41,6 @@ const fetchStudents = async () => {
   }
 };
 
-const addNilai = (student) => {
-  console.log('Adding nilai for student:', student);
-};
-
 onMounted(() => {
   fetchStudents();
 });
@@ -68,12 +63,12 @@ onMounted(() => {
             <div class="space-y-4">
               <div class="flex flex-col space-y-1">
                 <InputField v-model="filters.nama" label="Kelas" type="text" placeholder="Kelas" name="kelas"
-                  :value="filters.nama || ''" disabled />
+                  :value="filters.nama || ''" :disable="true" />
               </div>
 
               <div class="flex flex-col space-y-1">
                 <InputField v-model="filters.tahunAjaran" label="Tahun Ajaran" type="text" placeholder="Tahun Ajaran"
-                  name="tahunAjaran" :value="rombelData?.rombel?.study_year?.year || ''" disabled />
+                  name="tahunAjaran" :value="rombelData?.rombel?.study_year?.year || ''" :disable="true" />
               </div>
             </div>
 
@@ -81,12 +76,12 @@ onMounted(() => {
             <div class="space-y-4">
               <div class="flex flex-col space-y-1">
                 <InputField v-model="filters.kelas" label="Nama" type="text" placeholder="Nama Kelas" name="nama"
-                  :value="rombelData?.rombel?.kelas" disabled />
+                  :value="rombelData?.rombel?.kelas" :disable="true" />
               </div>
 
               <div class="flex flex-col space-y-1">
                 <InputField v-model="filters.waliKelas" label="Wali Kelas" type="text" placeholder="Wali Kelas"
-                  name="waliKelas" :value="rombelData?.rombel?.teacher?.name || ''" disabled />
+                  name="waliKelas" :value="rombelData?.rombel?.teacher?.name || ''" :disable="true" />
               </div>
             </div>
 
@@ -94,7 +89,7 @@ onMounted(() => {
             <div class="space-y-4">
               <div class="flex flex-col space-y-1">
                 <InputField v-model="filters.semester" label="Semester" type="text" placeholder="Semester"
-                  name="semester" :value="filters.semester" disabled />
+                  name="semester" :value="filters.semester" :disable="true" />
               </div>
             </div>
           </div>

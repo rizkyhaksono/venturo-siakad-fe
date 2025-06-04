@@ -2,11 +2,11 @@
 import { ref, computed, onMounted } from 'vue';
 import Layout from "@/layouts/main.vue";
 import InputField from "@/components/widgets/Input";
-import SelectField from "@/components/widgets/Select";
 import {
   useAdminStudentAssesment,
   useAdminStudentStore,
-  useAdminStudyYearStore
+  useAdminKKMStore,
+  useAdminSubjectScheduleStore,
 } from '@/state/pinia';
 import { showSuccessToast, showErrorToast } from "@/helpers/alert.js";
 import { useRoute } from 'vue-router';
@@ -14,206 +14,239 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const studentId = route.params.id;
 
-console.log('Student ID::', studentId);
-
 const studentAssesmentStore = useAdminStudentAssesment();
+const subjectScheduleStore = useAdminSubjectScheduleStore();
 const studentStore = useAdminStudentStore();
-const studyYearStore = useAdminStudyYearStore();
+const kkmStore = useAdminKKMStore();
 
-const formData = ref({
-  student_id: '',
-  student_name: 'Ricky Hadianto',
-  student_nis: 'STU-202500',
-  study_year_id: '',
-  academic_year: '2',
-  class: 'A',
-});
-
-const students = ref([]);
-const studyYears = ref([]);
+const student = ref(null);
+const kkm = ref([]);
+const subjectSchedule = ref([]);
 const loading = ref(false);
-
-const subjects = ref([
-  {
-    id: 1,
-    type: 'A. Mata Pelajaran',
-    name: 'Pendidikan Agama',
-    kkm: 80,
-    uts: 81,
-    uas: 98,
-    tugas: 81,
-    keaktifan: 81
-  },
-  {
-    id: 2,
-    type: 'A. Mata Pelajaran',
-    name: 'Matematika',
-    kkm: 78,
-    uts: 81,
-    uas: 98,
-    tugas: 81,
-    keaktifan: 81
-  },
-  {
-    id: 3,
-    type: 'A. Mata Pelajaran',
-    name: 'Bahasa Indonesia',
-    kkm: 80,
-    uts: 89,
-    uas: 98,
-    tugas: 81,
-    keaktifan: 81
-  },
-  {
-    id: 4,
-    type: 'A. Mata Pelajaran',
-    name: 'PKN',
-    kkm: 78,
-    uts: 81,
-    uas: 98,
-    tugas: 81,
-    keaktifan: 81
-  },
-  {
-    id: 5,
-    type: 'A. Mata Pelajaran',
-    name: 'IPA',
-    kkm: 76,
-    uts: 90,
-    uas: 98,
-    tugas: 81,
-    keaktifan: 81
-  },
-  {
-    id: 6,
-    type: 'A. Mata Pelajaran',
-    name: 'IPS',
-    kkm: 78,
-    uts: 81,
-    uas: 98,
-    tugas: 81,
-    keaktifan: 81
-  },
-  {
-    id: 7,
-    type: 'A. Mata Pelajaran',
-    name: 'PJOK',
-    kkm: 81,
-    uts: 81,
-    uas: 98,
-    tugas: 81,
-    keaktifan: 81
-  },
-  {
-    id: 8,
-    type: 'B. Muatan Lokal',
-    name: 'Bahasa Jawa',
-    kkm: 80,
-    uts: 81,
-    uas: 98,
-    tugas: 81,
-    keaktifan: 81
-  },
-]);
+const formData = ref({
+  student_number: '',
+  student_name: '',
+});
+const subjects = ref([]);
 
 const averages = computed(() => {
-  const total = subjects.value.length;
-
-  const utsSum = subjects.value.reduce((sum, subject) => sum + subject.uts, 0);
-  const uasSum = subjects.value.reduce((sum, subject) => sum + subject.uas, 0);
-  const tugasSum = subjects.value.reduce((sum, subject) => sum + subject.tugas, 0);
-  const keaktifanSum = subjects.value.reduce((sum, subject) => sum + subject.keaktifan, 0);
+  const total = subjects.value.length || 1;
+  const utsSum = subjects.value.reduce((sum, subject) => sum + Number(subject.uts || 0), 0);
+  const uasSum = subjects.value.reduce((sum, subject) => sum + Number(subject.uas || 0), 0);
+  const tugasSum = subjects.value.reduce((sum, subject) => sum + Number(subject.tugas || 0), 0);
+  const keaktifanSum = subjects.value.reduce((sum, subject) => sum + Number(subject.keaktifan || 0), 0);
 
   return {
-    uts: (utsSum / total).toFixed(3),
-    uas: (uasSum / total).toFixed(3),
-    tugas: (tugasSum / total).toFixed(3),
-    keaktifan: (keaktifanSum / total).toFixed(3)
+    uts: (utsSum / total).toFixed(2),
+    uas: (uasSum / total).toFixed(2),
+    tugas: (tugasSum / total).toFixed(2),
+    keaktifan: (keaktifanSum / total).toFixed(2)
   };
 });
 
 const finalAverage = computed(() => {
+  if (subjects.value.length === 0) return "0.00";
+
   const sum = subjects.value.reduce((sum, subject) => {
-    return sum + subject.uts + subject.uas + subject.tugas + subject.keaktifan;
+    return sum + Number(subject.uts || 0) + Number(subject.uas || 0) +
+      Number(subject.tugas || 0) + Number(subject.keaktifan || 0);
   }, 0);
 
-  return (sum / (subjects.value.length * 4)).toFixed(5);
+  return (sum / (subjects.value.length * 4)).toFixed(2);
 });
-
-const getStudents = async () => {
-  try {
-    loading.value = true;
-    await studentStore.getStudents();
-
-    students.value = studentStore.students.map(student => ({
-      value: student.id,
-      label: `${student.name} (${student.student_number})`
-    })) || [];
-  } catch (error) {
-    console.error('Error fetching students:', error);
-    showErrorToast('Gagal memuat data siswa');
-  } finally {
-    loading.value = false;
-  }
-};
 
 const getStudentById = async (id) => {
   try {
     loading.value = true;
     await studentStore.getStudentById(id);
-    console.log('Fetched student:', studentStore.student);
+    student.value = studentStore.student.data;
+    if (student.value) {
+      formData.value.student_number = student.value.student_number || '';
+      formData.value.student_name = student.value.name || '';
+    } else {
+      showErrorToast('Data siswa tidak ditemukan');
+      setTimeout(() => {
+        window.location.href = '/admin/student-assesment';
+      }, 2000);
+    }
   } catch (error) {
     console.error('Error fetching student:', error);
     showErrorToast('Gagal memuat data siswa');
+    setTimeout(() => {
+      window.location.href = '/admin/student-assesment';
+    }, 2000);
   } finally {
     loading.value = false;
   }
 }
 
-const getStudyYears = async () => {
+const getKKM = async () => {
   try {
     loading.value = true;
-    await studyYearStore.getStudyYears();
 
-    studyYears.value = studyYearStore.studyYears.map(year => ({
-      value: year.id,
-      label: `${year.semester} - ${year.year}`
-    })) || [];
+    kkmStore.perpage = 20;
+    await kkmStore.getKKM();
+    kkm.value = kkmStore.kkm.data || [];
+
+    await getSubjectSchedule();
+
+    if (kkm.value.length > 0) {
+      const subjectMap = {};
+      const studentSubjects = new Set();
+
+      if (subjectSchedule.value && subjectSchedule.value.length > 0 && student.value) {
+        subjectSchedule.value.forEach(schedule => {
+          if (schedule.rombel && schedule.rombel.student_name === student.value.name) {
+            studentSubjects.add(schedule.subject.name);
+          }
+        });
+      }
+
+      kkm.value.forEach(item => {
+        const subject = item.subject;
+        const subjectName = subject.name;
+
+        if (studentSubjects.has(subjectName)) {
+          const type = subjectName === "Bahasa Daerah" ? "B. Muatan Lokal" : "A. Mata Pelajaran";
+
+          if (!subjectMap[subject.id]) {
+            subjectMap[subject.id] = {
+              id: subject.id,
+              type: type,
+              name: subjectName,
+              kkm: item.min_score,
+              uts: 0,
+              uas: 0,
+              tugas: 0,
+              keaktifan: 0
+            };
+          }
+        }
+      });
+
+      subjects.value = Object.values(subjectMap);
+    }
   } catch (error) {
-    console.error('Error fetching study years:', error);
-    showErrorToast('Gagal memuat data tahun ajaran');
+    console.error('Error fetching KKM:', error);
+    showErrorToast('Gagal memuat data KKM');
   } finally {
     loading.value = false;
   }
-};
+}
+
+const getSubjectSchedule = async () => {
+  try {
+    loading.value = true;
+    await subjectScheduleStore.getSchedules();
+    subjectSchedule.value = subjectScheduleStore.schedules || [];
+  } catch (error) {
+    console.error('Error fetching subject schedule:', error);
+    showErrorToast('Gagal memuat jadwal mata pelajaran');
+  } finally {
+    loading.value = false;
+  }
+}
+
+const validateInput = (value, fieldName, subjectName) => {
+  const numValue = Number(value);
+  if (isNaN(numValue)) {
+    showErrorToast(`Nilai ${fieldName} untuk ${subjectName} harus berupa angka`);
+    return 0;
+  }
+  if (numValue < 0) {
+    showErrorToast(`Nilai ${fieldName} untuk ${subjectName} tidak boleh kurang dari 0`);
+    return 0;
+  }
+  if (numValue > 100) {
+    showErrorToast(`Nilai ${fieldName} untuk ${subjectName} tidak boleh lebih dari 100`);
+    return 100;
+  }
+  return numValue;
+}
+
+const watchInputs = () => {
+  subjects.value.forEach(subject => {
+    if (subject.uts === undefined) subject.uts = 0;
+    if (subject.uas === undefined) subject.uas = 0;
+    if (subject.tugas === undefined) subject.tugas = 0;
+    if (subject.keaktifan === undefined) subject.keaktifan = 0;
+  });
+}
 
 const saveAssessment = async () => {
   try {
     loading.value = true;
+    let hasErrors = false;
 
-    for (const subject of subjects.value) {
-      if (subject.uts < 0 || subject.uts > 100 ||
-        subject.uas < 0 || subject.uas > 100 ||
-        subject.tugas < 0 || subject.tugas > 100 ||
-        subject.keaktifan < 0 || subject.keaktifan > 100) {
-        showErrorToast('Nilai harus antara 0 dan 100');
-        return;
+    subjects.value.forEach(subject => {
+      const validUts = validateInput(subject.uts, 'UTS', subject.name);
+      const validUas = validateInput(subject.uas, 'UAS', subject.name);
+      const validTugas = validateInput(subject.tugas, 'Tugas', subject.name);
+      const validKeaktifan = validateInput(subject.keaktifan, 'Keaktifan', subject.name);
+
+      subject.uts = validUts;
+      subject.uas = validUas;
+      subject.tugas = validTugas;
+      subject.keaktifan = validKeaktifan;
+
+      if (subject.uts !== Number(subject.uts) ||
+        subject.uas !== Number(subject.uas) ||
+        subject.tugas !== Number(subject.tugas) ||
+        subject.keaktifan !== Number(subject.keaktifan)) {
+        hasErrors = true;
       }
+    });
+
+    if (hasErrors) {
+      return;
     }
 
-    const assessmentData = subjects.value.map(subject => ({
-      subject_id: subject.id,
-      student_id: formData.value.student_id,
-      study_year_id: formData.value.study_year_id,
-      uts_score: subject.uts,
-      uas_score: subject.uas,
-      tugas_score: subject.tugas,
-      activity_score: subject.keaktifan,
-      total_score: (subject.uts + subject.uas + subject.tugas + subject.keaktifan) / 4
-    }));
+    const calculateTotal = (uts, uas, tugas, keaktifan) => {
+      return Number(((Number(uts) + Number(uas) + Number(tugas) + Number(keaktifan)) / 4).toFixed(2));
+    };
 
-    // Save data via API
-    // await studentAssesmentStore.postBulkStudentAssesment(assessmentData);
+    // Find matching schedule IDs for each subject
+    const subjectToScheduleMap = {};
+
+    if (subjectSchedule.value && subjectSchedule.value.length > 0) {
+      subjectSchedule.value.forEach(schedule => {
+        if (schedule.rombel && student.value && schedule.rombel.student_name === student.value.name) {
+          const subjectName = schedule.subject.name;
+          // Store the schedule ID for this subject
+          if (!subjectToScheduleMap[subjectName]) {
+            subjectToScheduleMap[subjectName] = schedule.id;
+          }
+        }
+      });
+    }
+
+    const studyYearId = subjectSchedule.value && subjectSchedule.value.length > 0 ?
+      subjectSchedule.value[0].class.study_year.id :
+      "c4401737-cb7d-488b-9654-900eaae62525"; // Fallback
+
+    const apiPayload = subjects.value.map(subject => {
+      const scheduleId = subjectToScheduleMap[subject.name] || subject.id; // Fallback to subject ID
+
+      return {
+        student_id: student.value.id,
+        subject_id: subject.id,
+        subject_schedule_id: scheduleId,
+        uts_score: Number(subject.uts),
+        uas_score: Number(subject.uas),
+        tugas_score: Number(subject.tugas),
+        activity_score: Number(subject.keaktifan),
+        total_score: calculateTotal(subject.uts, subject.uas, subject.tugas, subject.keaktifan),
+        notes: "",
+        study_year_id: studyYearId
+      };
+    });
+
+    console.log('API Payload:', apiPayload);
+
+    // Send assessment data to API
+    for (const assessment of apiPayload) {
+      await studentAssesmentStore.postStudentAssesment(assessment);
+    }
 
     showSuccessToast('Nilai berhasil disimpan');
   } catch (error) {
@@ -229,11 +262,12 @@ const cancelAssessment = () => {
 };
 
 onMounted(async () => {
-  await getStudents();
-  await getStudyYears();
   if (studentId) {
     await getStudentById(studentId);
   }
+  await getKKM();
+  await getSubjectSchedule();
+  watchInputs();
 });
 </script>
 
@@ -245,23 +279,12 @@ onMounted(async () => {
       <div class="mb-6 bg-gray-50 p-4 rounded-lg">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <SelectField v-model="formData.student_id" label="Nama Siswa" placeholder="Pilih siswa" name="student_id"
-              :options="students" required class="w-full" />
+            <InputField v-model="formData.student_number" label="Nomor Induk Siswa" placeholder="Nomor Induk Siswa"
+              :value="student?.value?.student_number" name="student_number" disabled class="w-full" />
           </div>
           <div>
-            <SelectField v-model="formData.study_year_id" label="Tahun Pelajaran" placeholder="Pilih tahun ajaran"
-              name="study_year_id" :options="studyYears" required class="w-full" />
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <InputField v-model="formData.student_nis" label="NIS" placeholder="Nomor Induk Siswa" name="student_nis"
-              disabled class="w-full" />
-          </div>
-          <div>
-            <InputField v-model="formData.class" label="Kelas" placeholder="Kelas" name="class" disabled
-              class="w-full" />
+            <InputField v-model="formData.student_name" label="Nama Lengkap Siswa" placeholder="Nama Lengkap Siswa"
+              :value="student?.value?.student_name" name="student_name" disabled class="w-full" />
           </div>
         </div>
       </div>
@@ -303,18 +326,22 @@ onMounted(async () => {
                 </td>
                 <td class="border border-gray-300 px-2 py-2 text-center w-20">
                   <InputField type="number" v-model="subject.uts" name="uts"
+                    @blur="subject.uts = validateInput(subject.uts, 'UTS', subject.name)"
                     classes="w-full text-center text-sm rounded py-1 px-2" min="0" max="100" />
                 </td>
                 <td class="border border-gray-300 px-2 py-2 text-center w-20">
                   <InputField type="number" v-model="subject.uas" name="uas"
+                    @blur="subject.uas = validateInput(subject.uas, 'UAS', subject.name)"
                     classes="w-full text-center text-sm rounded py-1 px-2" min="0" max="100" />
                 </td>
                 <td class="border border-gray-300 px-2 py-2 text-center w-20">
                   <InputField type="number" v-model="subject.tugas" name="tugas"
+                    @blur="subject.tugas = validateInput(subject.tugas, 'Tugas', subject.name)"
                     classes="w-full text-center text-sm rounded py-1 px-2" min="0" max="100" />
                 </td>
                 <td class="border border-gray-300 px-2 py-2 text-center w-20">
                   <InputField type="number" v-model="subject.keaktifan" name="keaktifan"
+                    @blur="subject.keaktifan = validateInput(subject.keaktifan, 'Keaktifan', subject.name)"
                     classes="w-full text-center text-sm rounded py-1 px-2" min="0" max="100" />
                 </td>
               </tr>

@@ -21,6 +21,7 @@ import { useAdminStudyYearStore } from "./pinia/admin/study-year";
 import { useAdminRombelStore } from "./pinia/admin/rombel";
 import { useAdminSPPStore } from "./pinia/admin/spp";
 import { useAdminSPPHistoryStore } from "./pinia/admin/spp-history";
+import { useAdminKKMStore } from "./pinia/admin/kkm";
 
 // student
 import { useStudentClassStore } from "./pinia/student/class";
@@ -63,6 +64,7 @@ export {
   useAdminSPPStore,
   useAdminSPPHistoryStore,
   useAdminStudentAssesment,
+  useAdminKKMStore,
 
   // student
   useStudentClassStore,
