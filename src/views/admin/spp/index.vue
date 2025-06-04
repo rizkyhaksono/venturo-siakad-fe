@@ -22,9 +22,9 @@ const total = ref(0);
 const getSPP = async () => {
   await sppStore.getSPP();
   rows.value = sppStore.spp.data;
-  currentPage.value = rows.value.meta?.current_page || 1;
-  lastPage.value = rows.value.meta?.last_page || 1;
-  total.value = rows.value.meta?.total || 0;
+  currentPage.value = sppStore.spp.from || 1;
+  lastPage.value = sppStore.spp.last_page || 1;
+  total.value = sppStore.spp.total || 0;
 };
 
 const searchData = async () => {
@@ -80,7 +80,7 @@ const formatRupiah = (amount) => {
 };
 
 onMounted(async () => {
-  getSPP();
+  await getSPP();
 });
 </script>
 
@@ -117,7 +117,7 @@ onMounted(async () => {
                 <h1 class="text-xl font-bold">{{ modalTitle }}</h1>
               </template>
               <template #body>
-                <FormSpp ref="formRef" :spp="selectedSpp" @refresh="getSpps" @close="closeModal" />
+                <FormSpp ref="formRef" :spp="selectedSpp" @refresh="getSPP" @close="closeModal" />
               </template>
               <template #footer>
                 <div class="flex justify-end gap-2">

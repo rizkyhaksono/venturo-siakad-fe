@@ -77,7 +77,7 @@ defineExpose({
 </script>
 
 <template>
-    <div>
+    <div class="bg-white dark:bg-gray-800">
         <div class="mb-4">
             <label class="text-sm font-bold">Foto</label>
             <ImageCropper :imageUrl="imageUrl" :aspectRatio="16 / 9" :inputAspectRatio="true"
