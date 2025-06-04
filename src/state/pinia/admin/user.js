@@ -27,8 +27,9 @@ export const useAdminUserStore = defineStore("adminUser", {
       this.modalAction.action = newAction;
       this.user = user;
     },
-    async getUsers() {
+    async getUsers(perpage) {
       try {
+        this.perpage = perpage || this.perpage;
         const url = `${this.apiUrl}/v1/admin/users?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`;
         const res = await axios.get(url);
         const usersDataList = res.data.data.list.data;

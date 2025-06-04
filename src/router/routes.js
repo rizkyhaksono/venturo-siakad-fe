@@ -157,6 +157,12 @@ export default [
         meta: { title: "SPP History", authRequired: true },
         component: () => import("../views/admin/spp-history"),
     },
+    {
+        path: "/admin/kkm",
+        name: "KKM",
+        meta: { title: "KKM", authRequired: true },
+        component: () => import("../views/admin/kkm"),
+    },
     // student routes
     {
         path: "/student/dashboard",

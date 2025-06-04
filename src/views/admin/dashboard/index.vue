@@ -10,6 +10,7 @@ import {
     useAdminClassHistoryStore,
     useAdminSubjectScheduleStore,
     useAdminStudentStore,
+    useAdminRombelStore,
 } from "@/state/pinia";
 
 const users = ref([]);
@@ -43,14 +44,13 @@ const getUsers = async () => {
     const teacherRoleId = roleData.find(role => role.name === 'Teacher')?.id;
     const studentRoleId = roleData.find(role => role.name === 'Student')?.id;
 
-    await userStore.getUsers();
+    await userStore.getUsers(1000);
     const userData = userStore.users.map(user => ({
         id: user.id,
         name: user.name,
         email: user.email,
         role: user.m_user_roles_id,
     }));
-    console.log(userStore.users);
     users.value = userData;
 
     userCounts.value = {
@@ -121,7 +121,7 @@ onMounted(async () => {
                     <div class="ml-4">
                         <p class="text-gray-500">Total Users</p>
                         <p class="text-xl font-semibold">{{ userCounts.Admin + userCounts.Student + userCounts.Teacher
-                        }}</p>
+                            }}</p>
                     </div>
                 </div>
             </div>
