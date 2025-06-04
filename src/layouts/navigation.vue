@@ -85,6 +85,7 @@ import {
     mdiCashMultiple,
     mdiCardAccountDetailsOutline,
     mdiFormatListNumbered,
+    mdiAbTesting,
 } from "@mdi/js";
 
 // Ambil route aktif
@@ -186,6 +187,7 @@ const adminMenus = [
             { label: "Student Assesment", to: `${rolePrefix}/student-assesment` }
         ]
     },
+    { label: "KKM", to: `${rolePrefix}/kkm`, icon: mdiAbTesting },
     { label: "Study Year", to: `${rolePrefix}/study_year`, icon: mdiCounter },
     {
         label: "SPP",
@@ -238,7 +240,7 @@ function setMenusByRole() {
         setTimeout(() => {
             const status = localStorage.getItem("venturo_siakad_status");
             menus.value = status === 'accepted' ? studentMenusAccepted : studentMenusPending;
-        }, 100);
+        }, 1000);
     } else if (getRole === 'Teacher') {
         menus.value = teacherMenus;
     } else {

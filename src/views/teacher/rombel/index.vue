@@ -14,6 +14,33 @@ const loading = ref(true);
 const rombels = ref([]);
 const subjectSchedule = ref([]);
 
+// Group rombels by class and name
+const groupedRombels = computed(() => {
+  const grouped = {};
+
+  rombels.value.forEach(rombel => {
+    const key = `${rombel.class_id}-${rombel.name}`;
+
+    if (!grouped[key]) {
+      // Create new group with basic rombel data
+      grouped[key] = {
+        id: rombel.id,
+        name: rombel.name,
+        class: rombel.class,
+        study_year: rombel.study_year,
+        teacher: rombel.teacher,
+        students: [] // Initialize empty students array
+      };
+    }
+
+    // Add this student to the group
+    grouped[key].students.push(rombel.student);
+  });
+
+  // Convert object to array
+  return Object.values(grouped);
+});
+
 const getCurrentDay = () => {
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   return days[new Date().getDay()];
@@ -81,8 +108,8 @@ onMounted(async () => {
           <p class="text-gray-600">No rombels assigned to you yet.</p>
         </div>
 
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div v-for="rombel in rombels" :key="rombel.id"
+        <div v-else class="">
+          <div v-for="rombel in groupedRombels" :key="rombel.id"
             class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow">
             <div class="bg-secondary text-white p-4">
               <h3 class="font-bold text-md">{{ rombel.class.name }} - Rombel {{ rombel.name }}</h3>
@@ -96,9 +123,9 @@ onMounted(async () => {
                 <span class="ml-2">{{ rombel.teacher.name }} ({{ rombel.teacher.employee_number }})</span>
               </div>
 
-              <div class="mb-3 text-lg">
-                <span class="font-semibold">Student:</span>
-                <span class="ml-2">{{ rombel.student.name }} ({{ rombel.student.student_number }})</span>
+              <div class="mb-3">
+                <span class="font-semibold text-lg">Total Students:</span>
+                <span class="ml-2">{{ rombel.students.length }}</span>
               </div>
             </div>
           </div>

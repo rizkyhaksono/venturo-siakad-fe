@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, defineEmits, defineProps } from "vue";
 import { mdiEye, mdiEyeOff } from "@mdi/js";
 
 const props = defineProps({
@@ -9,6 +9,7 @@ const props = defineProps({
     placeholder: String,
     options: Array, // Untuk select, radio, dan checkbox (jika multiple)
     errors: Array,
+    disabled: Boolean,
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -86,7 +87,7 @@ const computedModelValue = computed(() => {
 
             <!-- Default Input -->
             <input v-else :type="type" :placeholder="placeholder" :value="modelValue"
-                @input="emit('update:modelValue', $event.target.value)"
+                @input="emit('update:modelValue', $event.target.value)" :disabled="disabled"
                 class="w-full border border-slate-200 rounded-md py-2 px-2.5 text-sm shadow-sm hover:border-slate-800 focus:border-slate-800 focus:ring focus:ring-slate-800/10" />
         </div>
 
