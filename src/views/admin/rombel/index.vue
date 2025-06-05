@@ -175,10 +175,12 @@ onMounted(() => {
                 </td>
                 <td class="p-3">
                   <div class="flex gap-2 justify-start">
-                    <Button @click="openEditRombelModal(row)" variant="solid" color="primary">
+                    <Button @click="openEditRombelModal(row)" variant="solid" color="primary"
+                      class="border-gray-300 dark:border-gray-600 bg-primary dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                       Edit
                     </Button>
-                    <Button @click="deleteRombel(row.id)" variant="outline" color="danger">
+                    <Button @click="deleteRombel(row.id)" variant="outline" color="danger"
+                      class="border-red-300 dark:border-red-700 bg-red-400 dark:bg-red-400 text-white dark:text-white hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200">
                       Delete
                     </Button>
                   </div>

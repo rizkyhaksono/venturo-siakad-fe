@@ -151,10 +151,10 @@ onMounted(() => {
                 <td class="p-3">
                   <small class="font-sans antialiased text-sm text-current">
                     <span :class="{
-                      'px-2 py-1 rounded-full text-xs font-semibold': true,
-                      'bg-green-100 text-green-800': row.status === 'accepted',
-                      'bg-yellow-100 text-yellow-800': row.status === 'pending',
-                      'bg-red-100 text-red-800': row.status === 'rejected'
+                      'px-2 py-1 rounded-full text-xs font-semibold transition-colors duration-200': true,
+                      'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400': row.status === 'accepted',
+                      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400': row.status === 'pending',
+                      'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400': row.status === 'rejected'
                     }">
                       {{ row.status }}
                     </span>
@@ -162,7 +162,8 @@ onMounted(() => {
                 </td>
                 <td class="p-3">
                   <div class="flex gap-2 justify-start">
-                    <Button @click="openClassModal(row.id)" variant="outline" color="secondary">
+                    <Button @click="openClassModal(row.id)" variant="outline" color="secondary"
+                      class="border-gray-300 dark:border-gray-600 bg-primary dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                       Update Status
                     </Button>
                   </div>
@@ -175,7 +176,7 @@ onMounted(() => {
           <small class="font-sans antialiased text-sm text-current">
             Page {{ registrationStore.registrations?.current_page || 1 }} of {{
               registrationStore.registrations?.last_page
-            || 1 }}
+              || 1 }}
           </small>
           <div class="flex gap-2">
             <Button variant="outline" color="secondary" :disabled="!registrationStore.registrations?.prev_page_url"

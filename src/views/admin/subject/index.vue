@@ -19,7 +19,7 @@ const lastPage = ref(1);
 const totalData = ref(0);
 const perPage = ref(10);
 
-const getClassHistories = async () => {
+const getSubjects = async () => {
   try {
     await subjectStore.getSubject({
       page: currentPage.value,
@@ -41,13 +41,13 @@ const getClassHistories = async () => {
 
 const searchData = async () => {
   currentPage.value = 1;
-  await getClassHistories();
+  await getSubjects();
 };
 
 const paginate = async (page) => {
   if (page >= 1 && page <= lastPage.value) {
     currentPage.value = page;
-    await getClassHistories();
+    await getSubjects();
   }
 };
 
@@ -78,7 +78,7 @@ const deleteSubject = async (id) => {
     try {
       await subjectStore.deleteSubject(id);
       showSuccessToast("User berhasil dihapus");
-      await getClassHistories();
+      await getSubjects();
     } catch (error) {
       console.error(error);
     }
@@ -86,7 +86,7 @@ const deleteSubject = async (id) => {
 };
 
 onMounted(() => {
-  getClassHistories();
+  getSubjects();
 });
 </script>
 
@@ -124,8 +124,7 @@ onMounted(() => {
                 <h1 class="text-xl font-bold">{{ userModalTitle }}</h1>
               </template>
               <template #body>
-                <FormSubject ref="formUserRef" :user="selectedUser" @refresh="getClassHistories"
-                  @close="closeUserModal" />
+                <FormSubject ref="formUserRef" :user="selectedUser" @refresh="getSubjects" @close="closeUserModal" />
               </template>
               <template #footer>
                 <div class="flex justify-end gap-2">
@@ -168,10 +167,12 @@ onMounted(() => {
                 </td>
                 <td class="p-3">
                   <div class="flex gap-2 justify-start">
-                    <Button @click="openClassModal('edit', row.id)" variant="outline" color="secondary">
+                    <Button @click="openClassModal('edit', row.id)" variant="outline" color="secondary"
+                      class="border-gray-300 dark:border-gray-600 bg-primary dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                       Edit
                     </Button>
-                    <Button @click="deleteSubject(row.id)" variant="outline" color="error">
+                    <Button @click="deleteSubject(row.id)" variant="outline" color="error"
+                      class="border-red-300 dark:border-red-700 bg-red-400 dark:bg-red-400 text-white dark:text-white hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200">
                       Delete
                     </Button>
                   </div>

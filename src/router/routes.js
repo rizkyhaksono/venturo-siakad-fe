@@ -207,6 +207,12 @@ export default [
         component: () => import("../views/student/spp"),
     },
     {
+        path: "/student/spp/form",
+        name: "student-spp-form",
+        meta: { title: "SPP Form", authRequired: true },
+        component: () => import("../views/student/spp/form.vue"),
+    },
+    {
         path: "/student/spp-history",
         name: "student-spp-history",
         meta: { title: "SPP History", authRequired: true },

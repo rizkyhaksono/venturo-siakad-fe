@@ -110,7 +110,7 @@ function formatTime(date) {
     <div
         class="grid min-h-screen w-full grid-rows-[auto_auto_1fr] bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
         <header
-            class="fixed top-0 left-0 w-full z-50 flex h-14 lg:h-[60px] items-center justify-between border-b bg-gray-100 dark:bg-gray-950 px-4 lg:px-6 transition-colors duration-200">
+            class="fixed top-0 left-0 w-full z-50 flex h-14 lg:h-[60px] items-center justify-between border-b bg-gray-100 dark:bg-gray-900 px-4 lg:px-6 transition-colors duration-200">
             <router-link :to="`${rolePrefix}/dashboard`" class="flex items-center gap-2 font-semibold">
                 <img src="https://natee.my.id/favicon.ico" class="size-8" alt="logo-siakad">
                 <span class="text-black dark:text-white">SIAKAD</span>

@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex items-center justify-start bg-primary dark:bg-gray-900 px-4 lg:px-6 transition-colors duration-200">
+        class="flex items-center justify-start bg-primary dark:bg-gray-800 px-4 lg:px-6 transition-colors duration-200">
         <nav class="flex gap-6 text-sm font-semibold text-white">
             <template v-for="(menu) in menus" :key="menu.label">
                 <router-link v-if="!menu.submenu" :to="menu.to"
