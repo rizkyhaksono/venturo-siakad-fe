@@ -109,7 +109,7 @@ const login = async () => {
             <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center gap-2">
                     <h1 class="text-xl font-bold text-gray-800 dark:text-white transition-colors duration-200">
-                        SIAKAD Natee
+                        SIAKAD
                     </h1>
                 </div>
                 <button @click="toggleTheme"

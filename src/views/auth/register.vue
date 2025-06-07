@@ -96,7 +96,7 @@ const register = async () => {
       class="w-full max-w-md bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-900 rounded-lg p-6 transition-colors duration-200">
       <div class="flex items-center justify-between mb-6">
         <h1 class="text-xl font-bold text-gray-800 dark:text-white transition-colors duration-200">
-          SIAKAD Natee
+          SIAKAD
         </h1>
         <button @click="toggleTheme"
           class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200">
