@@ -113,10 +113,18 @@ onMounted(async () => {
           <div v-for="rombel in groupedRombels" :key="rombel.id"
             class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200">
             <div class="bg-secondary dark:bg-blue-800 text-white p-4 transition-colors duration-200">
-              <h3 class="font-bold text-md">{{ rombel.class.name }} - Rombel {{ rombel.name }}</h3>
-              <p class="text-white-200 dark:text-blue-100 mt-1 transition-colors duration-200">
-                {{ rombel.study_year.semester === '1' ? 'Ganjil' : 'Genap' }} {{ rombel.study_year.year }}
-              </p>
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="font-bold text-md">{{ rombel.class.name }} - Rombel {{ rombel.name }}</h3>
+                  <p class="text-white-200 dark:text-blue-100 mt-1 transition-colors duration-200">
+                    {{ rombel.study_year.semester === '1' ? 'Ganjil' : 'Genap' }} {{ rombel.study_year.year }}
+                  </p>
+                </div>
+                <router-link :to="`/teacher/rombel/${rombel.id}`"
+                  class="text-white hover:underline transition-colors duration-200">
+                  View Details
+                </router-link>
+              </div>
             </div>
 
             <div class="p-4">
