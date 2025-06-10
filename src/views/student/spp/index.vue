@@ -6,18 +6,34 @@ import {
 } from "@/state/pinia";
 import { onMounted, ref } from "vue";
 import Button from "@/components/widgets/Button.vue";
+import Modal from "@/components/widgets/Modal.vue";
+import FormSPP from "@/views/student/spp/form.vue";
 
 const sppStore = useStudentSPPStore();
 const sppHistoryStore = useStudentSPPHistoryStore();
 const sppRows = ref([]);
 const sppHistoryRows = ref([]);
-
-const paymentModal = ref(false);
 const selectedSpp = ref(null);
+
+const modalRef = ref(null);
+const formRef = ref(null);
+const modalTitle = ref('Pembayaran');
 
 const openPaymentModal = (sppItem) => {
   selectedSpp.value = sppItem;
-  paymentModal.value = true;
+  modalTitle.value = `Pembayaran: ${sppItem.name}`;
+  modalRef.value.openModal();
+};
+
+const closeModal = () => {
+  modalRef.value.closeModal();
+  selectedSpp.value = null;
+};
+
+const submitModal = () => {
+  if (formRef.value) {
+    formRef.value.submitForm();
+  }
 };
 
 const getSPP = async () => {
@@ -51,7 +67,7 @@ const getStatusClass = (status) => {
     : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 px-2 py-1 rounded-full font-medium transition-colors duration-200';
 };
 
-const shouldShowPayButton = (sppId) => {
+const showPayButton = (sppId) => {
   return checkPaymentStatus(sppId) !== 'LUNAS';
 };
 
@@ -209,7 +225,25 @@ onMounted(async () => {
             </div>
           </div>
           <div class="w-full md:w-72 flex justify-end">
-            <!-- Modal Form space if needed -->
+            <!-- Modal Form  -->
+            <Modal ref="modalRef">
+              <template #title>
+                <h1 class="text-xl font-bold">{{ modalTitle }}</h1>
+              </template>
+              <template #body>
+                <FormSPP ref="formRef" :spp="selectedSpp" @refresh="getSPPHistory" @close="closeModal" />
+              </template>
+              <template #footer>
+                <div class="flex justify-end gap-2">
+                  <Button @click="closeModal" variant="outline" color="secondary">
+                    Close
+                  </Button>
+                  <Button @click="submitModal" variant="solid" color="primary">
+                    Submit
+                  </Button>
+                </div>
+              </template>
+            </Modal>
           </div>
         </div>
         <div
@@ -291,7 +325,7 @@ onMounted(async () => {
                 </td>
                 <td class="p-4 transition-colors duration-200">
                   <div class="flex gap-2 justify-start">
-                    <Button v-if="shouldShowPayButton(row.id)" @click="openPaymentModal(row)" variant="outline"
+                    <Button v-if="showPayButton(row.id)" @click="openPaymentModal(row)" variant="outline"
                       color="secondary"
                       class="bg-primary dark:bg-gray-500 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700 transition-colors duration-200">
                       Bayar
@@ -302,7 +336,7 @@ onMounted(async () => {
             </tbody>
           </table>
         </div>
-        <!-- Pagination component could be added here -->
+        <!-- Pagination -->
       </div>
     </div>
   </Layout>
