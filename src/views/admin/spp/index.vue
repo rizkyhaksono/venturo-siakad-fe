@@ -91,10 +91,12 @@ onMounted(async () => {
       <div class="w-full">
         <div class="mb-8 flex items-center justify-between gap-8">
           <div>
-            <h6 class="font-sans antialiased font-bold text-base md:text-lg lg:text-xl text-current">
+            <h6
+              class="font-sans antialiased font-bold text-base md:text-lg lg:text-xl text-gray-900 dark:text-gray-100">
               List SPP
             </h6>
-            <p class="font-sans antialiased text-base text-current mt-1">lihat informasi untuk semua SPP
+            <p class="font-sans antialiased text-base text-gray-700 dark:text-gray-300 mt-1">
+              lihat informasi untuk semua SPP
             </p>
           </div>
         </div>
@@ -114,7 +116,7 @@ onMounted(async () => {
             <!-- Modal Form -->
             <Modal ref="modalRef">
               <template #title>
-                <h1 class="text-xl font-bold">{{ modalTitle }}</h1>
+                <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ modalTitle }}</h1>
               </template>
               <template #body>
                 <FormSpp ref="formRef" :spp="selectedSpp" @refresh="getSPP" @close="closeModal" />
@@ -132,52 +134,55 @@ onMounted(async () => {
             </Modal>
           </div>
         </div>
-        <div class="mt-4 w-full overflow-hidden rounded-lg border border-gray-200">
+        <div class="mt-4 w-full overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
           <table class="w-full">
-            <thead class="border-b border-gray-200 bg-gray-100 text-sm font-medium text-gray-600 dark:bg-gray-900">
+            <thead
+              class="border-b border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-sm font-medium text-gray-600 dark:text-gray-300">
               <tr>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    class="font-sans antialiased text-sm text-gray-700 dark:text-gray-300 flex items-center justify-between gap-2 opacity-70">
                     Nama SPP
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    class="font-sans antialiased text-sm text-gray-700 dark:text-gray-300 flex items-center justify-between gap-2 opacity-70">
                     Nominal
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    class="font-sans antialiased text-sm text-gray-700 dark:text-gray-300 flex items-center justify-between gap-2 opacity-70">
                     Tahun Ajaran
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    class="font-sans antialiased text-sm text-gray-700 dark:text-gray-300 flex items-center justify-between gap-2 opacity-70">
                     Actions
                   </small>
                 </th>
               </tr>
             </thead>
-            <tbody class="group text-sm text-gray-800 dark:text-white">
-              <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
+            <tbody class="group text-sm text-gray-800 dark:text-gray-200">
+              <tr
+                class="border-b border-gray-200 dark:border-gray-700 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800"
+                v-for="row in rows" :key="row.id">
                 <td class="p-3">
                   <div class="flex items-center gap-3">
-                    <small class="font-sans antialiased text-sm font-medium text-current">
+                    <small class="font-sans antialiased text-sm font-medium text-gray-800 dark:text-gray-200">
                       {{ row.name }}
                     </small>
                   </div>
                 </td>
                 <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
+                  <small class="font-sans antialiased text-sm text-gray-800 dark:text-gray-200">
                     {{ formatRupiah(row.total) }}
                   </small>
                 </td>
                 <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
+                  <small class="font-sans antialiased text-sm text-gray-800 dark:text-gray-200">
                     {{ row.study_year?.year }}
                   </small>
                 </td>
@@ -194,11 +199,16 @@ onMounted(async () => {
                   </div>
                 </td>
               </tr>
+              <tr v-if="rows.length === 0">
+                <td colspan="4" class="p-4 text-center text-gray-500 dark:text-gray-400">
+                  Tidak ada data yang tersedia
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
-        <div class="flex items-center justify-between border-gray-200 py-4">
-          <small class="font-sans antialiased text-sm text-current">
+        <div class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 py-4 mt-4">
+          <small class="font-sans antialiased text-sm text-gray-700 dark:text-gray-300">
             Page {{ currentPage }} of {{ lastPage }} (Total: {{ total }} items)
           </small>
           <div class="flex gap-2">
