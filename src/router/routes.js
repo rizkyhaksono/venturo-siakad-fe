@@ -224,6 +224,12 @@ export default [
         meta: { title: "Student Assesment", authRequired: true },
         component: () => import("../views/student/student-assesment"),
     },
+    {
+        path: "/student/settings",
+        name: "Settings",
+        meta: { title: "Settings", authRequired: true },
+        component: () => import("../views/student/settings"),
+    },
     // teacher routes
     {
         path: "/teacher/dashboard",
@@ -260,6 +266,18 @@ export default [
         name: "teacher-rombel",
         meta: { title: "Rombel", authRequired: true },
         component: () => import("../views/teacher/rombel"),
+    },
+    {
+        path: "/teacher/rombel/:id",
+        name: "teacher-rombel-form",
+        meta: { title: "Rombel Form", authRequired: true },
+        component: () => import("../views/teacher/rombel/form.vue"),
+    },
+    {
+        path: "/teacher/settings",
+        name: "settings",
+        meta: { title: "settings", authRequired: true },
+        component: () => import("../views/teacher/settings"),
     },
     // auth routes
     {

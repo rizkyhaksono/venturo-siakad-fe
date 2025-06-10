@@ -66,14 +66,16 @@ const getOptionValue = (option) => {
 
 <template>
     <div class="space-y-1.5">
-        <label v-if="label" class="text-sm text-slate-800 font-bold capitalize">{{ label }}</label>
+        <label v-if="label"
+            class="text-sm text-slate-800 dark:text-white font-bold capitalize transition-colors duration-200">{{ label
+            }}</label>
         <div class="relative">
             <div @click="toggleDropdown"
-                class="w-full border border-slate-200 rounded-md py-2 px-2.5 text-sm shadow-sm flex items-center justify-between cursor-pointer hover:border-slate-800 focus:border-slate-800 focus:ring focus:ring-slate-800/10">
+                class="w-full border border-slate-200 dark:border-gray-700 rounded-md py-2 px-2.5 text-sm shadow-sm flex items-center justify-between cursor-pointer hover:border-slate-800 dark:hover:border-gray-500 focus:border-slate-800 dark:focus:border-gray-500 focus:ring focus:ring-slate-800/10 dark:focus:ring-gray-500/10 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 transition-colors duration-200">
                 <span class="truncate" v-if="selectedItems.length">{{ selectedLabels }}</span>
-                <span class="text-gray-400" v-else>{{ placeholder || "Pilih opsi..." }}</span>
-                <svg class="w-4 h-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                    fill="currentColor">
+                <span class="text-gray-400 dark:text-gray-500" v-else>{{ placeholder || "Pilih opsi..." }}</span>
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd"
                         d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                         clip-rule="evenodd" />
@@ -81,38 +83,42 @@ const getOptionValue = (option) => {
             </div>
 
             <div v-if="isOpen"
-                class="absolute z-10 mt-1 w-full bg-white border border-slate-200 rounded-md shadow-lg max-h-60 overflow-auto">
+                class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto transition-colors duration-200">
 
                 <div class="p-2">
                     <input type="text" v-model="searchQuery" placeholder="Cari..."
-                        class="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring focus:ring-blue-300">
+                        class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring focus:ring-blue-300 dark:focus:ring-blue-700 dark:bg-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-colors duration-200">
                 </div>
 
                 <div v-if="filteredOptions.length">
                     <div v-for="(option, index) in filteredOptions" :key="index"
-                        class="px-3 py-2 text-sm hover:bg-gray-100 flex items-center cursor-pointer"
+                        class="px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center cursor-pointer text-gray-800 dark:text-gray-200 transition-colors duration-200"
                         @click="selectItem({ value: getOptionValue(option), label: getOptionLabel(option) })">
                         <input v-if="multiple" type="checkbox" :checked="selectedItems.includes(getOptionValue(option))"
-                            class="w-4 h-4 mr-2 text-blue-600">
+                            class="w-4 h-4 mr-2 text-blue-600 dark:text-blue-500 accent-blue-600 dark:accent-blue-500">
                         {{ getOptionLabel(option) }}
                     </div>
                 </div>
 
-                <div v-else class="px-3 py-2 text-sm text-gray-500">Tidak ada hasil ditemukan</div>
+                <div v-else class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 transition-colors duration-200">
+                    Tidak ada hasil ditemukan</div>
             </div>
         </div>
 
         <div v-if="multiple && selectedItems.length" class="flex flex-wrap gap-2 mt-2">
             <span v-for="(option, index) in options.filter(opt => selectedItems.includes(getOptionValue(opt)))"
-                :key="index" class="flex items-center bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-md">
+                :key="index"
+                class="flex items-center bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 text-xs px-2 py-1 rounded-md transition-colors duration-200">
                 {{ getOptionLabel(option) }}
-                <button type="button" class="ml-1 text-red-500" @click="removeItem(getOptionValue(option))">
+                <button type="button" class="ml-1 text-red-500 dark:text-red-400 transition-colors duration-200"
+                    @click="removeItem(getOptionValue(option))">
                     ✕
                 </button>
             </span>
         </div>
 
-        <div v-if="errors && errors.length" class="text-red-500 text-xs mt-1">
+        <div v-if="errors && errors.length"
+            class="text-red-500 dark:text-red-400 text-xs mt-1 transition-colors duration-200">
             <span v-for="(err, index) in errors" :key="index">{{ err }}</span>
         </div>
     </div>

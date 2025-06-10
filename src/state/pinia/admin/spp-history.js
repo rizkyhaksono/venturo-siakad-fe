@@ -81,7 +81,7 @@ export const useAdminSPPHistoryStore = defineStore("adminSPPHistory", {
         };
       }
     },
-    async updateSPPHistory(sppHistoryData, id) {
+    async updateSPPHistory(id, sppHistoryData) {
       try {
         const url = `${this.apiUrl}/v1/admin/spp-history/${id}`;
         const res = await axios.put(url, sppHistoryData);

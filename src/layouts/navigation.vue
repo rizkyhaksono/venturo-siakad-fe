@@ -204,21 +204,7 @@ const studentMenusPending = [
 const teacherMenus = [
     { label: "Dashboard", to: `${rolePrefix}/dashboard`, icon: mdiHome },
     { label: "Rombel", to: `${rolePrefix}/rombel`, icon: mdiHumanMaleBoardPoll },
-    {
-        label: "Class",
-        icon: mdiSchool,
-        submenu: [
-            { label: "Class", to: `${rolePrefix}/class` },
-        ]
-    },
-    {
-        label: "Subject",
-        icon: mdiGoogleClassroom,
-        submenu: [
-            { label: "Subject", to: `${rolePrefix}/subject` },
-        ]
-    },
-    { label: "Student", to: `${rolePrefix}/student`, icon: mdiCardAccountDetails },
+    { label: "Subject", to: `${rolePrefix}/subject`, icon: mdiGoogleClassroom },
 ];
 
 setMenusByRole();
