@@ -55,10 +55,11 @@ onMounted(() => {
       <div class="w-full">
         <div class="mb-8 flex items-center justify-between gap-8">
           <div>
-            <h6 class="font-sans antialiased font-bold text-base md:text-lg lg:text-xl text-current">
-              List Rombe
+            <h6
+              class="font-sans antialiased font-bold text-base md:text-lg lg:text-xl text-gray-900 dark:text-gray-100">
+              List Rombel
             </h6>
-            <p class="font-sans antialiased text-base text-current mt-1">
+            <p class="font-sans antialiased text-base text-gray-700 dark:text-gray-300 mt-1">
               Lihat informasi rombongan belajar
             </p>
           </div>
@@ -79,7 +80,7 @@ onMounted(() => {
           </div>
           <Modal ref="modalRef">
             <template #title>
-              <h1 class="text-xl font-bold">{{ modalTitle }}</h1>
+              <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ modalTitle }}</h1>
             </template>
             <template #body>
               <FormClass ref="formRef" :class="selectedClass" @refresh="getClasses" @close="closeRombelModal" />
@@ -96,80 +97,83 @@ onMounted(() => {
             </template>
           </Modal>
         </div>
-        <div class="mt-4 w-full overflow-hidden rounded-lg border border-gray-200">
+        <div class="mt-4 w-full overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
           <table class="w-full">
-            <thead class="border-b border-gray-200 bg-gray-100 text-sm font-medium text-gray-600 dark:bg-gray-900">
+            <thead
+              class="border-b border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-sm font-medium text-gray-600 dark:text-gray-300">
               <tr>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    class="font-sans antialiased text-sm text-gray-700 dark:text-gray-300 flex items-center justify-between gap-2 opacity-70">
                     Kelas
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    class="font-sans antialiased text-sm text-gray-700 dark:text-gray-300 flex items-center justify-between gap-2 opacity-70">
                     Rombel
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    class="font-sans antialiased text-sm text-gray-700 dark:text-gray-300 flex items-center justify-between gap-2 opacity-70">
                     Tahun Pelajaran
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    class="font-sans antialiased text-sm text-gray-700 dark:text-gray-300 flex items-center justify-between gap-2 opacity-70">
                     Murid
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    class="font-sans antialiased text-sm text-gray-700 dark:text-gray-300 flex items-center justify-between gap-2 opacity-70">
                     Wali Kelas
                   </small>
                 </th>
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
-                    class="font-sans antialiased text-sm text-current flex items-center justify-between gap-2 opacity-70">
+                    class="font-sans antialiased text-sm text-gray-700 dark:text-gray-300 flex items-center justify-between gap-2 opacity-70">
                     Actions
                   </small>
                 </th>
               </tr>
             </thead>
-            <tbody class="group text-sm text-gray-800 dark:text-white">
-              <tr class="border-b border-gray-200 last:border-0" v-for="row in rows" :key="row.id">
+            <tbody class="group text-sm text-gray-800 dark:text-gray-200">
+              <tr
+                class="border-b border-gray-200 dark:border-gray-700 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800"
+                v-for="row in rows" :key="row.id">
                 <td class="p-3">
-                  <small class="font-sans antialiased text-sm font-medium text-current">
+                  <small class="font-sans antialiased text-sm font-medium text-gray-800 dark:text-gray-200">
                     {{ row.class.name }}
                   </small>
                 </td>
                 <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
+                  <small class="font-sans antialiased text-sm text-gray-800 dark:text-gray-200">
                     {{ row.name }}
                   </small>
                 </td>
                 <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
+                  <small class="font-sans antialiased text-sm text-gray-800 dark:text-gray-200">
                     {{ row.study_year.semester }} - {{ row.study_year.year }}
                   </small>
                 </td>
                 <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
+                  <small class="font-sans antialiased text-sm text-gray-800 dark:text-gray-200">
                     <div class="flex flex-col gap-1 items-start">
                       <template v-for="(student, index) in row.students" :key="index">
                         <span
-                          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                          class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
                           {{ student.name }}
                         </span>
                       </template>
-                      <span v-if="!row.students.length" class="text-gray-400">No students</span>
+                      <span v-if="!row.students.length" class="text-gray-400 dark:text-gray-500">No students</span>
                     </div>
                   </small>
                 </td>
                 <td class="p-3">
-                  <small class="font-sans antialiased text-sm text-current">
+                  <small class="font-sans antialiased text-sm text-gray-800 dark:text-gray-200">
                     {{ row.teacher.name }}
                   </small>
                 </td>
@@ -186,20 +190,27 @@ onMounted(() => {
                   </div>
                 </td>
               </tr>
+              <tr v-if="rows.length === 0">
+                <td colspan="6" class="p-4 text-center text-gray-500 dark:text-gray-400">
+                  Tidak ada data yang tersedia
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
-        <div class="flex items-center justify-between border-gray-200 py-4">
-          <small class="font-sans antialiased text-sm text-current">
+        <div class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 py-4 mt-4">
+          <small class="font-sans antialiased text-sm text-gray-700 dark:text-gray-300">
             Page {{ rombelStore.current || 1 }} of {{ rombelStore.totalData || 1 }}
           </small>
           <div class="flex gap-2">
             <Button variant="outline" color="secondary" :disabled="!rombelStore.prev_page_url"
-              @click="paginate(rombelStore.current_page - 1)">
+              @click="paginate(rombelStore.current_page - 1)"
+              class="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
               Previous
             </Button>
             <Button variant="outline" color="secondary" :disabled="!rombelStore.next_page_url"
-              @click="paginate(rombelStore.current_page + 1)">
+              @click="paginate(rombelStore.current_page + 1)"
+              class="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
               Next
             </Button>
           </div>
