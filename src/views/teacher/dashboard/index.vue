@@ -1,45 +1,56 @@
 <script setup>
-import ApexChart from "@/components/widgets/Apexchart";
 import Layout from "@/layouts/main.vue";
-import { onMounted, ref, inject } from "vue";
+import { onMounted, ref } from "vue";
 
 import {
   useAuthStore,
-  useTeacherClassStore,
-  useTeacherStudentStore,
-  useTeacherSubjectStore
+  useTeacherRombelStore,
 } from "@/state/pinia";
 
-const isDarkMode = inject('isDarkMode', ref(false));
-
 const meStore = useAuthStore();
-const classStore = useTeacherClassStore();
-const studentStore = useTeacherStudentStore();
-const subjectStore = useTeacherSubjectStore();
+const rombelStore = useTeacherRombelStore();
+
 const loading = ref(true);
+const currentRombel = ref(null);
+const rombelStudents = ref([]);
 
 const getMe = async () => {
   await meStore.saveUserLogin();
 }
 
-const getClass = async () => {
-  await classStore.getClasses();
-}
+const getRombels = async () => {
+  await rombelStore.getRombels();
+  console.log('Rombels:', rombelStore.rombels);
 
-const getStudent = async () => {
-  await studentStore.getStudents();
-}
+  if (rombelStore.rombels && rombelStore.rombels.length > 0) {
+    const rombels = {};
+    rombelStore.rombels.forEach(rombel => {
+      if (!rombels[rombel.name]) {
+        rombels[rombel.name] = {
+          name: rombel.name,
+          class: rombel.class,
+          study_year: rombel.study_year,
+          teacher: rombel.teacher,
+          students: []
+        };
+      }
+      if (rombel.student) {
+        rombels[rombel.name].students.push(rombel.student);
+      }
+    });
 
-const getSubject = async () => {
-  await subjectStore.getSubjects();
+    const rombelNames = Object.keys(rombels);
+    if (rombelNames.length > 0) {
+      currentRombel.value = rombels[rombelNames[0]];
+      rombelStudents.value = rombels[rombelNames[0]].students;
+    }
+  }
 }
 
 onMounted(async () => {
   loading.value = true;
   await getMe();
-  await getClass();
-  await getStudent();
-  await getSubject();
+  await getRombels();
   loading.value = false;
 });
 
@@ -93,7 +104,7 @@ onMounted(async () => {
               <p class="text-sm font-medium text-gray-500 dark:text-gray-400 transition-colors duration-200">Total Class
               </p>
               <p class="text-2xl font-bold text-gray-800 dark:text-gray-100 transition-colors duration-200">
-                {{ classStore?.classes?.meta?.total || 0 }}
+                {{ currentRombel ? 1 : 0 }}
               </p>
             </div>
           </div>
@@ -112,9 +123,7 @@ onMounted(async () => {
             <div class="ml-6">
               <p class="text-sm font-medium text-gray-500 dark:text-gray-400 transition-colors duration-200">Total
                 Subject</p>
-              <p class="text-2xl font-bold text-gray-800 dark:text-gray-100 transition-colors duration-200">
-                {{ subjectStore?.subjects.meta?.total || 0 }}
-              </p>
+              <p class="text-2xl font-bold text-gray-800 dark:text-gray-100 transition-colors duration-200">1</p>
             </div>
           </div>
         </div>
@@ -133,9 +142,109 @@ onMounted(async () => {
               <p class="text-sm font-medium text-gray-500 dark:text-gray-400 transition-colors duration-200">Total
                 Students</p>
               <p class="text-2xl font-bold text-gray-800 dark:text-gray-100 transition-colors duration-200">
-                {{ studentStore?.students?.length || 0 }}
+                {{ rombelStudents.length }}
               </p>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rombel Information Card -->
+      <div
+        class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all duration-300 mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 transition-colors duration-200">
+            Your Rombel
+          </h3>
+          <span v-if="currentRombel"
+            class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-sm font-medium transition-colors duration-200">
+            {{ currentRombel.name }}
+          </span>
+        </div>
+
+        <div v-if="!currentRombel"
+          class="py-8 text-center text-gray-500 dark:text-gray-400 transition-colors duration-200">
+          No rombel data available
+        </div>
+
+        <div v-else>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg transition-colors duration-200">
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-400 transition-colors duration-200">Class</p>
+              <p class="text-lg font-semibold text-gray-800 dark:text-gray-200 transition-colors duration-200">
+                {{ currentRombel.class?.name }}
+              </p>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg transition-colors duration-200">
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-400 transition-colors duration-200">Academic
+                Year</p>
+              <p class="text-lg font-semibold text-gray-800 dark:text-gray-200 transition-colors duration-200">
+                {{ currentRombel.study_year?.year }} (Semester {{ currentRombel.study_year?.semester }})
+              </p>
+            </div>
+
+            <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg transition-colors duration-200">
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-400 transition-colors duration-200">Total
+                Students</p>
+              <p class="text-lg font-semibold text-gray-800 dark:text-gray-200 transition-colors duration-200">
+                {{ rombelStudents.length }}
+              </p>
+            </div>
+          </div>
+
+          <h4 class="text-md font-medium text-gray-700 dark:text-gray-300 mb-3 transition-colors duration-200">Rombel
+            Students</h4>
+
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-200">
+              <thead class="bg-gray-50 dark:bg-gray-700 transition-colors duration-200">
+                <tr>
+                  <th scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-200">
+                    Student ID
+                  </th>
+                  <th scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-200">
+                    Name
+                  </th>
+                  <th scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-200">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody
+                class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-200">
+                <tr v-for="student in rombelStudents" :key="student.id"
+                  class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
+                  <td
+                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 transition-colors duration-200">
+                    {{ student.student_number }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div
+                        class="flex-shrink-0 h-8 w-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-300 transition-colors duration-200">
+                        {{ student.name?.charAt(0)?.toUpperCase() || 'S' }}
+                      </div>
+                      <div class="ml-4">
+                        <div
+                          class="text-sm font-medium text-gray-900 dark:text-gray-200 transition-colors duration-200">
+                          {{ student.name }}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 transition-colors duration-200">
+                      {{ student.status }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -214,7 +323,7 @@ onMounted(async () => {
             Actions</h3>
 
           <div class="grid grid-cols-2 gap-4">
-            <router-link to="/teacher/class"
+            <router-link to="/teacher/rombel"
               class="flex items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200">
               <div
                 class="p-2 rounded-md bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 mr-3 transition-colors duration-200">
@@ -240,7 +349,7 @@ onMounted(async () => {
                 Subjects</span>
             </router-link>
 
-            <router-link to="/teacher/assessment"
+            <router-link to="/teacher/rombel"
               class="flex items-center p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors duration-200">
               <div
                 class="p-2 rounded-md bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 mr-3 transition-colors duration-200">
@@ -253,7 +362,7 @@ onMounted(async () => {
                 Assessments</span>
             </router-link>
 
-            <router-link to="/teacher/student"
+            <router-link to="/teacher/rombel"
               class="flex items-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors duration-200">
               <div
                 class="p-2 rounded-md bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 mr-3 transition-colors duration-200">
@@ -266,239 +375,6 @@ onMounted(async () => {
                 Students</span>
             </router-link>
           </div>
-        </div>
-      </div>
-
-      <!-- Charts Section -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-        <div
-          class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all duration-300">
-          <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 transition-colors duration-200">Class
-            Distribution</h3>
-          <div v-if="!subjectStore?.subjects?.data?.length"
-            class="flex justify-center items-center py-10 text-gray-500 dark:text-gray-400 transition-colors duration-200">
-            No subject data available
-          </div>
-          <ApexChart v-else type="donut"
-            :categories="[subjectStore?.subjects?.data?.[0]?.study_year?.year + ' Semester ' + subjectStore?.subjects?.data?.[0]?.study_year?.semester]"
-            :series="[subjectStore?.subjects?.meta?.total || 0]" :colors="['#4F46E5']" :options="{
-              tooltip: {
-                y: {
-                  formatter: function (value) {
-                    return value + ' Subject' + (value !== 1 ? 's' : '');
-                  }
-                },
-                theme: isDarkMode ? 'dark' : 'light'
-              },
-              legend: {
-                labels: {
-                  colors: isDarkMode ? '#e5e7eb' : '#1f2937'
-                }
-              }
-            }" />
-        </div>
-
-        <div
-          class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all duration-300">
-          <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 transition-colors duration-200">Weekly
-            Schedule</h3>
-          <div v-if="!subjectStore?.subjects?.data?.length"
-            class="flex justify-center items-center py-10 text-gray-500 dark:text-gray-400 transition-colors duration-200">
-            No subject schedule data available
-          </div>
-          <ApexChart v-else type="column" :categories="subjectStore?.subjects?.data?.map(subject => subject.name) || []"
-            :series="[{
-              name: 'Subjects',
-              data: subjectStore?.subjects?.data?.map(() => 1) || []
-            }]" :colors="['#4F46E5']" :options="{
-              chart: {
-                toolbar: {
-                  show: false
-                },
-                foreColor: isDarkMode ? '#e5e7eb' : '#1f2937'
-              },
-              plotOptions: {
-                bar: {
-                  borderRadius: 4,
-                  horizontal: false,
-                }
-              },
-              dataLabels: {
-                enabled: false
-              },
-              tooltip: {
-                y: {
-                  formatter: function (value) {
-                    return value + ' Subject';
-                  }
-                },
-                theme: isDarkMode ? 'dark' : 'light'
-              },
-              xaxis: {
-                labels: {
-                  rotate: -45,
-                  trim: true,
-                  maxHeight: 120,
-                  style: {
-                    colors: isDarkMode ? '#d1d5db' : '#4b5563'
-                  }
-                }
-              },
-              yaxis: {
-                labels: {
-                  style: {
-                    colors: isDarkMode ? '#d1d5db' : '#4b5563'
-                  }
-                }
-              },
-              grid: {
-                borderColor: isDarkMode ? '#374151' : '#e5e7eb'
-              }
-            }" />
-        </div>
-
-        <div
-          class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700 md:col-span-2 hover:shadow-md transition-all duration-300">
-          <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 transition-colors duration-200">Student
-            Progress</h3>
-          <div v-if="!studentStore?.students?.length"
-            class="flex justify-center items-center py-10 text-gray-500 dark:text-gray-400 transition-colors duration-200">
-            No student data available
-          </div>
-          <ApexChart v-else type="line"
-            :categories="studentStore?.students?.map(student => student.classHistory.entry_date) || []" :series="[{
-              name: 'Students',
-              data: studentStore?.students?.map((_, index) => index + 1) || []
-            }]" :colors="['#4F46E5']" :options="{
-              chart: {
-                toolbar: {
-                  show: false
-                },
-                foreColor: isDarkMode ? '#e5e7eb' : '#1f2937'
-              },
-              stroke: {
-                curve: 'smooth',
-                width: 3
-              },
-              markers: {
-                size: 5
-              },
-              xaxis: {
-                labels: {
-                  rotate: -45,
-                  trim: true,
-                  style: {
-                    colors: isDarkMode ? '#d1d5db' : '#4b5563'
-                  }
-                },
-                title: {
-                  text: 'Entry Date',
-                  style: {
-                    color: isDarkMode ? '#d1d5db' : '#4b5563'
-                  }
-                }
-              },
-              yaxis: {
-                title: {
-                  text: 'Number of Students',
-                  style: {
-                    color: isDarkMode ? '#d1d5db' : '#4b5563'
-                  }
-                },
-                labels: {
-                  formatter: (value) => `${value} Students`,
-                  style: {
-                    colors: isDarkMode ? '#d1d5db' : '#4b5563'
-                  }
-                }
-              },
-              tooltip: {
-                y: {
-                  formatter: (value) => `${value} Students`
-                },
-                theme: isDarkMode ? 'dark' : 'light'
-              },
-              grid: {
-                borderColor: isDarkMode ? '#374151' : '#e5e7eb'
-              }
-            }" />
-        </div>
-      </div>
-
-      <!-- Recent Students Card -->
-      <div
-        class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all duration-300">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 transition-colors duration-200">Recent
-            Students</h3>
-          <router-link to="/teacher/student"
-            class="text-sm text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200">
-            View All
-          </router-link>
-        </div>
-
-        <div v-if="!studentStore?.students?.length"
-          class="py-8 text-center text-gray-500 dark:text-gray-400 transition-colors duration-200">
-          No student data available
-        </div>
-
-        <div v-else class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-200">
-            <thead class="bg-gray-50 dark:bg-gray-700 transition-colors duration-200">
-              <tr>
-                <th scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-200">
-                  Name
-                </th>
-                <th scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-200">
-                  Class
-                </th>
-                <th scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-200">
-                  Entry Date
-                </th>
-                <th scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-200">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody
-              class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-200">
-              <tr v-for="student in studentStore?.students?.slice(0, 5)" :key="student.id"
-                class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="flex items-center">
-                    <div
-                      class="flex-shrink-0 h-10 w-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-300 transition-colors duration-200">
-                      {{ student.name?.charAt(0)?.toUpperCase() || 'S' }}
-                    </div>
-                    <div class="ml-4">
-                      <div class="text-sm font-medium text-gray-900 dark:text-gray-200 transition-colors duration-200">
-                        {{ student.name }}</div>
-                      <div class="text-sm text-gray-500 dark:text-gray-400 transition-colors duration-200">{{
-                        student.email }}</div>
-                    </div>
-                  </div>
-                </td>
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 transition-colors duration-200">
-                  {{ student.classHistory?.class?.name || '-' }}
-                </td>
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 transition-colors duration-200">
-                  {{ student.classHistory?.entry_date || '-' }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span
-                    class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 transition-colors duration-200">
-                    Active
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>

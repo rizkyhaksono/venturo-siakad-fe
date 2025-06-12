@@ -1,11 +1,33 @@
 <script setup>
 import Layout from "@/layouts/main.vue";
 import { useRoute } from 'vue-router';
+import {
+  useTeacherRombelStore,
+  useTeacherStudentAssesment
+} from "@/state/pinia";
+import { onMounted, ref } from "vue";
 
 const route = useRoute();
 const id = route.params.id;
 
-console.log('Rombel ID:', id);
+const teacherRombelStore = useTeacherRombelStore();
+const teacherStudentAssesment = useTeacherStudentAssesment();
+
+const rombel = ref(null);
+const studentAssesment = ref(null);
+
+const fetchRombelById = async (id) => {
+  rombel.value = await teacherRombelStore.getRombelById(id);
+}
+
+const fetchStudentAssesmentByRombelName = async (rombelName) => {
+  studentAssesment.value = await teacherStudentAssesment.getStudentAssesmentByRombelName(rombelName);
+}
+
+onMounted(async () => {
+  if (id) await fetchRombelById(id);
+  if (rombel.value) await fetchStudentAssesmentByRombelName(rombel.value.name);
+});
 </script>
 
 <template>
