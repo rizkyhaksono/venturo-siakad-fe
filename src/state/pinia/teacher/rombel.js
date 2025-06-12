@@ -51,5 +51,17 @@ export const useTeacherRombelStore = defineStore("teacherRombel", {
       this.current = 1;
       await this.getRombels();
     },
+    async getRombelById(id) {
+      try {
+        const url = `${this.apiUrl}/v1/teacher/rombels/${id}`;
+        const res = await axios.get(url);
+        this.rombel = res.data.data;
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+        };
+      }
+    },
   }
 });

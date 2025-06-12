@@ -38,6 +38,7 @@ import { useTeacherStudentStore } from "./pinia/teacher/student";
 import { useTeacherSubjectStore } from "./pinia/teacher/subject";
 import { useTeacherRombelStore } from "./pinia/teacher/rombel";
 import { useTeacherSubjectScheduleStore } from "./pinia/teacher/subject-schedule";
+import { useTeacherStudentAssesment } from "./pinia/teacher/student-assesment";
 
 const pinia = createPinia();
 export default pinia;
@@ -80,5 +81,6 @@ export {
   useTeacherStudentStore,
   useTeacherSubjectStore,
   useTeacherRombelStore,
-  useTeacherSubjectScheduleStore
+  useTeacherSubjectScheduleStore,
+  useTeacherStudentAssesment,
 };

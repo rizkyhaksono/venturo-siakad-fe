@@ -205,6 +205,7 @@ const teacherMenus = [
     { label: "Dashboard", to: `${rolePrefix}/dashboard`, icon: mdiHome },
     { label: "Rombel", to: `${rolePrefix}/rombel`, icon: mdiHumanMaleBoardPoll },
     { label: "Subject", to: `${rolePrefix}/subject`, icon: mdiGoogleClassroom },
+    { label: "Student Assesment", to: `${rolePrefix}/student-assesment`, icon: mdiCardAccountDetails },
 ];
 
 setMenusByRole();

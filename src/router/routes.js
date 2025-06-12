@@ -17,10 +17,10 @@ export default [
                         next({ name: "teacher-dashboard" });
                         break;
                     default:
-                        next({ name: "login" });
+                        next({ name: "landing-page" });
                 }
             } else {
-                next({ name: "login" });
+                next({ name: "landing-page" });
             }
         }
     },
@@ -274,6 +274,12 @@ export default [
         component: () => import("../views/teacher/rombel/form.vue"),
     },
     {
+        path: "/teacher/student-assesment",
+        name: "teacher-student-assesment",
+        meta: { title: "Student Assesment", authRequired: true },
+        component: () => import("../views/teacher/student-assesment"),
+    },
+    {
         path: "/teacher/settings",
         name: "settings",
         meta: { title: "settings", authRequired: true },
@@ -339,5 +345,70 @@ export default [
     {
         path: "/:catchAll(.*)",
         redirect: { name: "NotFound" },
+    },
+    // visitor routes
+    {
+        path: "/",
+        name: "landing-page",
+        component: () => import("../views/(visitor)/index.vue"),
+        meta: {
+            title: "Landing Page",
+            beforeResolve(routeTo, routeFrom, next) {
+                const auth = useAuthStore();
+                if (auth.getToken) {
+                    next({ name: "default" });
+                } else {
+                    next();
+                }
+            },
+        },
+    },
+    {
+        path: "/feature",
+        name: "feature-page",
+        component: () => import("../views/(visitor)/feature.vue"),
+        meta: {
+            title: "Feature Page",
+            beforeResolve(routeTo, routeFrom, next) {
+                const auth = useAuthStore();
+                if (auth.getToken) {
+                    next({ name: "default" });
+                } else {
+                    next();
+                }
+            },
+        },
+    },
+    {
+        path: "/about",
+        name: "about-page",
+        component: () => import("../views/(visitor)/about.vue"),
+        meta: {
+            title: "About Page",
+            beforeResolve(routeTo, routeFrom, next) {
+                const auth = useAuthStore();
+                if (auth.getToken) {
+                    next({ name: "default" });
+                } else {
+                    next();
+                }
+            },
+        },
+    },
+    {
+        path: "/contact",
+        name: "contact-page",
+        component: () => import("../views/(visitor)/contact.vue"),
+        meta: {
+            title: "Contact Page",
+            beforeResolve(routeTo, routeFrom, next) {
+                const auth = useAuthStore();
+                if (auth.getToken) {
+                    next({ name: "default" });
+                } else {
+                    next();
+                }
+            },
+        },
     },
 ];
