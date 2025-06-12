@@ -409,7 +409,7 @@ onMounted(async () => {
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 transition-colors duration-200">Latest
               Assessment</h3>
-            <router-link to="/student/assessment"
+            <router-link to="/student/student-assesment"
               class="text-sm text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200">View
               All</router-link>
           </div>
