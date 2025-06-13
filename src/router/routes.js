@@ -274,6 +274,12 @@ export default [
         component: () => import("../views/teacher/rombel/form.vue"),
     },
     {
+        path: "/teacher/rombel/:name/student/:id",
+        name: "teacher-rombel-student",
+        meta: { title: "Rombel Student", authRequired: true },
+        component: () => import("../views/teacher/rombel/form-grade.vue"),
+    },
+    {
         path: "/teacher/student-assesment",
         name: "teacher-student-assesment",
         meta: { title: "Student Assesment", authRequired: true },

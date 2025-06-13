@@ -14,7 +14,6 @@ const loading = ref(true);
 const rombels = ref([]);
 const subjectSchedule = ref([]);
 
-// Group rombels by class and name
 const groupedRombels = computed(() => {
   const grouped = {};
 
@@ -22,22 +21,19 @@ const groupedRombels = computed(() => {
     const key = `${rombel.class_id}-${rombel.name}`;
 
     if (!grouped[key]) {
-      // Create new group with basic rombel data
       grouped[key] = {
         id: rombel.id,
         name: rombel.name,
         class: rombel.class,
         study_year: rombel.study_year,
         teacher: rombel.teacher,
-        students: [] // Initialize empty students array
+        students: []
       };
     }
 
-    // Add this student to the group
     grouped[key].students.push(rombel.student);
   });
 
-  // Convert object to array
   return Object.values(grouped);
 });
 
@@ -120,7 +116,7 @@ onMounted(async () => {
                     {{ rombel.study_year.semester === '1' ? 'Ganjil' : 'Genap' }} {{ rombel.study_year.year }}
                   </p>
                 </div>
-                <router-link :to="`/teacher/rombel/${rombel.id}`"
+                <router-link :to="`/teacher/rombel/${rombel.name}`"
                   class="text-white hover:underline transition-colors duration-200">
                   View Details
                 </router-link>

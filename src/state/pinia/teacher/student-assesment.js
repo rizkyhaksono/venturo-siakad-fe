@@ -43,6 +43,17 @@ export const useTeacherStudentAssesment = defineStore("teacherStudentAssesment",
         };
       }
     },
+    async getStudentAssesmentById(id) {
+      try {
+        const res = await axios.get(`${this.apiUrl}/v1/teacher/student-assessments/${id}`);
+        this.studentAssesment = res.data
+      } catch (error) {
+        this.response = {
+          status: error?.status,
+          message: error.message,
+        };
+      }
+    },
     async changePage(newPage) {
       this.current = newPage;
       await this.getStudentAssesments();
