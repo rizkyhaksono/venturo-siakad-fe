@@ -107,7 +107,7 @@ onMounted(() => {
         <router-link to="/" class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">Beranda</router-link>
         <router-link to="/feature" class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">Fitur</router-link>
         <router-link to="/about" class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">Tentang</router-link>
-        <router-link to="#kontak" class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">Kontak</router-link>
+        <router-link to="/contact" class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">Kontak</router-link>
         <router-link to="/login" class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">Login</router-link>
       </div>
     </div>

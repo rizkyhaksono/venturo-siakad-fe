@@ -5,7 +5,7 @@ import Navbar from '@/components/layouts/Navbar.vue';
 <template>
   <div class="landing-page">
     <Navbar />
-    
+
     <!-- Hero Section -->
     <section class="bg-blue-600 dark:bg-blue-950 text-white py-16">
       <div class="container mx-auto px-4">
@@ -24,10 +24,10 @@ import Navbar from '@/components/layouts/Navbar.vue';
     </section>
 
     <!-- Features Section -->
-    <section id="fitur" class="py-16 bg-white dark:bg-gray-300 transition-colors duration-200"> 
+    <section id="fitur" class="py-16 bg-white dark:bg-gray-800 transition-colors duration-200">
       <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center mb-12">Fitur Unggulan</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-800 dark:text-white">Fitur Unggulan</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-900 dark:text-gray-300">
           <div class="p-6 rounded-lg shadow-lg hover:-translate-y-1 transition-transform duration-300">
             <div class="mb-4">
               <i class="fas fa-user-graduate text-4xl text-blue-600"></i>
@@ -58,7 +58,7 @@ import Navbar from '@/components/layouts/Navbar.vue';
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row items-center">
           <div class="md:w-1/2 mb-8 md:mb-0">
-            <h2 class="text-3xl font-bold mb-4">Tentang SIAKAD SD</h2>
+            <h2 class="text-3xl font-bold mb-4 text-gray-800 dark:text-white">Tentang SIAKAD SD</h2>
             <p class="mb-4 text-gray-700 dark:text-gray-300">
               SIAKAD SD adalah sistem informasi akademik yang dirancang khusus untuk memenuhi kebutuhan
               sekolah dasar dalam mengelola kegiatan akademik secara digital.
@@ -73,19 +73,22 @@ import Navbar from '@/components/layouts/Navbar.vue';
     </section>
 
     <!-- Contact Section -->
-    <section id="kontak" class="py-16 bg-white dark:bg-gray">
+    <section id="kontak" class="py-16 bg-white dark:bg-gray-800">
       <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center mb-8">Hubungi Kami</h2>
+        <h2 class="text-3xl font-bold text-center mb-8 text-gray-800 dark:text-white">Hubungi Kami</h2>
         <div class="max-w-lg mx-auto">
           <form class="space-y-4">
             <div>
-              <input type="text" placeholder="Nama" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600 dark:bg-gray-700 dark:text-white dark:border-gray-600">
+              <input type="text" placeholder="Nama"
+                class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600 dark:bg-gray-700 dark:text-white dark:border-gray-600">
             </div>
             <div>
-              <input type="email" placeholder="Email" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600 dark:bg-gray-700 dark:text-white dark:border-gray-600">
+              <input type="email" placeholder="Email"
+                class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600 dark:bg-gray-700 dark:text-white dark:border-gray-600">
             </div>
             <div>
-              <textarea placeholder="Pesan" rows="4" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600 dark:bg-gray-700 dark:text-white dark:border-gray-600"></textarea>
+              <textarea placeholder="Pesan" rows="4"
+                class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600 dark:bg-gray-700 dark:text-white dark:border-gray-600"></textarea>
             </div>
             <button class="w-full bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
               Kirim Pesan
