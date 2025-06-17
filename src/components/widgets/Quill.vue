@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, defineProps, defineEmits } from "vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
@@ -37,15 +37,10 @@ const updateContent = (newContent) => {
         </label>
 
         <!-- Quill Editor -->
-        <div class="border border-slate-200 rounded-md shadow-sm hover:border-slate-800 focus-within:border-slate-800 focus-within:ring focus-within:ring-slate-800/10">
-            <QuillEditor 
-                v-model:content="editorContent" 
-                content-type="html" 
-                theme="snow"
-                :placeholder="placeholder"
-                @update:content="updateContent"
-                class="bg-white"
-            />
+        <div
+            class="border border-slate-200 rounded-md shadow-sm hover:border-slate-800 focus-within:border-slate-800 focus-within:ring focus-within:ring-slate-800/10">
+            <QuillEditor v-model:content="editorContent" content-type="html" theme="snow" :placeholder="placeholder"
+                @update:content="updateContent" class="bg-white" />
         </div>
 
         <!-- Error Messages -->
@@ -54,4 +49,3 @@ const updateContent = (newContent) => {
         </div>
     </div>
 </template>
-

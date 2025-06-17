@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { computed, defineProps, defineEmits } from "vue";
 import Datepicker from "vue-tailwind-datepicker";
 
 const props = defineProps({
@@ -51,18 +51,11 @@ const selectedDate = computed({
 <template>
     <div class="space-y-1.5">
         <label v-if="label" class="text-sm text-slate-800 font-bold capitalize">{{ label }}</label>
-        
+
         <div class="relative">
-            <Datepicker
-                v-model="selectedDate"
-                :placeholder="placeholder"
-                :format="format"
-                :autoApply="autoApply"
-                :weekStart="weekStart"
-                :i18n="i18n"
-                v-bind="range ? { asRange: true } : { asSingle: true }"
-                class="w-full border border-gray-300 rounded-md text-sm shadow-sm hover:border-gray-600 focus:border-gray-600 focus:ring focus:ring-gray-600/10"
-            />
+            <Datepicker v-model="selectedDate" :placeholder="placeholder" :format="format" :autoApply="autoApply"
+                :weekStart="weekStart" :i18n="i18n" v-bind="range ? { asRange: true } : { asSingle: true }"
+                class="w-full border border-gray-300 rounded-md text-sm shadow-sm hover:border-gray-600 focus:border-gray-600 focus:ring focus:ring-gray-600/10" />
         </div>
         <div v-if="errors && errors.length" class="text-red-500 text-xs mt-1">
             <span v-for="(err, index) in errors" :key="index">{{ err }}</span>
