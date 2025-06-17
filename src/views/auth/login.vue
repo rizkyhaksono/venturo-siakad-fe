@@ -176,7 +176,7 @@ const login = async () => {
             <div class="text-center text-sm mt-4 text-gray-700 dark:text-gray-300 transition-colors duration-200">
                 Don't have an account?
                 <router-link to="/register"
-                    class="text-primary hover:underline hover:underline-offset-2">Register</router-link>
+                    class="text-primary dark:text-gray-50 underline underline-offset-2">Register</router-link>
             </div>
 
             <div class="text-center text-xs text-gray-500 dark:text-gray-400 mt-6 transition-colors duration-200">

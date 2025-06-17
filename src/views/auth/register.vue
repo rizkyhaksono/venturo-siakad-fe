@@ -296,7 +296,7 @@ const register = async () => {
 
       <div class="text-center text-sm mt-4 text-gray-700 dark:text-gray-300 transition-colors duration-200">
         Already have an account?
-        <router-link to="/login" class="text-primary hover:underline hover:underline-offset-2">Login</router-link>
+        <router-link to="/login" class="text-primary dark:text-gray-50 underline underline-offset-2">Login</router-link>
       </div>
 
       <div class="text-center text-xs text-gray-500 dark:text-gray-400 mt-6 transition-colors duration-200">
