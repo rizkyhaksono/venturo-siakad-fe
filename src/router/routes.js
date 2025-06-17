@@ -277,7 +277,7 @@ export default [
         path: "/teacher/rombel/:name/student/:id",
         name: "teacher-rombel-student",
         meta: { title: "Rombel Student", authRequired: true },
-        component: () => import("../views/teacher/rombel/form-grade.vue"),
+        component: () => import("../views/teacher/rombel/rombel-student-grade.vue"),
     },
     {
         path: "/teacher/student-assesment",

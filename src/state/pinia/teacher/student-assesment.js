@@ -80,5 +80,22 @@ export const useTeacherStudentAssesment = defineStore("teacherStudentAssesment",
         };
       }
     },
+    async putStudentAssesment(id, studentAssesments) {
+      try {
+        const res = await axios.put(`${this.apiUrl}/v1/teacher/student-assessments/${id}`, studentAssesments);
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+          error: [],
+        };
+        await this.getStudentAssesments();
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data?.errors || [],
+        };
+      }
+    }
   },
 })

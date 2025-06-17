@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, nextTick  } from 'vue';
+import { computed, onMounted, nextTick, defineProps, defineEmits } from 'vue';
 
 import VueApexCharts from 'vue3-apexcharts';
 
