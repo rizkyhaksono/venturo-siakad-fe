@@ -49,9 +49,9 @@ onMounted(() => {
 <template>
   <Layout>
     <div class="container px-4 py-6 mx-auto">
-      <div class="bg-white rounded-lg shadow-sm mb-6">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm mb-6">
         <div class="border-b px-6 py-4">
-          <h5 class="text-lg font-medium text-gray-800">Add Nilai Siswa/i</h5>
+          <h5 class="text-lg font-medium text-gray-800 dark:text-gray-100">Add Nilai Siswa/i</h5>
           <p v-if="rombelData && rombelData.rombel" class="text-sm text-gray-600 mt-1">
             {{ rombelData.rombel.name }} - {{ rombelData.rombel.class ? rombelData.rombel.class.name : '' }}
           </p>
@@ -95,13 +95,13 @@ onMounted(() => {
           </div>
 
           <!-- Student Table -->
-          <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-            <div class="border-b px-6 py-3 bg-gray-50">
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+            <div class="border-b px-6 py-3 bg-gray-50 dark:bg-gray-700">
               <h6 class="font-medium text-gray-700">Siswa</h6>
             </div>
             <div class="overflow-x-auto">
               <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-50 dark:bg-gray-800 ">
                   <tr>
                     <th scope="col"
                       class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -121,8 +121,8 @@ onMounted(() => {
                     </th>
                   </tr>
                 </thead>
-                <tbody v-if="!loading" class="bg-white divide-y divide-gray-200">
-                  <tr v-for="student in students" :key="student.id" class="hover:bg-gray-50">
+                <tbody v-if="!loading" class="bg-white dark:bg-gray-800 divide-y divide-gray-200">
+                  <tr v-for="student in students" :key="student.id" class="hover:bg-gray-50 hover:dark:bg-gray-700">
                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
                       {{ student.student_number }}
                     </td>

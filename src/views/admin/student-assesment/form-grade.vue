@@ -273,10 +273,10 @@ onMounted(async () => {
 
 <template>
   <Layout>
-    <div class="px-4 py-6 bg-white shadow-sm rounded-lg">
-      <h3 class="text-2xl font-semibold text-center text-gray-800 mb-6">Add Nilai Siswa/i</h3>
+    <div class="px-4 py-6 bg-white dark:bg-gray-800 shadow-sm rounded-lg">
+      <h3 class="text-2xl font-semibold text-center text-gray-800 dark:text-gray-100 mb-6">Add Nilai Siswa/i</h3>
 
-      <div class="mb-6 bg-gray-50 p-4 rounded-lg">
+      <div class="mb-6 bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <InputField v-model="formData.student_number" label="Nomor Induk Siswa" placeholder="Nomor Induk Siswa"
@@ -290,72 +290,90 @@ onMounted(async () => {
       </div>
 
       <div class="overflow-x-auto">
-        <table class="w-full border-collapse">
+        <table class="w-full border-collapse text-gray-800 dark:text-gray-200">
           <thead>
-            <tr class="bg-gray-100">
-              <th scope="row" class="border border-gray-300 px-2 py-2 text-center align-middle" rowspan="2">
+            <tr class="bg-gray-100 dark:bg-gray-700">
+              <th scope="row" class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center align-middle"
+                rowspan="2">
                 No
               </th>
-              <th id="komponen" scope="col" class="border border-gray-300 px-2 py-2 text-center align-middle"
-                rowspan="2">Komponen
+              <th id="komponen" scope="col"
+                class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center align-middle" rowspan="2">
+                Komponen
               </th>
-              <th scope="row" id="kkm" class="border border-gray-300 px-2 py-2 text-center align-middle" rowspan="2">KKM
+              <th scope="row" id="kkm"
+                class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center align-middle" rowspan="2">KKM
               </th>
-              <th scope="row" id="hasil-nilai" class="border border-gray-300 px-2 py-2 text-center align-middle"
-                colspan="4">Nilai Hasil
+              <th scope="row" id="hasil-nilai"
+                class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center align-middle" colspan="4">Nilai
+                Hasil
                 Belajar</th>
             </tr>
-            <tr class="bg-gray-100">
-              <th scope="col" class="border border-gray-300 px-2 py-2 text-center">UTS</th>
-              <th scope="col" class="border border-gray-300 px-2 py-2 text-center">UAS</th>
-              <th scope="col" class="border border-gray-300 px-2 py-2 text-center">Tugas</th>
-              <th scope="col" class="border border-gray-300 px-2 py-2 text-center">Keaktifan</th>
+            <tr class="bg-gray-100 dark:bg-gray-700">
+              <th scope="col" class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center">UTS</th>
+              <th scope="col" class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center">UAS</th>
+              <th scope="col" class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center">Tugas</th>
+              <th scope="col" class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center">Keaktifan</th>
             </tr>
           </thead>
           <tbody>
             <template v-for="(subject, index) in subjects" :key="subject.id">
               <tr v-if="index === 0 || subjects[index - 1].type !== subject.type">
-                <td class="border border-gray-300 px-2 py-2 bg-blue-50 font-medium" colspan="7">{{ subject.type }}</td>
+                <td
+                  class="border border-gray-300 dark:border-gray-600 px-2 py-2 bg-blue-50 dark:bg-blue-900/30 font-medium text-gray-800 dark:text-gray-100"
+                  colspan="7">{{
+                    subject.type }}</td>
               </tr>
-              <tr :class="index % 2 === 0 ? 'bg-gray-50' : 'bg-white'">
-                <td class="border border-gray-300 px-2 py-2 text-center">{{ index + 1 }}</td>
-                <td class="border border-gray-300 px-2 py-2">{{ subject.name }}</td>
-                <td class="border border-gray-300 px-2 py-2 text-center w-20">
+              <tr :class="index % 2 === 0 ? 'bg-gray-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800'">
+                <td class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center">{{ index + 1 }}</td>
+                <td class="border border-gray-300 dark:border-gray-600 px-2 py-2">{{ subject.name }}</td>
+                <td class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center w-20">
                   <InputField type="number" v-model="subject.kkm" name="kkm"
-                    classes="w-full text-center text-sm rounded py-1 px-2" min="0" max="100" />
+                    classes="w-full text-center text-sm rounded py-1 px-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                    min="0" max="100" />
                 </td>
-                <td class="border border-gray-300 px-2 py-2 text-center w-20">
+                <td class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center w-20">
                   <InputField type="number" v-model="subject.uts" name="uts"
                     @blur="subject.uts = validateInput(subject.uts, 'UTS', subject.name)"
-                    classes="w-full text-center text-sm rounded py-1 px-2" min="0" max="100" />
+                    classes="w-full text-center text-sm rounded py-1 px-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                    min="0" max="100" />
                 </td>
-                <td class="border border-gray-300 px-2 py-2 text-center w-20">
+                <td class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center w-20">
                   <InputField type="number" v-model="subject.uas" name="uas"
                     @blur="subject.uas = validateInput(subject.uas, 'UAS', subject.name)"
-                    classes="w-full text-center text-sm rounded py-1 px-2" min="0" max="100" />
+                    classes="w-full text-center text-sm rounded py-1 px-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                    min="0" max="100" />
                 </td>
-                <td class="border border-gray-300 px-2 py-2 text-center w-20">
+                <td class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center w-20">
                   <InputField type="number" v-model="subject.tugas" name="tugas"
                     @blur="subject.tugas = validateInput(subject.tugas, 'Tugas', subject.name)"
-                    classes="w-full text-center text-sm rounded py-1 px-2" min="0" max="100" />
+                    classes="w-full text-center text-sm rounded py-1 px-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                    min="0" max="100" />
                 </td>
-                <td class="border border-gray-300 px-2 py-2 text-center w-20">
+                <td class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center w-20">
                   <InputField type="number" v-model="subject.keaktifan" name="keaktifan"
                     @blur="subject.keaktifan = validateInput(subject.keaktifan, 'Keaktifan', subject.name)"
-                    classes="w-full text-center text-sm rounded py-1 px-2" min="0" max="100" />
+                    classes="w-full text-center text-sm rounded py-1 px-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                    min="0" max="100" />
                 </td>
               </tr>
             </template>
-            <tr class="bg-blue-50">
-              <td colspan="3" class="border border-gray-300 px-2 py-2 text-center font-medium">Rata-rata</td>
-              <td class="border border-gray-300 px-2 py-2 text-center">{{ averages.uts }}</td>
-              <td class="border border-gray-300 px-2 py-2 text-center">{{ averages.uas }}</td>
-              <td class="border border-gray-300 px-2 py-2 text-center">{{ averages.tugas }}</td>
-              <td class="border border-gray-300 px-2 py-2 text-center">{{ averages.keaktifan }}</td>
+            <tr class="bg-blue-50 dark:bg-blue-900/30">
+              <td colspan="3"
+                class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center font-medium text-gray-800 dark:text-gray-100">
+                Rata-rata</td>
+              <td class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center">{{ averages.uts }}</td>
+              <td class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center">{{ averages.uas }}</td>
+              <td class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center">{{ averages.tugas }}</td>
+              <td class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center">{{ averages.keaktifan }}
+              </td>
             </tr>
-            <tr class="bg-blue-100">
-              <td colspan="6" class="border border-gray-300 px-2 py-2 text-center font-medium">Total</td>
-              <td class="border border-gray-300 px-2 py-2 text-center font-bold">{{ finalAverage }}</td>
+            <tr class="bg-blue-100 dark:bg-blue-900/40">
+              <td colspan="6"
+                class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center font-medium text-gray-800 dark:text-gray-100">
+                Total</td>
+              <td class="border border-gray-300 dark:border-gray-600 px-2 py-2 text-center font-bold">{{ finalAverage }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -363,7 +381,7 @@ onMounted(async () => {
 
       <div class="flex justify-end mt-6 gap-3">
         <button
-          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
+          class="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500"
           @click="cancelAssessment" :disabled="loading">
           Batal
         </button>
