@@ -92,6 +92,7 @@ onMounted(async () => {
               <div class="flex">
                 <span class="w-32 text-gray-500 dark:text-gray-400">Mata Pelajaran:</span>
                 <span class="font-medium text-gray-700 dark:text-gray-400">{{ rombel.rombel.teacher.subject }}</span>
+                <span class="font-medium text-gray-700 dark:text-gray-400">{{ console.log(rombel) }}</span>
               </div>
               <div class="flex">
                 <span class="w-32 text-gray-500 dark:text-gray-400">Jumlah Siswa:</span>
@@ -153,7 +154,7 @@ onMounted(async () => {
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
                     <router-link :to="`/teacher/rombel/${rombel.rombel.name}/student/${student.id}`"
-                      class="bg-cyan-800 dark:bg-cyan-300 px-3 py-1 rounded-full text-white dark:text-gray-800 font-medium hover:text-cyan-800 mr-2">
+                      class="bg-cyan-800 dark:bg-cyan-300 px-3 py-1 rounded-full text-white dark:text-gray-800 font-medium hover:bg-cyan-600 hover:dark:bg-cyan-400 mr-2">
                       Isi Nilai
                     </router-link>
                   </td>
