@@ -107,11 +107,14 @@ const login = async () => {
         <div
             class="w-full max-w-md bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-900 rounded-lg p-6 transition-colors duration-200">
             <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center gap-2">
-                    <h1 class="text-xl font-bold text-gray-800 dark:text-white transition-colors duration-200">
-                        SIAKAD
-                    </h1>
-                </div>
+                <router-link to="/">
+                    <div class="flex items-center gap-2">
+                        <h1
+                            class="text-xl font-bold text-gray-800 dark:text-white transition-colors duration-200 hover:shadow-lg hover:shadow-gray-300 dark:hover:shadow-gray-700">
+                            SIAKAD
+                        </h1>
+                    </div>
+                </router-link>
                 <button @click="toggleTheme"
                     class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200">
                     <svg class="h-5 w-5 text-gray-700 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
@@ -122,7 +125,8 @@ const login = async () => {
 
             <h2
                 class="text-lg font-semibold text-center text-gray-700 dark:text-gray-200 mb-4 transition-colors duration-200">
-                Welcome back</h2>
+                Welcome back
+            </h2>
 
             <form @submit.prevent="login">
                 <div class="mb-4 space-y-1.5">

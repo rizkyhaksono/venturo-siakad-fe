@@ -1,5 +1,6 @@
 <script setup>
 import Navbar from "@/components/layouts/Navbar.vue";
+import Footer from "@/components/layouts/Footer.vue";
 import { ref } from 'vue';
 
 // Feature data
@@ -9,42 +10,42 @@ const features = ref([
     title: "Manajemen Siswa",
     description: "Mengelola data siswa termasuk biodata, riwayat akademik, dan kehadiran",
     icon: "user-group",
-    color: "bg-blue-500"
+    color: "bg-blue-500 dark:bg-blue-600"
   },
   {
     id: 2,
     title: "Manajemen Guru",
     description: "Mengelola data guru, jadwal mengajar, dan beban kerja",
     icon: "academic-cap",
-    color: "bg-green-500"
+    color: "bg-green-500 dark:bg-green-600"
   },
   {
     id: 3,
     title: "Penilaian",
     description: "Pencatatan nilai tugas, ujian, dan rapor digital",
     icon: "clipboard-document-check",
-    color: "bg-cyan-500"
+    color: "bg-cyan-500 dark:bg-cyan-600"
   },
   {
     id: 4,
     title: "Kehadiran",
     description: "Monitoring kehadiran siswa dan guru",
     icon: "calendar",
-    color: "bg-amber-500"
+    color: "bg-amber-500 dark:bg-amber-600"
   },
   {
     id: 5,
     title: "Jadwal Pelajaran",
     description: "Pengelolaan jadwal pelajaran dan ruang kelas",
     icon: "clock",
-    color: "bg-red-500"
+    color: "bg-red-500 dark:bg-red-600"
   },
   {
     id: 6,
     title: "Manajemen Kelas",
     description: "Mengelola kelas dan wali kelas",
     icon: "building-office-2",
-    color: "bg-purple-500"
+    color: "bg-purple-500 dark:bg-purple-600"
   }
 ]);
 
@@ -52,55 +53,97 @@ const features = ref([
 const benefits = ref([
   {
     title: "Efisiensi Administrasi",
-    description: "Mengurangi beban administratif dengan otomatisasi",
+    description: "Mengurangi beban administratif dengan otomatisasi proses dan pengelolaan data yang lebih terstruktur",
     icon: "chart-bar"
   },
   {
     title: "Data Terpusat",
-    description: "Semua data akademik tersimpan dalam satu sistem",
+    description: "Semua data akademik tersimpan dalam satu sistem yang terintegrasi dan mudah diakses",
     icon: "database"
   },
   {
     title: "Akses Mudah",
-    description: "Akses informasi kapan saja dan di mana saja",
+    description: "Akses informasi kapan saja dan di mana saja melalui perangkat yang terhubung dengan internet",
     icon: "device-phone-mobile"
   },
   {
     title: "Transparansi",
-    description: "Orang tua dapat memantau perkembangan anak",
+    description: "Orang tua dapat memantau perkembangan akademik anak secara real-time dengan akses khusus",
     icon: "eye"
+  }
+]);
+
+// Testimonial data
+const testimonials = ref([
+  {
+    content: "SIAKAD sangat membantu administrasi sekolah kami menjadi lebih efisien dan terorganisir. Pengelolaan data siswa dan guru menjadi lebih mudah dan terintegrasi.",
+    name: "Budi Santoso",
+    role: "Kepala Sekolah SD Maju Bersama",
+    color: "border-blue-500 dark:border-blue-400"
+  },
+  {
+    content: "Sebagai guru, saya merasa terbantu dalam menginput nilai dan melihat perkembangan siswa. Pembuatan laporan juga menjadi lebih cepat dan akurat.",
+    name: "Siti Rahma",
+    role: "Guru Kelas 4 SD Cendekia",
+    color: "border-green-500 dark:border-green-400"
+  },
+  {
+    content: "Sebagai orang tua, saya dapat memantau nilai dan kehadiran anak saya dengan mudah melalui aplikasi. Komunikasi dengan guru juga menjadi lebih lancar.",
+    name: "Ahmad Ridwan",
+    role: "Orang Tua Siswa",
+    color: "border-purple-500 dark:border-purple-400"
   }
 ]);
 </script>
 
 <template>
-  <Navbar />
-  <div class="feature-page font-sans">
+  <div class="feature-page font-sans bg-white dark:bg-gray-900 min-h-screen transition-colors duration-300">
+    <Navbar />
     <!-- Hero Section -->
-    <section class="bg-gray-50 dark:bg-gray-700 py-16 md:py-24">
+    <section class="bg-gray-50 dark:bg-gray-800 py-16 md:py-24 transition-colors duration-300">
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row items-center">
           <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8">
             <h1 class="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white mb-6">SIAKAD Sekolah Dasar</h1>
-            <p class="text-lg text-gray-600 dark:text-white mb-8">
-              Sistem Informasi Akademik untuk pengelolaan data dan kegiatan akademik di sekolah dasar</p>
-            <button
-              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">
-              Pelajari Lebih Lanjut
-            </button>
+            <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">
+              Sistem Informasi Akademik modern untuk pengelolaan data dan kegiatan akademik di sekolah dasar yang
+              efisien,
+              terintegrasi, dan mudah diakses.
+            </p>
+            <div class="flex flex-wrap gap-4">
+              <button
+                class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-full transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">
+                Pelajari Lebih Lanjut
+              </button>
+              <button
+                class="bg-transparent border-2 border-blue-600 dark:border-blue-500 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 font-semibold py-3 px-8 rounded-full transition duration-300 ease-in-out">
+                Lihat Demo
+              </button>
+            </div>
           </div>
           <div class="md:w-1/2">
-            <!-- Using an inline SVG as a placeholder instead of importing an image -->
             <div
-              class="rounded-lg shadow-xl bg-white dark:bg-gray-700 p-6 h-64 md:h-80 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
-                stroke="currentColor" class="w-24 h-24 text-blue-500">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
-              </svg>
-              <div class="ml-4">
-                <h3 class="text-xl font-bold text-gray-800 dark:text-gray-300">SIAKAD</h3>
-                <p class="text-gray-600 dark:text-gray-400">Sistem Akademik Modern</p>
+              class="rounded-lg shadow-xl overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 transition-all duration-300 hover:shadow-2xl">
+              <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-6 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
+                  stroke="currentColor" class="w-20 h-20 text-blue-500 dark:text-blue-400">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
+                </svg>
+                <div class="ml-6">
+                  <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200">SIAKAD</h3>
+                  <p class="text-gray-600 dark:text-gray-400">Sistem Akademik Modern</p>
+                  <div class="flex items-center mt-3">
+                    <span
+                      class="inline-flex items-center rounded-md bg-green-50 dark:bg-green-900/30 px-2 py-1 text-xs font-medium text-green-700 dark:text-green-400 ring-1 ring-inset ring-green-600/20 dark:ring-green-500/30">
+                      Versi 2.5
+                    </span>
+                    <span
+                      class="inline-flex items-center rounded-md bg-blue-50 dark:bg-blue-900/30 px-2 py-1 text-xs font-medium text-blue-700 dark:text-blue-400 ring-1 ring-inset ring-blue-600/20 dark:ring-blue-500/30 ml-2">
+                      Cloud
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -109,13 +152,21 @@ const benefits = ref([
     </section>
 
     <!-- Features Section -->
-    <section class="py-16 md:py-24 bg-white dark:bg-gray-700">
+    <section class="py-16 md:py-24 bg-white dark:bg-gray-900 transition-colors duration-300">
       <div class="container mx-auto px-4">
-        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800 dark:text-white">Fitur Utama</h2>
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-white">Fitur Utama</h2>
+          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            SIAKAD menyediakan beragam fitur yang dirancang khusus untuk memenuhi kebutuhan administrasi dan
+            pembelajaran di sekolah dasar.
+          </p>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div v-for="feature in features" :key="feature.id"
-            class="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 transition duration-300 ease-in-out transform hover:-translate-y-2 hover:shadow-xl">
-            <div :class="`${feature.color} w-16 h-16 rounded-full flex items-center justify-center mb-6 text-white`">
+            class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-xl group">
+            <div
+              :class="`${feature.color} w-16 h-16 rounded-full flex items-center justify-center mb-6 text-white transform group-hover:scale-110 transition-transform duration-300`">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-8 h-8">
                 <path v-if="feature.icon === 'user-group'" stroke-linecap="round" stroke-linejoin="round"
@@ -133,7 +184,7 @@ const benefits = ref([
                   d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
               </svg>
             </div>
-            <h3 class="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">{{ feature.title }}</h3>
+            <h3 class="text-xl font-semibold mb-3 text-gray-800 dark:text-white">{{ feature.title }}</h3>
             <p class="text-gray-600 dark:text-gray-400">{{ feature.description }}</p>
           </div>
         </div>
@@ -141,15 +192,22 @@ const benefits = ref([
     </section>
 
     <!-- Benefits Section -->
-    <section class="py-16 md:py-24 bg-gray-50 dark:bg-gray-700">
+    <section class="py-16 md:py-24 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
       <div class="container mx-auto px-4">
-        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800 dark:text-gray-300">Manfaat SIAKAD
-        </h2>
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-white">Manfaat SIAKAD</h2>
+          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            Implementasi SIAKAD memberikan berbagai keuntungan yang signifikan bagi pengelolaan administrasi sekolah dan
+            proses pembelajaran.
+          </p>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div v-for="(benefit, index) in benefits" :key="index" class="flex items-start">
-            <div class="bg-blue-100 rounded-full p-4 mr-4">
+          <div v-for="(benefit, index) in benefits" :key="index"
+            class="flex items-start bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow duration-300">
+            <div class="bg-blue-100 dark:bg-blue-900/30 rounded-full p-4 mr-4 flex-shrink-0">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6 text-blue-600">
+                stroke="currentColor" class="w-6 h-6 text-blue-600 dark:text-blue-400">
                 <path v-if="benefit.icon === 'chart-bar'" stroke-linecap="round" stroke-linejoin="round"
                   d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
                 <path v-else-if="benefit.icon === 'database'" stroke-linecap="round" stroke-linejoin="round"
@@ -163,7 +221,7 @@ const benefits = ref([
               </svg>
             </div>
             <div>
-              <h4 class="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">{{ benefit.title }}</h4>
+              <h4 class="text-xl font-semibold mb-2 text-gray-800 dark:text-white">{{ benefit.title }}</h4>
               <p class="text-gray-600 dark:text-gray-400">{{ benefit.description }}</p>
             </div>
           </div>
@@ -172,50 +230,114 @@ const benefits = ref([
     </section>
 
     <!-- Testimonials Section -->
-    <section class="py-16 md:py-24 bg-white dark:bg-gray-700">
+    <section class="py-16 md:py-24 bg-white dark:bg-gray-900 transition-colors duration-300">
       <div class="container mx-auto px-4">
-        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800 dark:text-white">Testimoni Pengguna
-        </h2>
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-white">Testimoni Pengguna</h2>
+          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            Berikut adalah pendapat dari para pengguna SIAKAD dari berbagai sekolah di Indonesia.
+          </p>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
-            <p class="text-gray-600 dark:text-gray-300 italic mb-6">
-              "SIAKAD sangat membantu administrasi sekolah kami menjadi lebih efisien dan terorganisir."</p>
-            <div>
-              <h5 class="font-semibold text-gray-800 dark:text-gray-300">Budi Santoso</h5>
-              <p class="text-gray-500 dark:text-gray-400 text-sm">Kepala Sekolah SD Maju Bersama</p>
+          <div v-for="(testimonial, index) in testimonials" :key="index"
+            class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border-l-4 hover:shadow-xl transition-shadow duration-300"
+            :class="testimonial.color">
+            <div class="relative">
+              <svg
+                class="absolute top-0 left-0 transform -translate-x-4 -translate-y-6 w-10 h-10 text-gray-200 dark:text-gray-700"
+                fill="currentColor" viewBox="0 0 32 32" aria-hidden="true">
+                <path
+                  d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
+              </svg>
+              <p class="text-gray-600 dark:text-gray-300 italic mb-6 relative z-10 pl-4">
+                "{{ testimonial.content }}"
+              </p>
             </div>
-          </div>
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border-l-4 border-green-500">
-            <p class="text-gray-600 dark:text-gray-300 italic mb-6">"Sebagai guru, saya merasa terbantu dalam menginput
-              nilai dan melihat perkembangan siswa."</p>
-            <div>
-              <h5 class="font-semibold text-gray-800 dark:text-gray-300">Siti Rahma</h5>
-              <p class="text-gray-500 dark:text-gray-400 text-sm">Guru Kelas 4 SD Cendekia</p>
-            </div>
-          </div>
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border-l-4 border-purple-500">
-            <p class="text-gray-600 dark:text-gray-300 italic mb-6">"Sebagai orang tua, saya dapat memantau nilai dan
-              kehadiran anak saya
-              dengan mudah melalui aplikasi."</p>
-            <div>
-              <h5 class="font-semibold text-gray-800 dark:text-gray-300">Ahmad Ridwan</h5>
-              <p class="text-gray-500 dark:text-gray-400 text-sm">Orang Tua Siswa</p>
+            <div class="flex items-center">
+              <div
+                class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400 font-bold">
+                {{ testimonial.name.charAt(0) }}
+              </div>
+              <div class="ml-4">
+                <h5 class="font-semibold text-gray-800 dark:text-gray-200">{{ testimonial.name }}</h5>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">{{ testimonial.role }}</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Stats Section -->
+    <section class="py-16 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div class="text-center">
+            <div class="text-4xl md:text-5xl font-bold mb-2 text-blue-600 dark:text-blue-400">500+</div>
+            <div class="text-lg text-gray-700 dark:text-gray-300">Sekolah</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl md:text-5xl font-bold mb-2 text-green-600 dark:text-green-400">100k+</div>
+            <div class="text-lg text-gray-700 dark:text-gray-300">Siswa</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl md:text-5xl font-bold mb-2 text-purple-600 dark:text-purple-400">34</div>
+            <div class="text-lg text-gray-700 dark:text-gray-300">Provinsi</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl md:text-5xl font-bold mb-2 text-amber-600 dark:text-amber-400">10k+</div>
+            <div class="text-lg text-gray-700 dark:text-gray-300">Guru</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Call to Action Section -->
-    <section class="py-16 md:py-20 bg-blue-600 text-white">
+    <section class="py-16 md:py-20 bg-blue-600 dark:bg-blue-700 text-white transition-colors duration-300">
       <div class="container mx-auto px-4 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">Siap Menerapkan SIAKAD di Sekolah Anda?</h2>
-        <p class="text-xl opacity-90 mb-8">Hubungi kami untuk informasi lebih lanjut dan demo sistem</p>
-        <button
-          class="bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-full transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">
-          Hubungi Kami
-        </button>
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">Siap Menerapkan SIAKAD di Sekolah Anda?</h2>
+        <p class="text-xl opacity-90 mb-8 max-w-3xl mx-auto">
+          Jadwalkan konsultasi gratis dengan tim kami untuk melihat bagaimana SIAKAD dapat membantu
+          meningkatkan efisiensi administrasi dan kualitas pembelajaran di sekolah Anda.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/contact"
+            class="bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-full transition duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg inline-flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-5 h-5 mr-2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+            </svg>
+            Hubungi Kami
+          </a>
+          <a href="#"
+            class="bg-transparent border-2 border-white text-white hover:bg-white/10 font-semibold py-3 px-8 rounded-full transition duration-300 ease-in-out inline-flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-5 h-5 mr-2">
+              <path stroke-linecap="round"
+                d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+            Lihat Demo
+          </a>
+        </div>
       </div>
     </section>
   </div>
+  <Footer />
 </template>
+
+<style scoped>
+/* Transitions for dark mode */
+.transition-colors {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.transition-all {
+  transition: all 0.3s ease;
+}
+
+.transition-transform {
+  transition: transform 0.3s ease;
+}
+</style>
