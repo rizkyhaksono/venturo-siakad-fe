@@ -15,11 +15,26 @@ export const useAuthStore = defineStore("auth", {
         },
     }),
     actions: {
+        async getSignature(data) {
+            const res = await axios.post(
+                `${this.apiUrl}/v1/sign-payload`,
+                data
+            );
+            const { signature, token } = res.data;
+            return { signature, token };
+        },
         async register(credential) {
             try {
+                const { signature, token } = await this.getSignature(credential);
                 const res = await axios.post(
                     `${this.apiUrl}/v1/auth/register`,
-                    credential
+                    credential,
+                    {
+                        headers: {
+                            "X-Signature": signature,
+                            "X-Signature-Token": token,
+                        },
+                    }
                 );
                 this.response = {
                     status: res.status,
@@ -37,9 +52,16 @@ export const useAuthStore = defineStore("auth", {
         },
         async login(credential) {
             try {
+                const { signature, token } = await this.getSignature(credential);
                 const res = await axios.post(
                     `${this.apiUrl}/v1/auth/login`,
-                    credential
+                    credential,
+                    {
+                        headers: {
+                            "X-Signature": signature,
+                            "X-Signature-Token": token,
+                        },
+                    }
                 );
                 this.response = {
                     status: res.status,

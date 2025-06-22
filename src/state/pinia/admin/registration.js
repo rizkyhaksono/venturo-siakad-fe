@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import { useAuthStore } from "../auth";
 
 export const useAdminRegistrationStore = defineStore("adminRegistration", {
   state: () => ({
@@ -29,8 +30,14 @@ export const useAdminRegistrationStore = defineStore("adminRegistration", {
     },
     async getRegistrations() {
       try {
-        const url = `${this.apiUrl}/v1/admin/registrations?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`;
-        const res = await axios.get(url);
+        const authStore = useAuthStore();
+        const { signature, token } = await authStore.getSignature();
+        const res = await axios.get(`${this.apiUrl}/v1/admin/registrations?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`, {
+          headers: {
+            "X-Signature": signature,
+            "X-Signature-Token": token,
+          },
+        });
         const registrationsDataList = res.data.data;
         this.registrations = registrationsDataList;
         this.totalData = res.data.data.meta.total;
@@ -53,10 +60,16 @@ export const useAdminRegistrationStore = defineStore("adminRegistration", {
     },
     async updateStatusRegistration(registrationId, data) {
       try {
-        const url = `${this.apiUrl}/v1/admin/registration/${registrationId}`;
-        const res = await axios.put(url, {
+        const authStore = useAuthStore();
+        const { signature, token } = await authStore.getSignature();
+        const res = await axios.put(`${this.apiUrl}/v1/admin/registration/${registrationId}`, {
           status: data.status,
           assigned_to: data.assigned_to,
+        }, {
+          headers: {
+            "X-Signature": signature,
+            "X-Signature-Token": token,
+          },
         });
         this.response = {
           status: res.status,

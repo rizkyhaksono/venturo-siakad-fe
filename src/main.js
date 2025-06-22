@@ -52,7 +52,6 @@ const app = createApp(App)
     .directive("maska", vMaska)
     .directive("money3", Money3Directive);
 
-    
 app.component("VueDatePicker", VueDatePicker);
 app.mount("#app");
 
