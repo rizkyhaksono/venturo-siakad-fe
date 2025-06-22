@@ -465,9 +465,9 @@ onMounted(async () => {
 
             <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg transition-colors duration-200">
               <div class="flex justify-between items-center">
-                <span
-                  class="text-sm font-medium text-gray-800 dark:text-gray-200 transition-colors duration-200">Overall
-                  Average</span>
+                <span class="text-sm font-medium text-gray-800 dark:text-gray-200 transition-colors duration-200">
+                  Overall Average
+                </span>
                 <span :class="{
                   'text-xl font-bold': true,
                   'text-green-600 dark:text-green-400': parseFloat(averageScores.total) >= 70,

@@ -20,7 +20,6 @@ const getMe = async () => {
 
 const getRombels = async () => {
   await rombelStore.getRombels();
-  console.log('Rombels:', rombelStore.rombels);
 
   if (rombelStore.rombels && rombelStore.rombels.length > 0) {
     const rombels = {};
@@ -276,8 +275,8 @@ onMounted(async () => {
                   Term</span>
               </div>
               <span class="text-gray-800 dark:text-gray-200 transition-colors duration-200">
-                {{ subjectStore?.subjects?.data?.[0]?.study_year?.semester || '-' }} / {{
-                  subjectStore?.subjects?.data?.[0]?.study_year?.year || '-' }}
+                <!-- {{ subjectStore?.subjects?.data?.[0]?.study_year?.semester || '-' }} / {{
+                  subjectStore?.subjects?.data?.[0]?.study_year?.year || '-' }} -->
               </span>
             </div>
 
@@ -294,8 +293,9 @@ onMounted(async () => {
                 <span class="text-gray-700 dark:text-gray-300 font-medium transition-colors duration-200">Teaching
                   Subjects</span>
               </div>
-              <span class="text-gray-800 dark:text-gray-200 transition-colors duration-200">{{
-                subjectStore?.subjects?.meta?.total || 0 }}</span>
+              <span class="text-gray-800 dark:text-gray-200 transition-colors duration-200">
+                <!-- {{ subjectStore?.subjects?.meta?.total || 0 }} -->
+              </span>
             </div>
 
             <div class="flex items-center justify-between">
@@ -310,8 +310,9 @@ onMounted(async () => {
                 <span class="text-gray-700 dark:text-gray-300 font-medium transition-colors duration-200">Class
                   Advisor</span>
               </div>
-              <span class="text-gray-800 dark:text-gray-200 transition-colors duration-200">{{
-                classStore?.classes?.data?.filter(c => c.teacher?.id === meStore.userLogin?.id)?.length || 0}}</span>
+              <span class="text-gray-800 dark:text-gray-200 transition-colors duration-200">
+                <!-- {{ classStore?.classes?.data?.filter(c => c.teacher?.id === meStore.userLogin?.id)?.length || 0}} -->
+              </span>
             </div>
           </div>
         </div>
