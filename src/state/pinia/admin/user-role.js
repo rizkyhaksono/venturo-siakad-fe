@@ -1,5 +1,6 @@
 import axios from "axios";
 import { defineStore } from "pinia";
+import { useAuthStore } from "../auth";
 
 export const useAdminUserRoleStore = defineStore("adminUserRole", {
   state: () => ({
@@ -29,8 +30,17 @@ export const useAdminUserRoleStore = defineStore("adminUserRole", {
     },
     async getRoles() {
       try {
+        const authStore = useAuthStore();
+        const { signature, token } = await authStore.getSignature();
         const url = `${this.apiUrl}/v1/admin/roles?page=${this.current}&per_page=${this.perpage}&name=${this.searchQuery}`;
-        const res = await axios.get(url);
+        const res = await axios.get(url,
+          {
+            headers: {
+              "X-Signature": signature,
+              "X-Signature-Token": token,
+            },
+          }
+        );
         const rolesDataList = res.data.data.list.data;
         this.roles = rolesDataList;
         this.totalData = res.data.data.list.total;
