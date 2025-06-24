@@ -116,5 +116,20 @@ export const useAdminSPPHistoryStore = defineStore("adminSPPHistory", {
         };
       }
     },
+    async getProofPayment(sppHistoryId) {
+      try {
+        const res = await axios.get(`${this.apiUrl}/v1/admin/spp-history/proof-payment/${sppHistoryId}`)
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+        };
+        return res;
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+        };
+      }
+    },
   },
 })

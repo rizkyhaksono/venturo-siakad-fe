@@ -14,6 +14,12 @@ const modalTitle = ref("");
 const modalRef = ref(null);
 const formRef = ref(null);
 const selectedSPPHistory = ref(null);
+const showModal = ref(false);
+const currentProofPayment = ref(null);
+const isLoading = ref(false);
+const loadingId = ref(null);
+
+const apiBaseUrl = import.meta.env.VITE_APP_APIURL
 
 const getSPPHistory = async () => {
   await sppHistoryStore.getSPPHistory();
@@ -48,6 +54,11 @@ const closeModal = () => {
   selectedSPPHistory.value = null;
 }
 
+const closeProofModal = () => {
+  showModal.value = false;
+  currentProofPayment.value = null;
+};
+
 const submitModal = () => {
   if (formRef.value) {
     formRef.value.submitForm();
@@ -62,6 +73,23 @@ const deleteSPPHistory = async (id) => {
     })
   } catch (error) {
     showErrorToast("Failed to delete SPP History", error.message);
+  }
+};
+
+const viewProofPayment = async (id) => {
+  try {
+    const res = await sppHistoryStore.getProofPayment(id)
+    if (res && res.data) {
+      currentProofPayment.value = `${apiBaseUrl}/v1/admin/spp-history/proof-payment/${id}`;
+      showModal.value = true;
+    } else {
+      showErrorToast("Failed to load proof payment");
+    }
+  } catch (error) {
+    console.error("Error loading proof payment:", error);
+  } finally {
+    isLoading.value = false;
+    loadingId.value = null;
   }
 };
 
@@ -165,6 +193,12 @@ onMounted(async () => {
                 <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
                   <small
                     class="font-sans antialiased text-sm text-gray-700 dark:text-gray-300 flex items-center justify-between gap-2 opacity-70">
+                    Bukti Pembayaran
+                  </small>
+                </th>
+                <th class="cursor-pointer px-2.5 py-2 text-start font-medium">
+                  <small
+                    class="font-sans antialiased text-sm text-gray-700 dark:text-gray-300 flex items-center justify-between gap-2 opacity-70">
                     Actions
                   </small>
                 </th>
@@ -215,6 +249,12 @@ onMounted(async () => {
                   </small>
                 </td>
                 <td class="p-3">
+                  <Button variant="outline" color="primary" @click="viewProofPayment(row.id)"
+                    :disabled="isLoading && loadingId === row.id">
+                    {{ isLoading && loadingId === row.id ? 'Loading...' : 'Lihat Bukti' }}
+                  </Button>
+                </td>
+                <td class="p-3">
                   <div class="flex gap-2 justify-start">
                     <Button @click="openClassModal('edit', row.id)" variant="outline" color="secondary"
                       class="border-gray-300 dark:border-gray-600 bg-primary dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
@@ -251,6 +291,36 @@ onMounted(async () => {
             </Button>
           </div>
         </div> -->
+      </div>
+    </div>
+
+    <div v-if="showModal"
+      class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-gray-800 rounded-lg max-w-3xl w-full shadow-lg">
+        <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+            Bukti Pembayaran
+          </h3>
+          <button @click="closeProofModal" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div class="p-6 flex items-center justify-center min-h-[300px]">
+          <img v-if="currentProofPayment" :src="currentProofPayment" class="max-h-[70vh] max-w-full object-contain"
+            alt="Proof of Payment" />
+          <div v-else class="text-gray-500 dark:text-gray-400 text-center py-8">
+            <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <p class="mt-2">Failed to load image</p>
+          </div>
+        </div>
+        <div class="flex justify-end p-4 border-t border-gray-200 dark:border-gray-700">
+          <Button variant="outline" @click="closeProofModal">Tutup</Button>
+        </div>
       </div>
     </div>
   </Layout>
