@@ -12,26 +12,26 @@ const currentProofPayment = ref(null);
 const isLoading = ref(false);
 const loadingId = ref(null);
 
-// Get API base URL from environment variable
-const apiBaseUrl = process.env.VITE_APP_APIURL
+const apiBaseUrl = import.meta.env.VITE_APP_APIURL
 
 const getSPPHistory = async () => {
   await sppHistoryStore.getSPPHistory();
   rows.value = sppHistoryStore.sppHistory.data;
 };
 
-const viewProofPayment = async (id) => {
+const getProofPayment = async (id) => {
   try {
     loadingId.value = id;
     isLoading.value = true;
-
-    // Set image URL for the modal
-    currentProofPayment.value = `${apiBaseUrl}/v1/student/spp-history/proof-payment/${id}`;
-
-    // Show the modal
-    showModal.value = true;
+    const response = await sppHistoryStore.getProofPayment(id);
+    if (response) {
+      currentProofPayment.value = `${apiBaseUrl}/v1/student/spp-history/proof-payment/${id}`;
+      showModal.value = true;
+    } else {
+      console.error("Failed to load proof payment");
+    }
   } catch (error) {
-    console.error("Error loading proof payment:", error);
+    console.error("Error fetching proof payment:", error);
   } finally {
     isLoading.value = false;
     loadingId.value = null;
@@ -199,10 +199,11 @@ onMounted(async () => {
                   {{ row.payment_method }}
                 </td>
                 <td class="px-4 py-3 text-sm">
-                  <Button variant="link" color="primary" @click="viewProofPayment(row.id)"
-                    :disabled="isLoading && loadingId === row.id">
-                    {{ isLoading && loadingId === row.id ? 'Loading...' : 'Lihat Bukti' }}
+                  <Button variant="outline" color="primary" :loading="loadingId === row.id"
+                    @click="getProofPayment(row.id)" v-if="row.proof_payment">
+                    Lihat Bukti
                   </Button>
+                  <span v-else class="text-gray-500 dark:text-gray-400">Tidak ada bukti</span>
                 </td>
                 <td class="px-4 py-3 text-sm">
                   <span :class="getStatusClass(row.payment_status)">
@@ -275,8 +276,7 @@ onMounted(async () => {
         </div>
         <div class="p-6 flex items-center justify-center min-h-[300px]">
           <img v-if="currentProofPayment" :src="currentProofPayment" class="max-h-[70vh] max-w-full object-contain"
-            alt="Proof of Payment"
-            @error="$event.target.src = 'https://via.placeholder.com/400x300?text=Image+Not+Available'" />
+            alt="Proof of Payment" />
           <div v-else class="text-gray-500 dark:text-gray-400 text-center py-8">
             <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
