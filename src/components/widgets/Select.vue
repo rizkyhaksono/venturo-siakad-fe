@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, defineProps, defineEmits } from "vue";
+import { ref, computed, defineProps, defineEmits, onMounted, onBeforeUnmount } from "vue";
 
 const props = defineProps({
     modelValue: [String, Array, null], // Bisa single atau multiple select
@@ -8,11 +8,39 @@ const props = defineProps({
     options: Array, // Bisa berupa array string atau array objek [{ value: "", label: "" }]
     multiple: Boolean, // Jika true, multi-select aktif
     errors: Array,
+    position: { // Added position prop with auto as default
+        type: String,
+        default: 'auto', // 'auto', 'up', 'down'
+        validator: (value) => ['auto', 'up', 'down'].includes(value)
+    }
 });
 
 const emit = defineEmits(["update:modelValue"]);
 const isOpen = ref(false);
 const searchQuery = ref("");
+const selectContainer = ref(null);
+const dropdownPosition = ref('down');
+
+// Calculate dropdown position based on space available
+const calculatePosition = () => {
+    if (props.position !== 'auto') {
+        dropdownPosition.value = props.position;
+        return;
+    }
+
+    if (selectContainer.value) {
+        const rect = selectContainer.value.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+
+        // If space below is less than 200px and there's more space above, show dropdown above
+        if (spaceBelow < 200 && spaceAbove > spaceBelow) {
+            dropdownPosition.value = 'up';
+        } else {
+            dropdownPosition.value = 'down';
+        }
+    }
+};
 
 // Filter opsi berdasarkan pencarian
 const filteredOptions = computed(() => {
@@ -27,6 +55,9 @@ const selectedItems = computed(() => {
 });
 
 const toggleDropdown = () => {
+    if (!isOpen.value) {
+        calculatePosition();
+    }
     isOpen.value = !isOpen.value;
     searchQuery.value = ""; // Reset pencarian setiap kali dropdown dibuka
 };
@@ -62,10 +93,29 @@ const getOptionLabel = (option) => {
 const getOptionValue = (option) => {
     return typeof option === "string" ? option : option.value;
 };
+
+// Close dropdown when clicked outside
+const closeDropdownOnOutsideClick = (event) => {
+    if (isOpen.value && selectContainer.value && !selectContainer.value.contains(event.target)) {
+        isOpen.value = false;
+    }
+};
+
+onMounted(() => {
+    document.addEventListener('click', closeDropdownOnOutsideClick);
+    window.addEventListener('resize', calculatePosition);
+    window.addEventListener('scroll', calculatePosition);
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener('click', closeDropdownOnOutsideClick);
+    window.removeEventListener('resize', calculatePosition);
+    window.removeEventListener('scroll', calculatePosition);
+});
 </script>
 
 <template>
-    <div class="space-y-1.5">
+    <div class="space-y-1.5" ref="selectContainer">
         <label v-if="label"
             class="text-sm text-slate-800 dark:text-white font-bold capitalize transition-colors duration-200">{{ label
             }}</label>
@@ -82,8 +132,10 @@ const getOptionValue = (option) => {
                 </svg>
             </div>
 
-            <div v-if="isOpen"
-                class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto transition-colors duration-200">
+            <div v-if="isOpen" :class="[
+                'absolute z-10 w-full bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto transition-colors duration-200',
+                dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full mt-1'
+            ]">
 
                 <div class="p-2">
                     <input type="text" v-model="searchQuery" placeholder="Cari..."

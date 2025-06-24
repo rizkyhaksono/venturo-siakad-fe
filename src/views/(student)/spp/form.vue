@@ -1,8 +1,8 @@
 <script setup>
 import { ref, watch, defineProps, defineEmits, defineExpose, onMounted } from 'vue';
 import {
-  useStudentSPPHistoryStore,
-  useAuthStore
+  useAuthStore,
+  useStudentSPPHistoryStore
 } from "@/state/pinia";
 import SelectField from "@/components/widgets/Select.vue";
 import DatePicker from '@/components/widgets/DatePicker.vue';
@@ -26,6 +26,7 @@ const form = ref({
   payment_date: new Date().toISOString().substr(0, 10),
   payment_status: 'pending',
   payment_method: 'transfer',
+  proof_payment: null,
 });
 
 const paymentMethods = [
@@ -34,17 +35,14 @@ const paymentMethods = [
   { value: 'digital', label: 'Dompet Digital' },
 ];
 
-const fileInputRef = ref(null);
 const fileName = ref('');
 const previewImage = ref(null);
 
 watch(() => props.spp, (newVal) => {
   if (newVal) {
-    console.log("SPP data received:", newVal);
     form.value.spp_id = newVal.id || '';
     form.value.payment_date = new Date().toISOString().substr(0, 10);
     form.value.payment_method = 'transfer';
-    form.value.payment_proof = null;
   }
 }, { immediate: true });
 
@@ -53,23 +51,19 @@ const getProfile = async () => {
   form.value.user_id = authStore.userLogin.id;
 }
 
-const handleFileUpload = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    form.value.payment_proof = file;
+const handleFileUpload = (fileOrEvent) => {
+  const file = fileOrEvent?.target?.files?.[0] || fileOrEvent;
+
+  if (file && file instanceof File) {
+    form.value.proof_payment = file;
     fileName.value = file.name;
 
-    // Create preview
     const reader = new FileReader();
     reader.onload = (e) => {
       previewImage.value = e.target.result;
     };
     reader.readAsDataURL(file);
   }
-};
-
-const triggerFileInput = () => {
-  fileInputRef.value.click();
 };
 
 const submitForm = async () => {
@@ -79,16 +73,15 @@ const submitForm = async () => {
       return;
     }
 
-    // Create form data for file upload
     const formData = new FormData();
+    formData.append('user_id', form.value.user_id);
     formData.append('spp_id', form.value.spp_id);
     formData.append('payment_date', form.value.payment_date);
-    formData.append('payment_method', form.value.payment_method);
     formData.append('payment_status', form.value.payment_status);
-    formData.append('user_id', form.value.user_id);
+    formData.append('payment_method', form.value.payment_method);
 
-    if (form.value.payment_proof) {
-      formData.append('payment_proof', form.value.payment_proof);
+    if (form.value.proof_payment) {
+      formData.append('proof_payment', form.value.proof_payment);
     }
 
     await studentSPPHistoryStore.postSPPHistory(formData)
@@ -125,16 +118,19 @@ onMounted(async () => {
         </div>
         <div>
           <p class="text-sm text-gray-600 dark:text-gray-400">Total</p>
-          <p class="font-medium text-gray-800 dark:text-white">{{ new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0
-          }).format(spp.total) }}</p>
+          <p class="font-medium text-gray-800 dark:text-white">
+            {{ new Intl.NumberFormat('id-ID', {
+              style: 'currency',
+              currency: 'IDR',
+              minimumFractionDigits: 0
+            }).format(spp.total) }}
+          </p>
         </div>
         <div>
           <p class="text-sm text-gray-600 dark:text-gray-400">Tahun Ajaran</p>
-          <p class="font-medium text-gray-800 dark:text-white">Semester {{ spp.study_year?.semester }} - {{
-            spp.study_year?.year }}</p>
+          <p class="font-medium text-gray-800 dark:text-white">
+            Semester
+            {{ spp.study_year?.semester }} - {{ spp.study_year?.year }}</p>
         </div>
       </div>
     </div>
@@ -147,27 +143,21 @@ onMounted(async () => {
 
       <div class="mb-4">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Metode Pembayaran</label>
-        <SelectField v-model="form.payment_method" :options="paymentMethods" placeholder="Pilih Metode Pembayaran" />
+        <SelectField v-model="form.payment_method" :options="paymentMethods" position="up"
+          placeholder="Pilih Metode Pembayaran" />
       </div>
 
-      <!-- <div class="mb-4">
+      <div class="mb-4">
+        <!-- Changed to use native file input for reliability -->
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bukti Pembayaran</label>
-        <div class="mt-1 flex flex-col items-center space-y-2">
-          <input ref="fileInputRef" type="file" @change="handleFileUpload" accept="image/*" class="hidden" />
-          <button type="button" @click="triggerFileInput"
-            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600">
-            Upload Bukti Pembayaran
-          </button>
-          <p v-if="fileName" class="text-sm text-gray-600 dark:text-gray-400">{{ fileName }}</p>
+        <input type="file" @change="handleFileUpload($event)"
+          class="w-full border border-slate-200 dark:border-slate-700 rounded-md py-2 px-2.5 text-sm shadow-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100" />
+        <!-- Show preview if available -->
+        <div v-if="previewImage" class="mt-2">
+          <img :src="previewImage" class="h-32 object-contain" alt="Preview" />
+          <p class="text-sm text-gray-600">{{ fileName }}</p>
         </div>
       </div>
-
-      <div v-if="previewImage" class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Preview</label>
-        <div class="mt-1">
-          <img :src="previewImage" class="max-h-48 rounded border border-gray-300 dark:border-gray-600" />
-        </div>
-      </div> -->
     </form>
   </div>
 </template>

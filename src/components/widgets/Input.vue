@@ -58,6 +58,26 @@ const computedModelValue = computed(() => {
                 <span class="text-base text-slate-800 dark:text-slate-200">{{ label }}</span>
             </div>
 
+            <!-- File -->
+            <div v-else-if="type === 'file'" class="relative">
+                <input type="file" :placeholder="placeholder"
+                    @change="emit('update:modelValue', $event.target.files[0])"
+                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                <div class="w-full border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-4
+                    hover:border-slate-500 dark:hover:border-slate-400 transition-colors duration-200">
+                    <div class="flex flex-col items-center justify-center gap-2">
+                        <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <span class="text-sm text-slate-600 dark:text-slate-400">
+                            {{ modelValue ? (typeof modelValue === 'object' ? modelValue.name : modelValue) :
+                                (placeholder || 'Click or drag file to upload') }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
             <!-- Select -->
             <select v-else-if="type === 'select'" :value="modelValue"
                 @change="emit('update:modelValue', $event.target.value)" class="w-full border border-slate-200 dark:border-slate-700 rounded-md py-2 px-2.5 text-sm

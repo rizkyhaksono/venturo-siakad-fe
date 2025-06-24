@@ -7,10 +7,40 @@ import InputField from "@/components/widgets/Input";
 
 const sppHistoryStore = useStudentSPPHistoryStore();
 const rows = ref([]);
+const showModal = ref(false);
+const currentProofPayment = ref(null);
+const isLoading = ref(false);
+const loadingId = ref(null);
+
+// Get API base URL from environment variable
+const apiBaseUrl = process.env.VITE_APP_APIURL
 
 const getSPPHistory = async () => {
   await sppHistoryStore.getSPPHistory();
   rows.value = sppHistoryStore.sppHistory.data;
+};
+
+const viewProofPayment = async (id) => {
+  try {
+    loadingId.value = id;
+    isLoading.value = true;
+
+    // Set image URL for the modal
+    currentProofPayment.value = `${apiBaseUrl}/v1/student/spp-history/proof-payment/${id}`;
+
+    // Show the modal
+    showModal.value = true;
+  } catch (error) {
+    console.error("Error loading proof payment:", error);
+  } finally {
+    isLoading.value = false;
+    loadingId.value = null;
+  }
+};
+
+const closeModal = () => {
+  showModal.value = false;
+  currentProofPayment.value = null;
 };
 
 const formatRupiah = (amount) => {
@@ -141,12 +171,13 @@ onMounted(async () => {
                 <th class="px-4 py-3 text-left">Tanggal Pembayaran</th>
                 <th class="px-4 py-3 text-left">Jumlah</th>
                 <th class="px-4 py-3 text-left">Metode Pembayaran</th>
+                <th class="px-4 py-3 text-left">Bukti Pembayaran</th>
                 <th class="px-4 py-3 text-left">Status</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
               <tr v-if="rows.length === 0">
-                <td colspan="6" class="px-4 py-5 text-center text-gray-500 dark:text-gray-400">
+                <td colspan="6" class="text-sm px-4 py-5 text-center text-gray-500 dark:text-gray-400">
                   Belum ada riwayat pembayaran
                 </td>
               </tr>
@@ -166,6 +197,12 @@ onMounted(async () => {
                 </td>
                 <td class="px-4 py-3 text-sm">
                   {{ row.payment_method }}
+                </td>
+                <td class="px-4 py-3 text-sm">
+                  <Button variant="link" color="primary" @click="viewProofPayment(row.id)"
+                    :disabled="isLoading && loadingId === row.id">
+                    {{ isLoading && loadingId === row.id ? 'Loading...' : 'Lihat Bukti' }}
+                  </Button>
                 </td>
                 <td class="px-4 py-3 text-sm">
                   <span :class="getStatusClass(row.payment_status)">
@@ -219,6 +256,37 @@ onMounted(async () => {
               </nav>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showModal"
+      class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-gray-800 rounded-lg max-w-3xl w-full shadow-lg">
+        <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+            Bukti Pembayaran
+          </h3>
+          <button @click="closeModal" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div class="p-6 flex items-center justify-center min-h-[300px]">
+          <img v-if="currentProofPayment" :src="currentProofPayment" class="max-h-[70vh] max-w-full object-contain"
+            alt="Proof of Payment"
+            @error="$event.target.src = 'https://via.placeholder.com/400x300?text=Image+Not+Available'" />
+          <div v-else class="text-gray-500 dark:text-gray-400 text-center py-8">
+            <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <p class="mt-2">Failed to load image</p>
+          </div>
+        </div>
+        <div class="flex justify-end p-4 border-t border-gray-200 dark:border-gray-700">
+          <Button variant="outline" @click="closeModal">Tutup</Button>
         </div>
       </div>
     </div>

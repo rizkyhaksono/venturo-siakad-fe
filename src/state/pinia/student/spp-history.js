@@ -44,12 +44,30 @@ export const useStudentSPPHistoryStore = defineStore("studentSPPHistory", {
     },
     async postSPPHistory(data) {
       try {
-        const url = `${this.apiUrl}/v1/student/spp-history`;
-        const res = await axios.post(url, data);
+        const res = await axios.post(`${this.apiUrl}/v1/student/spp-history`, data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          }
+        });
         this.response = {
           status: res.status,
           message: res.data.message,
         };
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+        };
+      }
+    },
+    async getProofPayment(sppHistoryId) {
+      try {
+        const res = await axios.get(`${this.apiUrl}/v1/student/spp-history/proof-payment/${sppHistoryId}`)
+        this.response = {
+          status: res.status,
+          message: res.data.message,
+        };
+        return res;
       } catch (error) {
         this.response = {
           status: error.response?.status,
