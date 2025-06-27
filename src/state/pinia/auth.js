@@ -113,6 +113,50 @@ export const useAuthStore = defineStore("auth", {
                 this.removeStatus();
             }
         },
+        async forgetPassword(credential) {
+            try {
+                const res = await axios.post(
+                    `${this.apiUrl}/v1/forgot-password`,
+                    credential,
+                );
+                this.response = {
+                    status: res.status,
+                    message: res.data.message,
+                }
+            } catch (error) {
+                console.error("Forgot password failed", error);
+                this.response = {
+                    status: error.response?.status || 500,
+                    message:
+                        error.response?.data?.message ||
+                        "Could not send forgot password request.",
+                    error: error.response?.data?.errors || [],
+                };
+            }
+        },
+        async resetPassword(credential) {
+            try {
+                const token = this.getToken();
+                await axios.post(
+                    `${this.apiUrl}/v1/reset-password`,
+                    credential,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+            } catch (error) {
+                console.error("Reset password failed", error);
+                this.response = {
+                    status: error.response?.status || 500,
+                    message:
+                        error.response?.data?.message ||
+                        "Could not send reset password request.",
+                    error: error.response?.data?.errors || [],
+                };
+            }
+        },
         async saveUserLogin() {
             try {
                 const response = await axios.get(`${this.apiUrl}/v1/auth/profile`);

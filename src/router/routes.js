@@ -341,6 +341,22 @@ export default [
         },
     },
     {
+        path: "/reset-password",
+        name: "Reset password",
+        component: () => import("../views/(auth)/reset-password"),
+        meta: {
+            title: "Reset password",
+            beforeResolve(routeTo, routeFrom, next) {
+                const auth = useAuthStore();
+                if (auth.getToken) {
+                    next({ name: "default" });
+                } else {
+                    next();
+                }
+            },
+        },
+    },
+    {
         path: "/404",
         name: "NotFound",
         component: () => import("../views/utility/404.vue"),
@@ -407,6 +423,22 @@ export default [
         component: () => import("../views/(visitor)/contact.vue"),
         meta: {
             title: "Contact Page",
+            beforeResolve(routeTo, routeFrom, next) {
+                const auth = useAuthStore();
+                if (auth.getToken) {
+                    next({ name: "default" });
+                } else {
+                    next();
+                }
+            },
+        },
+    },
+    {
+        path: "/demo",
+        name: "demo-page",
+        component: () => import("../views/(visitor)/demo.vue"),
+        meta: {
+            title: "Demo Page",
             beforeResolve(routeTo, routeFrom, next) {
                 const auth = useAuthStore();
                 if (auth.getToken) {
