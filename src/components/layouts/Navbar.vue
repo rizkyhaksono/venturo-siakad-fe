@@ -69,13 +69,25 @@ onMounted(() => {
           <div class="hidden md:block ml-10">
             <div class="flex items-center space-x-6">
               <router-link to="/"
-                class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-2 py-1 text-sm font-medium">Beranda</router-link>
+                class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-2 py-1 text-sm font-medium">
+                Beranda
+              </router-link>
               <router-link to="/feature"
-                class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-2 py-1 text-sm font-medium">Fitur</router-link>
+                class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-2 py-1 text-sm font-medium">
+                Fitur
+              </router-link>
               <router-link to="/about"
-                class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-2 py-1 text-sm font-medium">Tentang</router-link>
+                class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-2 py-1 text-sm font-medium">
+                Tentang
+              </router-link>
               <router-link to="/contact"
-                class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-2 py-1 text-sm font-medium">Kontak</router-link>
+                class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-2 py-1 text-sm font-medium">
+                Kontak
+              </router-link>
+              <router-link to="/demo"
+                class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-2 py-1 text-sm font-medium">
+                Demo
+              </router-link>
             </div>
           </div>
         </div>
@@ -114,15 +126,29 @@ onMounted(() => {
     <div id="mobile-menu" v-show="isMenuOpen" class="md:hidden bg-white dark:bg-gray-800 transition-all duration-200">
       <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
         <router-link to="/"
-          class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">Beranda</router-link>
+          class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">
+          Beranda
+        </router-link>
         <router-link to="/feature"
-          class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">Fitur</router-link>
+          class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">
+          Fitur
+        </router-link>
         <router-link to="/about"
-          class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">Tentang</router-link>
+          class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">
+          Tentang
+        </router-link>
         <router-link to="/contact"
-          class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">Kontak</router-link>
+          class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">
+          Kontak
+        </router-link>
+        <router-link to="/demo"
+          class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">
+          Demo
+        </router-link>
         <router-link to="/login"
-          class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">Login</router-link>
+          class="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium">
+          Login
+        </router-link>
       </div>
     </div>
   </nav>

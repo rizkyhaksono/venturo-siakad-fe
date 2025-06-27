@@ -72,6 +72,7 @@ const getRombels = async () => {
 const getSubjectSchedule = async () => {
   try {
     loading.value = true;
+    scheduleStore.perpage = 100;
     await scheduleStore.getSchedules();
     subjectSchedule.value = scheduleStore.schedules;
   } catch (error) {
