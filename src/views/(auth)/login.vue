@@ -5,6 +5,7 @@ import { useColorMode } from "@vueuse/core";
 import { computed, reactive, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { Toaster, toast } from "vue-sonner";
+import Button from "@/components/widgets/Button.vue";
 
 const showPassword = ref(false);
 const mode = useColorMode({
@@ -110,7 +111,7 @@ const login = async () => {
                 <router-link to="/">
                     <div class="flex items-center gap-2">
                         <h1
-                            class="text-xl font-bold text-gray-800 dark:text-white transition-colors duration-200 hover:shadow-lg hover:shadow-gray-300 dark:hover:shadow-gray-700">
+                            class="text-xl font-bold text-gray-800 dark:text-white transition-colors duration-200 hover:shadow-lg hover:underline hover:underline-offset-4">
                             SIAKAD
                         </h1>
                     </div>
@@ -133,7 +134,7 @@ const login = async () => {
                     <label
                         class="text-sm text-slate-800 dark:text-gray-300 font-bold transition-colors duration-200">Email</label>
                     <input v-model="formModel.email" type="email" placeholder="Masukkan Email"
-                        class="w-full border border-slate-200 dark:border-gray-600 rounded-md py-2 px-2.5 text-sm shadow-sm bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:border-slate-800 dark:hover:border-gray-500 focus:border-slate-800 dark:focus:border-blue-500 focus:ring focus:ring-slate-800/10 dark:focus:ring-blue-500/20transition-colors duration-200" />
+                        class="w-full border border-slate-200 dark:border-gray-600 rounded-md py-2 px-2.5 text-sm shadow-sm bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:border-slate-800 dark:hover:border-gray-500 focus:border-slate-800 dark:focus:border-gray-500 focus:ring focus:ring-slate-800/10 dark:focus:ring-gray-500/20transition-colors duration-200" />
                     <div v-if="errorList?.email"
                         class="text-red-500 dark:text-red-400 text-xs transition-colors duration-200">
                         <span v-for="(err, index) in errorList.email" :key="index">
@@ -148,7 +149,7 @@ const login = async () => {
                     <div class="relative">
                         <input v-model="formModel.password" :type="showPassword ? 'text' : 'password'"
                             placeholder="Masukkan Password"
-                            class="w-full border border-slate-200 dark:border-gray-600 rounded-md py-2 px-2.5 text-sm shadow-sm bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:border-slate-800 dark:hover:border-gray-500 focus:border-slate-800 dark:focus:border-blue-500 focus:ring focus:ring-slate-800/10 dark:focus:ring-blue-500/20 transition-colors duration-200" />
+                            class="w-full border border-slate-200 dark:border-gray-600 rounded-md py-2 px-2.5 text-sm shadow-sm bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:border-slate-800 dark:hover:border-gray-500 focus:border-slate-800 dark:focus:border-gray-500 focus:ring focus:ring-slate-800/10 dark:focus:ring-gray-500/20 transition-colors duration-200" />
                         <button type="button"
                             class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-200"
                             @click="togglePassword">
@@ -166,21 +167,22 @@ const login = async () => {
                 </div>
 
                 <div class="flex items-center justify-between text-sm">
-                    <router-link to="/forgot-password" class="text-primary hover:underline">
+                    <router-link to="/forgot-password"
+                        class="text-primary dark:text-gray-200 hover:underline hover:underline-offset-4 transition-colors duration-200">
                         Forgot Password?
                     </router-link>
                 </div>
 
-                <button type="submit"
-                    class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-2 rounded-md mt-4 transition-colors duration-200">
+                <Button type="submit" variant="solid" color="info" class="w-full mt-4 flex justify-center">
                     Login
-                </button>
+                </Button>
             </form>
 
             <div class="text-center text-sm mt-4 text-gray-700 dark:text-gray-300 transition-colors duration-200">
                 Don't have an account?
-                <router-link to="/register"
-                    class="text-primary dark:text-gray-50 underline underline-offset-2">Register</router-link>
+                <router-link to="/register" class="text-primary dark:text-gray-50 underline underline-offset-2">
+                    Register
+                </router-link>
             </div>
 
             <div class="text-center text-xs text-gray-500 dark:text-gray-400 mt-6 transition-colors duration-200">

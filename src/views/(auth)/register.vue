@@ -5,6 +5,7 @@ import { useColorMode } from "@vueuse/core";
 import { reactive, ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { Toaster, toast } from "vue-sonner";
+import Button from "@/components/widgets/Button.vue";
 
 const showPassword = ref(false);
 const mode = useColorMode({
@@ -15,10 +16,8 @@ const mode = useColorMode({
   },
 });
 
-// Compute dark mode state for use in template
 const isDarkMode = computed(() => mode.value === 'dark');
 
-// Initialize theme based on localStorage
 onMounted(() => {
   const darkModePreference = localStorage.getItem('dark-mode');
   if (darkModePreference !== null) {
@@ -28,10 +27,8 @@ onMounted(() => {
   }
 });
 
-// Theme toggle function
 const toggleTheme = () => {
   mode.value = mode.value === "dark" ? "light" : "dark";
-  // Update localStorage for consistency with other pages
   localStorage.setItem('dark-mode', mode.value === 'dark');
   localStorage.setItem('vueuse-color-scheme', mode.value);
 };
@@ -43,12 +40,12 @@ const formModel = reactive({
   name: "",
   email: "",
   password: "",
-  phone_number: "", // Updated from phone to phone_number to match API
+  phone_number: "",
   wali: "",
   pekerjaan: "",
   birth_date: "",
   address: "",
-  gender: "Laki-laki", // Default value
+  gender: "Laki-laki",
 });
 
 const errorList = reactive({
@@ -97,7 +94,7 @@ const register = async () => {
       <div class="flex items-center justify-between mb-6">
         <router-link to="/">
           <h1
-            class="text-xl font-bold text-gray-800 dark:text-white transition-colors duration-200 hover:shadow-lg hover:shadow-gray-300 dark:hover:shadow-gray-700">
+            class="text-xl font-bold text-gray-800 dark:text-white transition-colors duration-200 hover:shadow-lg hover:underline hover:underline-offset-4">
             SIAKAD
           </h1>
         </router-link>
@@ -291,10 +288,10 @@ const register = async () => {
           </div>
         </div>
 
-        <button type="submit"
-          class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-2 rounded-md mt-4 transition-colors duration-200">
+        <Button type="submit" variant="solid" color="info" class="w-full mt-4 flex justify-center">
           Register
-        </button>
+        </Button>
+
       </form>
 
       <div class="text-center text-sm mt-4 text-gray-700 dark:text-gray-300 transition-colors duration-200">
