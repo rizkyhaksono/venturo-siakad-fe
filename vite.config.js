@@ -5,6 +5,8 @@ import path from "path";
 import commonjs from "vite-plugin-commonjs";
 import autoprefixer from "autoprefixer";
 import tailwind from "tailwindcss";
+import cryptoBrowserify from 'crypto-browserify';
+import buffer from 'buffer';
 
 const filename = fileURLToPath(import.meta.url);
 const pathSegments = path.dirname(filename);
@@ -23,8 +25,8 @@ export default defineConfig(({ mode }) => {
         },
         resolve: {
             fallback: {
-                crypto: require.resolve('crypto-browserify'),
-                buffer: require.resolve('buffer/'),
+                crypto: cryptoBrowserify,
+                buffer: buffer,
             },
             alias: {
                 "@": path.resolve(pathSegments, "./src"),

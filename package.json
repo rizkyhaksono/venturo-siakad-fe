@@ -10,7 +10,6 @@
         "build:dev": "vite build --mode dev",
         "preview": "vite preview --host --port 8081"
     },
-    "type": "commonjs",
     "dependencies": {
         "@aacassandra/vue3-progressbar": "^1.0.3",
         "@amcharts/amcharts4": "^4.10.36",
