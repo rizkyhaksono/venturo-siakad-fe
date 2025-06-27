@@ -29,7 +29,7 @@ export function axiosInterceptors(api) {
 
             if (progress) progress.start();
 
-            config.timeout = 3000;
+            config.timeout = 5000; // Tolerant timeout for slow networks
 
             return config;
         }, error => {
