@@ -124,6 +124,19 @@ const getKKM = async () => {
         }
       });
 
+      // Populate existing grades if available
+      if (studentAssesmentStore.studentAssesments && studentAssesmentStore.studentAssesments.length > 0) {
+        studentAssesmentStore.studentAssesments.forEach(assessment => {
+          const subjectId = assessment.subject_schedule.subject.id;
+          if (subjectMap[subjectId]) {
+            subjectMap[subjectId].uts = parseFloat(assessment.uts_score) || 0;
+            subjectMap[subjectId].uas = parseFloat(assessment.uas_score) || 0;
+            subjectMap[subjectId].tugas = parseFloat(assessment.tugas_score) || 0;
+            subjectMap[subjectId].keaktifan = parseFloat(assessment.activity_score) || 0;
+          }
+        });
+      }
+
       subjects.value = Object.values(subjectMap);
     }
   } catch (error) {
@@ -239,11 +252,8 @@ const saveAssessment = async () => {
         notes: "",
         study_year_id: studyYearId
       };
-    });
+    })
 
-    console.log('API Payload:', apiPayload);
-
-    // Send assessment data to API
     for (const assessment of apiPayload) {
       await studentAssesmentStore.postStudentAssesment(assessment);
     }
@@ -261,12 +271,18 @@ const cancelAssessment = () => {
   window.history.back();
 };
 
+const getStudentAssesmentsByStudentIdAndStudyYearId = async () => {
+  await studentAssesmentStore.getStudentAssesmentsByStudentIdAndStudyYearId(studentId, (subjectSchedule.value.map((e) => e.class.study_year.id)[0]));
+  console.log(studentAssesmentStore.studentAssesments)
+}
+
 onMounted(async () => {
   if (studentId) {
     await getStudentById(studentId);
   }
-  await getKKM();
   await getSubjectSchedule();
+  await getStudentAssesmentsByStudentIdAndStudyYearId();
+  await getKKM();
   watchInputs();
 });
 </script>

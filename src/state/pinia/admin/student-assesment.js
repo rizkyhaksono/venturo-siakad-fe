@@ -42,6 +42,30 @@ export const useAdminStudentAssesment = defineStore("adminStudentAssesment", {
         };
       }
     },
+    async getStudentAssesmentsById(id) {
+      try {
+        const res = await axios.get(`${this.apiUrl}/v1/admin/student-assesments/${id}`);
+        this.studentAssesment = res.data.data;
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.errors,
+        };
+      }
+    },
+    async getStudentAssesmentsByStudentIdAndStudyYearId(studentId, studyYearId) {
+      try {
+        const res = await axios.get(`${this.apiUrl}/v1/admin/student-assesments/${studentId}/${studyYearId}`);
+        this.studentAssesments = res.data;
+      } catch (error) {
+        this.response = {
+          status: error.response?.status,
+          message: error.message,
+          error: error.response?.data.errors,
+        };
+      }
+    },
     async changePage(newPage) {
       this.current = newPage;
       await this.getStudentAssesments();
